@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wuhan Photography Boards · 武汉摄影展板</title>
+<meta name="description" content="Nine brick-slip display boards: layouts, brick schedule, clip details and 3D models.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f7f6f3'/><g fill='none' stroke='%23b4553a' stroke-width='2.4'><rect x='4' y='7' width='24' height='7'/><rect x='4' y='18' width='24' height='7'/></g></svg>">
+<script type="importmap">
+{"imports":{"three":"./vendor/three.module.js"}}
+</script>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <span class="code" data-t="code"></span>
+  <nav>
+    <a href="#boards" data-t="nav_boards"></a>
+    <a href="#model" data-t="nav_model"></a>
+    <a href="#bricks" data-t="nav_bricks"></a>
+    <a href="#clips" data-t="nav_clips"></a>
+    <a href="#shots" class="hs" data-t="nav_shots"></a>
+    <a href="#drawings" class="hs" data-t="nav_draw"></a>
+    <a href="#summary" data-t="nav_sum"></a>
+    <a href="#files" class="cta" data-t="nav_files"></a>
+  </nav>
+  <div class="langsw" id="lang" role="group" aria-label="language">
+    <button type="button" data-lang="en">EN</button>
+    <button type="button" data-lang="zh">中文</button>
+  </div>
+</div></div>
+
+<!-- The chooser is a band of nine labelled cards rather than a row of thumbnails.  A thumbnail
+     strip reads as decoration; a card that carries the board's number, bond, size and type count
+     reads as a thing you are meant to pick. -->
+<section id="boards"><div class="wrap">
+  <div class="shead tight">
+    <h2 data-t="s_boards"></h2>
+    <p data-t="s_boards_p"></p>
+  </div>
+  <div class="bgrid" id="boardgrid"></div>
+</div></section>
+
+<div class="stage" id="model">
+  <canvas id="gl"></canvas>
+  <img id="still" alt="" draggable="false">
+  <div class="loading" id="load"><div>
+    <p data-t="loading"></p><div class="bar2"><i id="bar2i"></i></div>
+  </div></div>
+
+  <div class="overlay">
+    <div class="wrap"><div class="lede">
+      <div class="kicker"><span data-t="board"></span> <b id="bno">01</b><i id="bof"></i></div>
+      <h1 id="btitle">&nbsp;</h1>
+      <p id="bsub">&nbsp;</p>
+      <div class="stats" id="bstats"></div>
+    </div></div>
+
+    <div class="wrap"><div class="dock">
+      <div class="grp"><h4 data-t="h_view"></h4>
+        <div class="seg" id="views">
+          <button data-v="hero" class="on" data-t="v_hero"></button>
+          <button data-v="front" data-t="v_front"></button>
+          <button data-v="rake" data-t="v_rake"></button>
+          <button data-v="exp" data-t="v_exp"></button>
+        </div>
+      </div>
+      <div class="grp"><h4 data-t="h_colour"></h4>
+        <div class="seg" id="modes">
+          <button data-m="real" class="on" data-t="m_real"></button>
+          <button data-m="type" data-t="m_type"></button>
+          <button data-m="clip" data-t="m_clip"></button>
+        </div>
+      </div>
+      <div class="grp"><h4 data-t="h_layers"></h4>
+        <div class="chips" id="layers">
+          <button class="chip on" data-l="slips"><i class="dot"></i><span data-t="l_slips"></span></button>
+          <button class="chip on" data-l="clips"><i class="dot"></i><span data-t="l_clips"></span></button>
+          <button class="chip on" data-l="mortar"><i class="dot"></i><span data-t="l_mortar"></span></button>
+          <button class="chip on" data-l="board"><i class="dot"></i><span data-t="l_board"></span></button>
+        </div>
+      </div>
+      <div class="grp"><h4 data-t="h_zoom"></h4>
+        <div class="zoom" id="zoom">
+          <button data-z="out" type="button" aria-label="zoom out">&minus;</button>
+          <button data-z="fit" type="button" data-t="z_fit"></button>
+          <button data-z="in" type="button" aria-label="zoom in">+</button>
+        </div>
+      </div>
+      <div class="grp grow"><h4 data-t="h_lift"></h4>
+        <div class="slider"><input type="range" id="ex" min="0" max="100" value="0">
+          <span class="v" id="exv">0 mm</span></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="inspect" id="insp">
+    <div class="id" id="ins-id">&mdash;</div>
+    <div class="sub" id="ins-sub"></div>
+    <dl id="ins-dl"></dl>
+  </div>
+  <div class="hint" id="hint" data-t="hint"></div>
+</div>
+
+<section id="bricks"><div class="wrap">
+  <div class="shead">
+    <span class="snum">01</span>
+    <h2 data-t="s_bricks"></h2>
+    <p data-t="s_bricks_p"></p>
+  </div>
+  <div class="tscroll"><table class="tbl">
+    <thead><tr>
+      <th></th><th data-t="th_code"></th><th data-t="th_kind"></th>
+      <th style="text-align:right" data-t="th_size"></th>
+      <th style="text-align:right" data-t="th_area"></th>
+      <th style="text-align:right" data-t="th_qty"></th>
+      <th data-t="th_desc"></th>
+    </tr></thead>
+    <tbody id="brickrows"></tbody>
+  </table></div>
+  <p class="tnote" id="bricknote"></p>
+</div></section>
+
+<section id="clips"><div class="wrap">
+  <div class="shead">
+    <span class="snum">02</span>
+    <h2 data-t="s_clips"></h2>
+    <p data-t="s_clips_p"></p>
+  </div>
+  <div class="clipcards" id="clipcards"></div>
+</div></section>
+
+<section id="shots"><div class="wrap">
+  <div class="shead">
+    <span class="snum">03</span>
+    <h2 data-t="s_shots"></h2>
+    <p data-t="s_shots_p"></p>
+  </div>
+  <div class="sheets" id="shotgrid"></div>
+</div></section>
+
+<section id="drawings"><div class="wrap">
+  <div class="shead">
+    <span class="snum">04</span>
+    <h2 data-t="s_draw"></h2>
+    <p data-t="s_draw_p"></p>
+  </div>
+  <div class="sheets">
+    <figure class="plate tall" data-lb="downloads/S7_nine_boards_schedule_CN_EN.svg"
+            data-name="S7_nine_boards_schedule_CN_EN.svg">
+      <img src="renders/S7_preview.webp" alt="S7" loading="lazy">
+      <figcaption class="pcap"><b>S7</b><span data-t="sheet7"></span><i data-t="open_svg"></i></figcaption>
+    </figure>
+    <figure class="plate" data-lb="downloads/S8_clips_CN_EN.svg"
+            data-name="S8_clips_CN_EN.svg">
+      <img src="renders/S8_preview.webp" alt="S8" loading="lazy">
+      <figcaption class="pcap"><b>S8</b><span data-t="sheet8"></span><i data-t="open_svg"></i></figcaption>
+    </figure>
+    <figure class="plate tall" data-lb="downloads/S9_bricks_CN_EN.svg"
+            data-name="S9_bricks_CN_EN.svg">
+      <img src="renders/S9_preview.webp" alt="S9" loading="lazy">
+      <figcaption class="pcap"><b>S9</b><span data-t="sheet9"></span><i data-t="open_svg"></i></figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section id="summary"><div class="wrap">
+  <div class="shead">
+    <span class="snum">05</span>
+    <h2 data-t="s_sum"></h2>
+    <p data-t="s_sum_p"></p>
+  </div>
+  <div class="sumbar">
+    <div class="qsw" id="spare">
+      <button data-s="exact" class="on" type="button">
+        <b data-t="q_exact"></b><i data-t="q_exact_s"></i>
+      </button>
+      <button data-s="spare" type="button">
+        <b data-t="q_spare"></b><i data-t="q_spare_s"></i>
+      </button>
+    </div>
+  </div>
+  <p class="sumnote" id="sumnote"></p>
+  <div class="sumgrid">
+    <div class="sumcol">
+      <h3 data-t="sum_bricks"></h3>
+      <div class="tscroll"><table class="tbl sum">
+        <thead><tr>
+          <th></th><th data-t="th_code"></th><th data-t="th_kind"></th>
+          <th style="text-align:right" data-t="th_size"></th>
+          <th data-t="th_prod"></th>
+          <th style="text-align:right" data-t="th_qty"></th>
+          <th data-t="th_used"></th>
+        </tr></thead>
+        <tbody id="sumbricks"></tbody>
+        <tfoot><tr><td></td><td colspan="3" data-t="th_total"></td>
+          <td class="qty" id="sumbtot"></td><td></td></tr></tfoot>
+      </table></div>
+    </div>
+    <div class="sumcol">
+      <h3 data-t="sum_clips"></h3>
+      <div class="tscroll"><table class="tbl sum">
+        <thead><tr>
+          <th data-t="th_code"></th><th data-t="th_kind"></th>
+          <th style="text-align:right" data-t="th_qty"></th>
+          <th data-t="th_used"></th>
+        </tr></thead>
+        <tbody id="sumclips"></tbody>
+        <tfoot><tr><td colspan="2" data-t="th_total"></td>
+          <td class="qty" id="sumctot"></td><td></td></tr></tfoot>
+      </table></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="files"><div class="wrap">
+  <div class="shead">
+    <span class="snum">06</span>
+    <h2 data-t="s_files"></h2>
+    <p data-t="s_files_p"></p>
+  </div>
+  <a class="allbtn" id="dlall" href="downloads/wuhan-9-panels.zip" download>
+    <span data-t="dl_all"></span><i id="dlsize"></i>
+  </a>
+  <div class="tscroll"><table class="dl"><thead><tr>
+    <th data-t="th_for"></th><th data-t="th_file"></th><th data-t="th_what"></th>
+    <th style="text-align:right" data-t="th_size2"></th><th></th>
+  </tr></thead><tbody id="dlrows"></tbody></table></div>
+</div></section>
+
+<footer>
+  <span data-t="foot1"></span>
+  <span id="foot2"></span>
+</footer>
+
+<div class="lb" id="lb">
+  <div class="lbbar">
+    <b id="lbt"></b>
+    <div class="lbz">
+      <button data-z="out" type="button" aria-label="zoom out">&minus;</button>
+      <button data-z="fit" type="button" data-t="d_fit"></button>
+      <button data-z="one" type="button">100%</button>
+      <button data-z="in" type="button" aria-label="zoom in">+</button>
+    </div>
+    <span id="lbpct">100%</span>
+    <a id="lbdl" download data-t="d_dl"></a>
+    <button class="x" type="button" aria-label="close">&times;</button>
+  </div>
+  <div class="lbpane" id="lbpane"><img id="lbimg" alt=""></div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

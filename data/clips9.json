@@ -1,0 +1,8627 @@
+{
+ "clips": [
+  {
+   "code": "RC-50",
+   "kind": "RAIL",
+   "zh": "\u901a\u7528\u5bfc\u8f68\u5361\u6263",
+   "en": "Universal rail clip",
+   "length": 50.0,
+   "qty": 1364,
+   "note_zh": "M \u578b\u5361\u6263\uff0c\u76f4\u6bb5 50 mm\u3002\u5e73\u677f 68 \u5bbd\u8d34\u7816\u80cc\u9762\uff0c\u4e24\u4fa7\u7acb\u8fb9 15 \u9ad8\uff0c\u8fb9\u7f18 10 mm \u5507\u8fb9\u5185\u6298 16 \u5ea6\uff0c\u5f00\u53e3\u6536\u81f3 62.5\uff0c\u7816\u7247\u9700\u538b\u5165\u5361\u7d27\u30022 \u4e2a 3.5 \u76f4\u5f84\u56fa\u5b9a\u5b54\u3002",
+   "note_en": "M-section snap clamp, 50 mm long. 68 flat behind the slip, 15 legs, 10 lips folded 16 deg in, mouth 62.5 so the slip snaps past. 2 off dia 3.5 fixing holes."
+  },
+  {
+   "code": "PK-3T03",
+   "kind": "POCKET",
+   "zh": "\u4e13\u7528\u5305\u8fb9\u5361\u6263",
+   "en": "Dedicated pocket clip",
+   "panel": 3,
+   "type": "T03",
+   "qty": 34,
+   "piece": [
+    [
+     0.000683449886651033,
+     204.33914477029214
+    ],
+    [
+     64.99793877655401,
+     139.34188944362472
+    ],
+    [
+     64.99793877655401,
+     215.00231503058535
+    ],
+    [
+     0.000683449886651033,
+     215.00231503058524
+    ]
+   ],
+   "base": [
+    [
+     -1.499316550113349,
+     206.5462515514787
+    ],
+    [
+     66.49793877655401,
+     138.54899622481128
+    ],
+    [
+     66.49793877655401,
+     215.00231503058535
+    ],
+    [
+     -1.499316550113349,
+     215.00231503058524
+    ]
+   ],
+   "lipped": [
+    true,
+    false,
+    true,
+    false
+   ],
+   "tabs": [
+    false,
+    false,
+    true,
+    false
+   ],
+   "tab_w": 20.0,
+   "elen": [
+    10.7,
+    91.9,
+    75.7,
+    65.0
+   ],
+   "area": 2805.0,
+   "nlip": 2,
+   "run": 11.6,
+   "note_zh": "\u6309\u7b2c 3 \u53f7\u677f T03 \u53f7\u7816\u578b\u5b9a\u5236\u3002\u8be5\u7816\u7247\u6700\u77ed\u8fb9 10.7 mm\uff08\u662f\u7816\u7684\u8fb9\u957f\uff0c\u4e0d\u662f\u5361\u6263\u7684\u8fb9\u957f\uff09\uff0c\u6574\u5e45\u65e0 20 mm \u4ee5\u4e0a\u7b49\u5bbd\u6bb5\uff0c\u5bfc\u8f68\u5361\u6263\u65e0\u5904\u53ef\u5939\u3002\u6298\u8fb9\uff1a1 \u6761\u8fb9\u6574\u6761\u6298\u8d77\u5507\u8fb9\uff08\u8fb9\u957f 8.5\uff09\uff0c1 \u6761\u8fb9\u5728\u4e2d\u90e8\u6298\u4e00\u4e2a 20 \u5bbd\u5c0f\u5361\u6263\uff1b\u5507\u8fb9\u4e00\u5f8b\u5411\u5185\u6298\u56de\u6263\u4f4f\u7816\u7247\uff0c\u5507\u5c16\u538b\u8fdb\u7816\u9762 1.26 mm\uff0c\u4e0e\u5bfc\u8f68\u5361\u6263\u7684\u8fc7\u76c8\u91cf\u76f8\u540c\u3002\u659c\u8fb9\u843d\u5728\u677f\u8fb9\u4e0a\uff0c\u9876\u8fb9\u843d\u5728 10 mm \u7070\u7f1d\u91cc\uff0c\u4e24\u6761\u90fd\u4e0d\u6298\uff1b\u6258\u76d8\u9000\u5230\u659c\u8fb9\u5185\u4fa7 0.5 mm\uff0c\u677f\u8fb9\u770b\u4e0d\u5230\u91d1\u5c5e\uff0c\u77ed\u8fb9\u4ecd\u80fd\u6298\u8db3 8.5 mm\u30022 \u4e2a 3.5 \u76f4\u5f84\u56fa\u5b9a\u5b54\u3002",
+   "note_en": "Made for board 3 type T03. The shortest edge of the SLIP is 10.7 mm (that is the brick, not the clip) and it has no 20 mm run of full width, so a rail has nothing to grip. The piece is held by 1 full-length lip, on the 8.5 edge and 1 centre tab 20 wide; every one of them folds INWARD back over the slip, gripping the slip face by 1.26 mm, the same interference as the rail. The rake is the board outline itself and the top sits in a 10 mm joint, so neither is folded; the tray stops 0.5 inside the rake, which keeps steel off the board edge and still leaves the short edge 8.5 of fold. 2 off dia 3.5 fixing holes."
+  },
+  {
+   "code": "PK-8T02",
+   "kind": "POCKET",
+   "zh": "\u4e13\u7528\u5305\u8fb9\u5361\u6263",
+   "en": "Dedicated pocket clip",
+   "panel": 8,
+   "type": "T02",
+   "qty": 16,
+   "piece": [
+    [
+     65.00219356390875,
+     150.20442737620942
+    ],
+    [
+     65.00219356390875,
+     215.00369280414452
+    ],
+    [
+     0.2099992037854861,
+     214.9966217363327
+    ]
+   ],
+   "base": [
+    [
+     66.50219356390875,
+     146.58310703264976
+    ],
+    [
+     66.50219356390875,
+     216.50385651492167
+    ],
+    [
+     -3.4109259806195666,
+     216.49622657717813
+    ]
+   ],
+   "lipped": [
+    true,
+    true,
+    true
+   ],
+   "tabs": [
+    true,
+    true,
+    true
+   ],
+   "tab_w": 20.0,
+   "elen": [
+    91.6,
+    64.8,
+    64.8
+   ],
+   "area": 2099.0,
+   "nlip": 3,
+   "run": 0.5,
+   "note_zh": "\u6309\u7b2c 8 \u53f7\u677f T02 \u53f7\u7816\u578b\u5b9a\u5236\u3002\u8be5\u7816\u7247\u6700\u77ed\u8fb9 64.8 mm\uff08\u662f\u7816\u7684\u8fb9\u957f\uff0c\u4e0d\u662f\u5361\u6263\u7684\u8fb9\u957f\uff09\uff0c\u6574\u5e45\u65e0 20 mm \u4ee5\u4e0a\u7b49\u5bbd\u6bb5\uff0c\u5bfc\u8f68\u5361\u6263\u65e0\u5904\u53ef\u5939\u3002\u6298\u8fb9\uff1a3 \u6761\u8fb9\u5404\u5728\u4e2d\u90e8\u6298\u4e00\u4e2a 20 \u5bbd\u5c0f\u5361\u6263\uff1b\u5507\u8fb9\u4e00\u5f8b\u5411\u5185\u6298\u56de\u6263\u4f4f\u7816\u7247\uff0c\u5507\u5c16\u538b\u8fdb\u7816\u9762 1.26 mm\uff0c\u4e0e\u5bfc\u8f68\u5361\u6263\u7684\u8fc7\u76c8\u91cf\u76f8\u540c\u3002\u76f8\u90bb\u8fb9\u6574\u6761\u5185\u6298\u4f1a\u5728\u8f6c\u89d2\u5904\u6253\u67b6\uff0c\u6545\u6bcf\u8fb9\u53ea\u5728\u4e2d\u90e8\u7559\u4e00\u4e2a\u5c0f\u5361\u6263\uff0c\u79bb\u8f6c\u89d2 23 mm \u4ee5\u4e0a\u30022 \u4e2a 3.5 \u76f4\u5f84\u56fa\u5b9a\u5b54\u3002",
+   "note_en": "Made for board 8 type T02. The shortest edge of the SLIP is 64.8 mm (that is the brick, not the clip) and it has no 20 mm run of full width, so a rail has nothing to grip. The piece is held by 3 centre tabs 20 wide; every one of them folds INWARD back over the slip, gripping the slip face by 1.26 mm, the same interference as the rail. Whole edges folding inward jam in the corners, so each edge keeps only a centre tab, over 23 mm clear of the nearest corner. 2 off dia 3.5 fixing holes."
+  }
+ ],
+ "assign": [
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 1,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 2,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.488
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.42
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.259
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 3,
+   "type": "T03",
+   "clip": "PK-3T03",
+   "grip": 1.0
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 4,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.769
+  },
+  {
+   "panel": 5,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.357
+  },
+  {
+   "panel": 5,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 6,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T02",
+   "clip": "RC-50",
+   "grip": 0.481
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 7,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.339
+  },
+  {
+   "panel": 8,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.339
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.339
+  },
+  {
+   "panel": 8,
+   "type": "T05",
+   "clip": "RC-50",
+   "grip": 0.339
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 8,
+   "type": "T04",
+   "clip": "RC-50",
+   "grip": 0.274
+  },
+  {
+   "panel": 8,
+   "type": "T03",
+   "clip": "RC-50",
+   "grip": 0.466
+  },
+  {
+   "panel": 8,
+   "type": "T02",
+   "clip": "PK-8T02",
+   "grip": 1.0
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  },
+  {
+   "panel": 9,
+   "type": "T01",
+   "clip": "RC-50",
+   "grip": 0.233
+  }
+ ]
+}

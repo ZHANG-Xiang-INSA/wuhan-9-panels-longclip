@@ -1,0 +1,56 @@
+{
+ "1": {
+  "brick": "#cdb48f",
+  "dark": "#bda583",
+  "light": "#d9c09a",
+  "mortar": "#e6e2d1"
+ },
+ "2": {
+  "brick": "#cdb38f",
+  "dark": "#bca482",
+  "light": "#d9c09a",
+  "mortar": "#e6e2d0"
+ },
+ "3": {
+  "brick": "#cfb590",
+  "dark": "#bea683",
+  "light": "#dcc29b",
+  "mortar": "#ebe8d2"
+ },
+ "4": {
+  "brick": "#905f4f",
+  "dark": "#805142",
+  "light": "#9d6d5b",
+  "mortar": "#eee7e6"
+ },
+ "5": {
+  "brick": "#916050",
+  "dark": "#7f5142",
+  "light": "#9f6f5c",
+  "mortar": "#efe8e8"
+ },
+ "6": {
+  "brick": "#8f5e4e",
+  "dark": "#7e4f40",
+  "light": "#9c6b59",
+  "mortar": "#edebeb"
+ },
+ "7": {
+  "brick": "#aaaaa3",
+  "dark": "#9a9a93",
+  "light": "#b7b6af",
+  "mortar": "#e3e2dd"
+ },
+ "8": {
+  "brick": "#a9a9a2",
+  "dark": "#989890",
+  "light": "#b5b5ae",
+  "mortar": "#e4e3de"
+ },
+ "9": {
+  "brick": "#a7a7a1",
+  "dark": "#979790",
+  "light": "#b3b3ac",
+  "mortar": "#e2e1dc"
+ }
+}

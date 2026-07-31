@@ -1,0 +1,8 @@
+# Never convert line endings anywhere under this project.  These are deliverables: ezdxf writes
+# DXF with CRLF, and the whole job guarantees that the copies under site/downloads are byte for
+# byte the files the generators wrote.  Without this, autocrlf normalises them on commit and the
+# blob stops being the artefact - 05_nine_boards_CN_EN.dxf was committed at 361,926 B against a
+# 426,474 B master.  It cost a round trip to find on GitHub Pages, which served the normalised
+# copy; no check that compares a master to the local copy beside it can see the difference,
+# because that copy is made with shutil.copy2 and is always identical.
+* -text
