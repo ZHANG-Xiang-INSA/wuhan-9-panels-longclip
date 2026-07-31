@@ -941,7 +941,7 @@ function summary() {
   // anybody reading it.  The clip figure is derived from the brick figures it serves.
   // The clip count comes from the clip schedule, not from the bricks it serves.  That derivation
   // held only while every slip took exactly one clip: a long clip covers a whole run, so B01 is
-  // now served by both LC-1375 and RC-50 and each claimed all 1115 of it - the page read 2700
+  // now served by both the long clip and RC-50 and each claimed all 1115 of it - the page read 2700
   // clips against 884.  site_export counts the clips themselves.
   const cq = e => q(e.qty);
   $('#sumbricks').innerHTML = S.bricks.map(e => `
