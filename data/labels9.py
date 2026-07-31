@@ -22,7 +22,13 @@ FIN = {'Sleek': '细面', 'Raw': '粗面'}
 SHEET_TITLE = ('武汉摄影展板　九种排布、砖型表与提案原图对照',
                'Wuhan photography boards - nine layouts, brick schedule and proposal reference')
 MOCKUP = '提案原图  proposal mock-up'
-HDR = ('编号', '数量', '说明  DESCRIPTION')
+HDR = ('编号', '数量', '备料+15%', '说明  DESCRIPTION')
+
+# which product each board's slips are cut from; carried on every schedule so an order can be
+# placed off the sheet without going back to the data
+PRODUCT = {1: 'L10 Yellow', 2: 'L10 Yellow', 3: 'L10 Yellow',
+           4: 'L10 B2', 5: 'L10 B2', 6: 'L10 B2',
+           7: 'L10 Grey', 8: 'L10 Grey', 9: 'L10 Grey'}
 
 
 def bond(idx):
@@ -49,6 +55,8 @@ def header(P, ntypes, ncutt, nw, ns, nc, npc):
         '共 %d 片 pieces:  整砖 %d whole,  标准件 %d standard,  切割件 %d cut'
         % (npc, nw, ns, nc),
         '砖型 %d 种 brick types,  其中 %d 种需切割 need cutting' % (ntypes, ncutt),
+        '砖类型 product: %s     备料 spare +15%%, 逐型向上取整 rounded up per type'
+        % PRODUCT[P['idx']],
     ]
 
 

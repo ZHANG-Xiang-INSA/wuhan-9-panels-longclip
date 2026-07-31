@@ -156,7 +156,8 @@ def geom(c):
         # base[i-1] -> base[i], which is why this is derived rather than written out.
         lipped = [abs(math.hypot(base[i][0]-base[i-1][0], base[i][1]-base[i-1][1])-Lg) < 1e-6
                   for i in range(len(base))]
-        return base, lipped, holes_rule(base, lipped, rail_len=Lg), blank(base, lipped)
+        hs = [tuple(q) for q in c['holes']] if c.get('holes') else             holes_rule(base, lipped, rail_len=Lg)
+        return base, lipped, hs, blank(base, lipped)
     else:
         # the tray follows the piece exactly.  Where the piece tapers to a few millimetres the
         # tray tapers with it; that end carries no lip (the edge is under the 30 mm minimum), so

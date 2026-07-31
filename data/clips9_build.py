@@ -139,6 +139,32 @@ def pocket(loc, code=None):
 
 # ---------------------------------------------------------------- assign every piece
 CLIPS, ASSIGN = [], []
+# The long clip, read from the schedule site_export writes rather than declared here: its length
+# is searched against the boards by longclip9 and must not be stated twice.  Absent on a first run
+# from an empty tree, and then the drawings simply carry the rail and the pockets.
+_bj = os.path.join(HERE, '..', 'site', 'data', 'boards.json')
+LONG = None
+if os.path.exists(_bj):
+    _s = json.load(open(_bj, encoding='utf-8'))['summary']
+    LONG = _s.get('longclip')
+    if LONG:
+        CLIPS.append(dict(
+            code=LONG['code'], kind='RAIL', zh='通用长卡扣', en='Universal long clip',
+            length=LONG['length'], qty=LONG['qty'],
+            holes=[(LONG['margin']+k*LONG['pitch'], FLAT/2.0) for k in range(LONG['holes'])],
+            note_zh='断面与 RC-50 完全相同：平板 %g 宽贴砖背面，两侧立边 %g 高，边缘 %g mm 唇边内折 '
+                    '%g 度，开口收至 %g。直段 %g mm，%d 个 %g 直径固定孔，孔距 %g，两端各留 %g。'
+                    '连续排砖处以一根长卡扣代替整排 R50；每段两端各留 20–30 mm 不铺满，'
+                    '零头仍用 R50 补。'
+                    % (FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
+                       LONG['length'], LONG['holes'], HOLE, LONG['pitch'], LONG['margin']),
+            note_en='Section identical to RC-50: %g flat behind the slip, %g legs, %g lips folded '
+                    '%g deg in, mouth %g. %g mm long, %d off dia %g fixing holes at %g pitch, %g '
+                    'from each end. One of these replaces the row of R50s along a continuous run; '
+                    'it stops 20-30 mm short of each end and the remainder keeps its R50s.'
+                    % (FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
+                       LONG['length'], LONG['holes'], HOLE, LONG['pitch'], LONG['margin'])))
+
 CLIPS.append(dict(code='RC-50', kind='RAIL', zh='通用导轨卡扣', en='Universal rail clip',
                   length=RAIL[0], qty=0,
                   note_zh='M 型卡扣，直段 50 mm。平板 68 宽贴砖背面，两侧立边 15 高，'

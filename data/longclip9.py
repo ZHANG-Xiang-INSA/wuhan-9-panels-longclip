@@ -24,6 +24,9 @@ PITCH = 125.0                  # the hole pitch asked for
 M_MIN, M_MAX = 12.5, 62.5      # end margin: never nearer the end than an RC-50's own hole, never
                                # so far out that another hole would fit at the pitch
 R50_LEN = 50.0                 # an RC-50, and so the shortest leftover that can still be filled
+END_GAP = 20.0                 # a long clip stops short of each end of its run by at least this,
+END_GAP_MAX = 30.0             # and by no more than this where the arithmetic allows it.  Running
+                               # a clip hard into the end of a course buys nothing and costs metal
 FLAT = 68.0
 _CACHE = {}
 
@@ -46,17 +49,18 @@ def _score(L, ALL):
     long_n = r50_n = 0
     for R in ALL.values():
         for r in R:
-            k = int((r['length']+1e-9)//L)
-            left = r['length']-k*L
+            usable = r['length']-2*END_GAP
+            k = int((usable+1e-9)//L) if usable >= L else 0
+            left = r['length']-END_GAP-k*L
             if k and 1e-9 < left < R50_LEN-1e-9:
                 return None                       # a stub no RC-50 can fill: reject the length
             if not k:
                 r50_n += r['n']
             else:
                 long_n += k
-                end = r['s0']+k*L
+                end = r['s0']+END_GAP+k*L
                 for p in r['pieces']:
-                    if _along(p, r) > k*L:
+                    if _along(p, r) > END_GAP+k*L:
                         if r50_tray(p, r, end) is None:
                             return None       # a leftover slip with nowhere to put its RC-50
                         r50_n += 1
@@ -165,18 +169,23 @@ def plan(board, std=None):
     R = runs(board)
     longs, keep = [], []
     for r in R:
-        k = int((r['length']+1e-9)//L)
+        usable = r['length']-2*END_GAP
+        k = int((usable+1e-9)//L) if usable >= L else 0
         if not k:
             keep.extend(dict(piece=p, tray=list(p['k']), moved=False) for p in r['pieces'])
             continue
+        # centre the run of long clips in the course where the slack allows, but never closer
+        # than END_GAP and never further out than END_GAP_MAX
+        gap = min(END_GAP_MAX, max(END_GAP, (r['length']-k*L)/2.0))
         for j in range(k):
-            s0 = r['s0']+j*L
-            covers = [p for p in r['pieces'] if j*L <= _along(p, r) <= (j+1)*L]
+            s0 = r['s0']+gap+j*L
+            covers = [p for p in r['pieces']
+                      if gap+j*L <= _along(p, r) <= gap+(j+1)*L]
             longs.append(dict(tray=tray(r, s0, L), holes=hole_pts(r, s0, std),
                               s0=s0, run=r, covers=covers))
-        end = r['s0']+k*L
+        end = r['s0']+gap+k*L
         for p in r['pieces']:
-            if _along(p, r) > k*L:
+            if not (gap <= _along(p, r) <= gap+k*L):
                 t2 = r50_tray(p, r, end)
                 keep.append(dict(piece=p, tray=t2, moved=t2 != list(p['k'])))
     order = {id(p): i for i, p in enumerate(board['pieces'])}

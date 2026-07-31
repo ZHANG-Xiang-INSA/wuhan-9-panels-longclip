@@ -4,7 +4,7 @@ brick type, and the schedule of types, sizes and quantities, in Chinese and Engl
 The mock-ups are raster textures, so they carry the bond and nothing else.  No dimension is read
 off them; they sit beside the drawing so the bond can be checked by eye.
 """
-import json, os
+import json, math, os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -77,17 +77,22 @@ for row, p in enumerate(P):
     nw, ns, nc, ncutt = LB.counts(types)
     for k, line in enumerate(LB.header(p, len(types), ncutt, nw, ns, nc, len(pieces))):
         ax.text(0.0, 0.985-k*0.043, line, va='top', ha='left', fontsize=9.6, color=INK)
-    ax.plot([0.0, 0.63], [0.800, 0.800], color=INK, lw=0.8)
-    for x, s in zip((0.075, 0.150, 0.225), LB.HDR):
-        ax.text(x, 0.782, s, va='top', ha='left', fontsize=9.0, color=INK)
+    # the header block gained the product line, so the rule and the table drop to clear it
+    ax.plot([0.0, 0.90], [0.772, 0.772], color=INK, lw=0.8)
+    for x, s in zip((0.075, 0.150, 0.228, 0.318), LB.HDR):
+        ax.text(x, 0.754, s, va='top', ha='left', fontsize=9.0, color=INK)
 
-    y, dy = 0.735, min(0.049, 0.72/max(len(types), 1))
+    y, dy = 0.706, min(0.047, 0.69/max(len(types), 1))
     for t in types:
         ax.add_patch(Rectangle((0.005, y-dy*0.60), 0.055, dy*0.60, fc=t['colour'],
                                ec=INK, lw=0.4, transform=ax.transAxes, clip_on=False))
         ax.text(0.075, y, t['code'], va='top', ha='left', fontsize=8.5, color=INK)
         ax.text(0.150, y, str(t['qty']), va='top', ha='left', fontsize=8.5, color=INK)
-        ax.text(0.225, y, LB.describe(t), va='top', ha='left', fontsize=8.5, color=INK)
+        # ordered per type and rounded up: 15 % of a small type rounds to nothing if it is taken
+        # off the grand total instead
+        ax.text(0.228, y, str(int(math.ceil(t['qty']*1.15))), va='top', ha='left',
+                fontsize=8.5, color=INK)
+        ax.text(0.318, y, LB.describe(t), va='top', ha='left', fontsize=8.5, color=INK)
         y -= dy
 
 fig.suptitle('%s\n%s' % LB.SHEET_TITLE, fontsize=16, color=INK, y=0.9885, linespacing=1.5)

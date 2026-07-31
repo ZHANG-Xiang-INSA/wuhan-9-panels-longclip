@@ -70,17 +70,21 @@ def place_tray(loc, clip):
     return [[dx+(q[0]-cx)*c-(q[1]-cy)*s, dy+(q[0]-cx)*s+(q[1]-cy)*c] for q in base]
 
 
+STAGGER_BELOW = 7.0     # joints under this stagger the rails; 7 and 10 sit aligned
+
+
 def bias(p, obj, rect):
     """which side of the piece's own centre the rail sits on, -1, 0 or +1
 
     The rail's flat is 68 across a 65 slip, so it stands 1.5 proud on each side and needs 3 mm of
-    joint to itself.  Board 9's joint IS 3 mm, so the course pitch is 68 and two rails in
-    neighbouring courses meet face to face with nothing between them - the legs of one stand in
-    the metal of the other.  Sliding the rail wholly to one side of the slip's own midpoint and
-    alternating that side course by course leaves the two touching at one corner instead of
-    running into each other, which is all the room a 3 mm joint has to give.
+    joint to itself.  Below a 7 mm joint the course pitch leaves too little between neighbouring
+    rails to work with, so the rail is slid wholly to one side of the slip's own midpoint and the
+    side alternates course by course: the two then touch at a corner instead of running into each
+    other.  At 7 mm and above - boards 4 at 7 and the rest at 10 - there is room to spare and the
+    rails sit square on their slips, aligned course to course, which is easier to set out and
+    easier to check.
     """
-    if rect is None or p['J'] > FLAT - SLIP_W + 0.01:
+    if rect is None or p['J'] >= STAGGER_BELOW - 0.01:
         return 0
     row = int(round(rect[1] / (SLIP_W + p['J'])))
     return -1 if row % 2 == 0 else 1

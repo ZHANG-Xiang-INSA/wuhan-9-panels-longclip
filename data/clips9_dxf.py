@@ -252,7 +252,9 @@ def geom(c):
         # the legs on the two 68-long sides, so every drawing and the 3D model carried a rail
         # lipped across its width instead of along its length.
         lipped = [False, True, False, True]
-        hs = [(12.5, W/2), (Lg-12.5, W/2)]         # exactly as the reference R50
+        # the long clip carries its own hole list - eleven at 125 pitch - and the R50 keeps the
+        # reference drawing's two at 12.5 from each end
+        hs = [tuple(q) for q in c['holes']] if c.get('holes') else             [(12.5, W/2), (Lg-12.5, W/2)]
     else:
         base = [tuple(q) for q in c['base']]
         lipped = list(c['lipped'])
