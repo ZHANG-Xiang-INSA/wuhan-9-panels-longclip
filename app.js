@@ -53,14 +53,16 @@ const T = {
     cap_plan: '阴影为唇边折过来压住砖片的部分',
     cap_sect: '箭头为折弯方向：向内',
     cap_blank: '折边为展平状态，箭头为折向',
+    cap_brk: '断开画法：两端为实长，中间等断面省略',
     blank_note: b => `展开料 ${b} 宽`,
+    brk_note: (L, n, d) => `全长 ${L} mm，${n} 个 Ø${d} 固定孔；`+`图为断开画法，中间等断面已省略，两端按实长绘制。`,
     fold_note: (f, t, w) => `折边一律<b>向内折回</b>压住砖片：` +
       [f ? `${f} 条整边折起` : '', t ? `${t} 条仅在中部折一个 ${w} mm 宽小卡扣` : '']
         .filter(Boolean).join('，') + '。',
     s_shots: '渲染', s_shots_p: '三张同一套灯光。点击看大图。',
     sh_front: '正视', sh_hero: '立体', sh_detail: '掠光局部',
     sh_front_s: '板面正投影', sh_hero_s: '整板三维', sh_detail_s: '620 mm 局部',
-    s_draw: '图纸', s_draw_p: '九块板共用三张总图。点击看大图，原稿在文件区。',
+    s_draw: '图纸', s_draw_p: '九块板共用三张总图：S7 排布与砖型表、S8 卡扣详图、S9 砖片下料图。点击看大图，原稿在文件区；背板放线图为 1:1 的 dxf/08，无预览图，同样在文件区下载。',
     sheet7: '九板排布与砖型表', sheet8: '卡扣详图', sheet9: '砖片下料图',
     no_gl: '这台设备的浏览器没有可用的 WebGL，三维查看器无法运行，上面显示的是这块板的渲染图。'
          + '页面其余部分（排布、砖型与卡扣明细、图纸、下载）不受影响。'
@@ -72,7 +74,10 @@ const T = {
     sum_bricks: '砖片', sum_clips: '卡扣',
     th_used: '用于', th_total: '合计', th_prod: '砖类型',
     note_exact: (b, c) => `实际用量：砖片 ${b} 片，卡扣 ${c} 个。${prodNote()}${longNote()}`,
-    note_spare: (b, c) => `含 15% 备料，按砖型逐型向上取整；卡扣随其所服务的砖型走，所以两边总数相等：砖片 ${b} 片，卡扣 ${c} 个。`,
+    note_spare: (b, c) => `含 15% 备料，按（型号 × 砖类型）逐项向上取整（下单最小单位）：砖片 ${b} 片，卡扣 ${c} 个。两者不再一一对应，因为一根长卡扣覆盖整排砖。`,
+    g_shape: '按形状', g_type: '按型号', g_prod: '按砖类型',
+    g_board: '按板号', g_board_l: '板',
+    note_board: '　按板分组只给出净用量：备料按砖类型下单，不按板分摊。',
     s_files: '文件', s_files_p: '每块板的模型与渲染单独列出，图纸与数据九块板共用。',
     th_file: '文件', th_what: '内容', th_size2: '大小', dl: '下载',
     foot1: '武汉摄影展板　砖片 215 × 65 × 20',
@@ -81,6 +86,8 @@ const T = {
     f_front: n => `第 ${n} 块板 正视渲染`, f_hero: n => `第 ${n} 块板 立体渲染`,
     f_detail: n => `第 ${n} 块板 掠光局部`,
     f_dxf1: '九板排布图 DXF', f_dxf2: '卡扣详图 DXF', f_dxf3: '砖片下料图 DXF', f_dxf4: '背板放线图 DXF',
+    f_bcsv: '砖片明细表 CSV（形状 / 砖类型 / 板号 三种分组）',
+    f_ccsv: '卡扣明细表 CSV（型号 / 砖类型 / 板号 三种分组）',
     f_s7svg: 'S7 九板排布与砖型表 SVG', f_s7png: 'S7 同上 PNG',
     f_s8svg: 'S8 卡扣详图 SVG', f_s8png: 'S8 同上 PNG',
     f_s9svg: 'S9 砖片下料图 SVG', f_s9png: 'S9 同上 PNG',
@@ -127,7 +134,9 @@ const T = {
     cap_plan: 'shaded = the lip folded back over the slip',
     cap_sect: 'arrow = the fold direction: inward',
     cap_blank: 'flaps shown unfolded; arrow = which way they fold',
+    cap_brk: 'broken view: both ends to length, the identical middle omitted',
     blank_note: b => `blank ${b} across`,
+    brk_note: (L, n, d) => `${L} mm overall, ${n} off Ø${d} fixing holes. `+`Drawn broken: both ends are to length and the identical middle is omitted.`,
     fold_note: (f, t, w) => `Every fold hooks <b>INWARD</b>, back over the slip: ` +
       [f ? `${f} full-length lip${f > 1 ? 's' : ''}` : '',
        t ? `${t} edge${t > 1 ? 's' : ''} folded only as a ${w} mm wide tab at the middle` : '']
@@ -135,7 +144,7 @@ const T = {
     s_shots: 'Renders', s_shots_p: 'Three views, one lighting set-up. Click to enlarge.',
     sh_front: 'Front', sh_hero: 'Hero', sh_detail: 'Raking',
     sh_front_s: 'elevation', sh_hero_s: 'whole board', sh_detail_s: '620 mm detail',
-    s_draw: 'Drawings', s_draw_p: 'Three sheets cover all nine boards. Click to enlarge; originals are under Files.',
+    s_draw: 'Drawings', s_draw_p: 'Three sheets cover all nine boards: S7 layouts and brick schedule, S8 clip details, S9 brick cutting. Click to enlarge; originals are under Files. The setting-out for the backing board is dxf/08, drawn 1:1 with no preview, and is under Files too.',
     sheet7: 'Boards and brick schedule', sheet8: 'Clip details',
     sheet9: 'Brick slips, cutting drawing',
     no_gl: 'This browser has no working WebGL, so the 3D viewer cannot run and the picture above '
@@ -149,7 +158,10 @@ const T = {
     sum_bricks: 'Bricks', sum_clips: 'Clips',
     th_used: 'Used on', th_total: 'Total', th_prod: 'Product',
     note_exact: (b, c) => `As built: ${b} slips, ${c} clips.${prodNote()}${longNote()}`,
-    note_spare: (b, c) => `With 15% spare, rounded up per brick type; each clip follows the brick types it serves, so the two totals agree: ${b} slips, ${c} clips.`,
+    note_spare: (b, c) => `With 15% spare, rounded up per (type × product) - the cell an order line is placed against: ${b} slips, ${c} clips. The two no longer match one for one, because a long clip covers a whole run of slips.`,
+    g_shape: 'By shape', g_type: 'By type', g_prod: 'By product',
+    g_board: 'By board', g_board_l: 'Board',
+    note_board: '  Grouped by board the figure is net only: spare is ordered per product, not apportioned board by board.',
     s_files: 'Files', s_files_p: 'Each board has its own model and renders; the drawings and the data cover all nine.',
     th_file: 'File', th_what: 'What it is', th_size2: 'Size', dl: 'Download',
     foot1: 'Wuhan photography boards   slip 215 × 65 × 20',
@@ -158,6 +170,8 @@ const T = {
     f_front: n => `Board ${n} front elevation`, f_hero: n => `Board ${n} hero render`,
     f_detail: n => `Board ${n} raking detail`,
     f_dxf1: 'Boards, DXF', f_dxf2: 'Clip details, DXF', f_dxf3: 'Brick slips, DXF', f_dxf4: 'Setting out on the board, DXF',
+    f_bcsv: 'Brick schedule, CSV (by shape / product / board)',
+    f_ccsv: 'Clip schedule, CSV (by type / product / board)',
     f_s7svg: 'S7 boards and brick schedule, SVG', f_s7png: 'S7 as above, PNG',
     f_s8svg: 'S8 clip details, SVG', f_s8png: 'S8 as above, PNG',
     f_s9svg: 'S9 brick slips, SVG', f_s9png: 'S9 as above, PNG',
@@ -673,13 +687,44 @@ function edgePts(a, b, t0, t1) {
   return [[a[0] + ux * t0, a[1] + uy * t0], [a[0] + ux * t1, a[1] + uy * t1]];
 }
 
+/* A rail 1366 long and 68 across, scaled to fit a card, is a five-pixel hairline: the plan and the
+   blank are drawn but there is nothing in them to see, which is why the long clip's card read as a
+   note with no drawing under it.  Anything longer than six times its own width is therefore drawn
+   BROKEN - KEEP mm off each end at a scale that can be read, the identical middle left out between
+   two break lines, which is what any drawing of a long section does.  KEEP is 210 so both end
+   holes and one full 125 pitch fall inside the kept part.
+
+   breakParts returns the same {base, lipped, tabs, holes} shape the whole-part path uses, so the
+   plan and the blank draw one part or two without knowing which case they are in. */
+const BRK_KEEP = 210, BRK_GAP = 60;
+
+function breakParts(g) {
+  const W = g.bw, H = g.bh, shift = W - (2 * BRK_KEEP + BRK_GAP);
+  const rect = (x0, x1) => [[x0, 0], [x1, 0], [x1, H], [x0, H]];
+  // lipped[i] is the edge poly[i-1] -> poly[i]: the two long edges carry the legs, the two ends
+  // and the two cut faces at the break do not
+  const lip = [false, true, false, true];
+  return [
+    {base: rect(0, BRK_KEEP), lipped: lip, tabs: [],
+     holes: g.holes.filter(h => h[0] <= BRK_KEEP + 0.01), cut: [false, false, true, false]},
+    {base: rect(BRK_KEEP + BRK_GAP, 2 * BRK_KEEP + BRK_GAP), lipped: lip, tabs: [],
+     holes: g.holes.filter(h => h[0] >= W - BRK_KEEP - 0.01).map(h => [h[0] - shift, h[1]]),
+     cut: [true, false, false, false]},
+  ];
+}
+
 function clipViews(code) {
   const g = clipgeo[code];
   if (!g) return '';
-  const col = CLIP_COL(code), n = g.base.length;
+  const col = CLIP_COL(code);
   const pad = 7;
-  const tabs = g.tabs || new Array(n).fill(false), tabW = g.tab_w || P.tab_w;
-  const runs = i => lipRuns(g.base[(i - 1 + n) % n], g.base[i], g.lipped[i], tabs[i], tabW);
+  const tabW = g.tab_w || P.tab_w;
+  const brk = g.bw > 6 * g.bh;
+  const parts = brk ? breakParts(g)
+    : [{base: g.base, lipped: g.lipped, tabs: g.tabs || [], holes: g.holes, cut: []}];
+  const VW = brk ? 2 * BRK_KEEP + BRK_GAP : g.bw;      // the width actually drawn
+  const runsOf = (p, i) => lipRuns(p.base[(i - 1 + p.base.length) % p.base.length], p.base[i],
+                                   p.lipped[i], p.tabs[i], tabW);
 
   const pts = (p, S, ox, oy, H) =>
     p.map(q => `${(ox + q[0] * S).toFixed(1)},${(oy + (H - q[1]) * S).toFixed(1)}`).join(' ');
@@ -688,32 +733,65 @@ function clipViews(code) {
   // metal is but nothing about which way it goes; the client read the card as folding outward.
   // Each run now also carries the hook tip, drawn tip_in INSIDE the tray, and a hatch joining the
   // two - the plan of the metal that stands over the slip.  This is what the DXF top view shows.
-  const S1 = 108 / Math.max(g.bw, g.bh);
-  const vb1 = `0 0 ${(g.bw * S1 + pad * 2).toFixed(1)} ${(g.bh * S1 + pad * 2).toFixed(1)}`;
+  const S1 = 108 / Math.max(VW, g.bh);
+  const dimH = brk ? 20 : 0;                             // room under the tray for the dimensions
+  const vb1 = `0 0 ${(VW * S1 + pad * 2).toFixed(1)} ${(g.bh * S1 + pad * 2 + dimH).toFixed(1)}`;
   const M1 = q => `${(pad + q[0] * S1).toFixed(1)},${(pad + (g.bh - q[1]) * S1).toFixed(1)}`;
-  const lips1 = g.base.map((q, i) => {
-    const a = g.base[(i - 1 + n) % n];
-    const dx = q[0] - a[0], dy = q[1] - a[1], L = Math.hypot(dx, dy) || 1;
-    const ix = -dy / L, iy = dx / L;                     // inward normal of a CCW tray
-    return runs(i).map(([t0, t1]) => {
-      const [p0, p1] = edgePts(a, q, t0, t1);
-      const k0 = [p0[0] + ix * P.tip_in, p0[1] + iy * P.tip_in];
-      const k1 = [p1[0] + ix * P.tip_in, p1[1] + iy * P.tip_in];
-      return `<polygon points="${[p0, p1, k1, k0].map(M1).join(' ')}" fill="${col}"
-        fill-opacity=".28" stroke="none"/>
-      <line x1="${M1(p0).split(',')[0]}" y1="${M1(p0).split(',')[1]}"
-        x2="${M1(p1).split(',')[0]}" y2="${M1(p1).split(',')[1]}"
-        stroke="${col}" stroke-width="3.2" stroke-linecap="butt"/>
-      <line x1="${M1(k0).split(',')[0]}" y1="${M1(k0).split(',')[1]}"
-        x2="${M1(k1).split(',')[0]}" y2="${M1(k1).split(',')[1]}"
-        stroke="${col}" stroke-width="1.1" stroke-dasharray="3 2"/>`;
+  const body1 = parts.map(part => {
+    const m = part.base.length;
+    const lips = part.base.map((q, i) => {
+      const a = part.base[(i - 1 + m) % m];
+      const dx = q[0] - a[0], dy = q[1] - a[1], L = Math.hypot(dx, dy) || 1;
+      const ix = -dy / L, iy = dx / L;                   // inward normal of a CCW tray
+      return runsOf(part, i).map(([t0, t1]) => {
+        const [p0, p1] = edgePts(a, q, t0, t1);
+        const k0 = [p0[0] + ix * P.tip_in, p0[1] + iy * P.tip_in];
+        const k1 = [p1[0] + ix * P.tip_in, p1[1] + iy * P.tip_in];
+        return `<polygon points="${[p0, p1, k1, k0].map(M1).join(' ')}" fill="${col}"
+          fill-opacity=".28" stroke="none"/>
+        <line x1="${M1(p0).split(',')[0]}" y1="${M1(p0).split(',')[1]}"
+          x2="${M1(p1).split(',')[0]}" y2="${M1(p1).split(',')[1]}"
+          stroke="${col}" stroke-width="3.2" stroke-linecap="butt"/>
+        <line x1="${M1(k0).split(',')[0]}" y1="${M1(k0).split(',')[1]}"
+          x2="${M1(k1).split(',')[0]}" y2="${M1(k1).split(',')[1]}"
+          stroke="${col}" stroke-width="1.1" stroke-dasharray="3 2"/>`;
+      }).join('');
     }).join('');
+    const holes = part.holes.map(h => `<circle cx="${(pad + h[0] * S1).toFixed(1)}"
+      cy="${(pad + (g.bh - h[1]) * S1).toFixed(1)}" r="${Math.max(1.6, P.hole / 2 * S1).toFixed(1)}"
+      fill="#fff" stroke="${MUT}" stroke-width=".9"/>`).join('');
+    // the face at a break is not an end of the part, so it is drawn as a break line, not an edge
+    const cutX = part.cut.map((c, i) => c ? part.base[i][0] : null).filter(v => v !== null);
+    const zig = cutX.map(x => {
+      const X = pad + x * S1, y0 = pad, y1 = pad + g.bh * S1, k = (y1 - y0) / 6;
+      const w = 3.4;
+      let d = `M${X.toFixed(1)},${y0.toFixed(1)}`;
+      for (let j = 1; j <= 6; j++) {
+        d += ` L${(X + (j % 2 ? w : -w)).toFixed(1)},${(y0 + k * (j - 0.5)).toFixed(1)}`;
+      }
+      return `<path d="${d} L${X.toFixed(1)},${y1.toFixed(1)}" fill="none" stroke="${INK}"
+        stroke-width="1.1"/>`;
+    }).join('');
+    return `<polygon points="${pts(part.base, S1, pad, pad, g.bh)}" fill="#efece6"
+      stroke="${INK}" stroke-width="1.1"/>${lips}${holes}${zig}`;
   }).join('');
-  const holes1 = g.holes.map(h => `<circle cx="${(pad + h[0] * S1).toFixed(1)}"
-    cy="${(pad + (g.bh - h[1]) * S1).toFixed(1)}" r="${Math.max(1.6, P.hole / 2 * S1).toFixed(1)}"
-    fill="#fff" stroke="${MUT}" stroke-width=".9"/>`).join('');
-  const plan = `<svg viewBox="${vb1}"><polygon points="${pts(g.base, S1, pad, pad, g.bh)}"
-    fill="#efece6" stroke="${INK}" stroke-width="1.1"/>${lips1}${holes1}</svg>`;
+  // On a broken view the drawn length is not the real one, so the real one is dimensioned: the end
+  // margin, one pitch, and the overall figure across the break.
+  let dims1 = '';
+  if (brk) {
+    const yd = pad + g.bh * S1 + 12, h0 = g.holes[0][0], h1 = g.holes[1][0];
+    const tick = x => `<line x1="${(pad + x * S1).toFixed(1)}" y1="${(yd - 4).toFixed(1)}"
+      x2="${(pad + x * S1).toFixed(1)}" y2="${(yd + 4).toFixed(1)}" stroke="${MUT}"
+      stroke-width=".8"/>`;
+    const lab = (x, s) => `<text x="${(pad + x * S1).toFixed(1)}" y="${(yd + 15).toFixed(1)}"
+      font-size="9" text-anchor="middle" fill="${MUT}">${s}</text>`;
+    dims1 = `<line x1="${pad}" y1="${yd.toFixed(1)}" x2="${(pad + VW * S1).toFixed(1)}"
+      y2="${yd.toFixed(1)}" stroke="${MUT}" stroke-width=".8"/>
+      ${tick(0)}${tick(h0)}${tick(h1)}${tick(VW)}
+      ${lab(h0 / 2, Math.round(h0))}${lab((h0 + h1) / 2, Math.round(h1 - h0))}
+      ${lab((h1 + VW) / 2, Math.round(g.bw))}`;
+  }
+  const plan = `<svg viewBox="${vb1}">${body1}${dims1}</svg>`;
 
   // ---- section, drawn in its own frame so the 20 deep slip is not clipped off the top
   const F = P.flat, LG = P.leg, TI = P.tip_in, TU = P.tip_up, ST = SLIP[2];
@@ -726,7 +804,9 @@ function clipViews(code) {
   // part that does not exist.  What the two share is the edge, so a pocket gets one leg and its
   // return lip, with the slip against it, and an arrow on the lip so the direction is not left to
   // be inferred: the tip comes back over the slip, and that interference is the whole retention.
-  const isRail = code === 'RC-50';
+  // by kind, not by code: the long clip is the same M profile as RC-50 and only its length differs,
+  // and testing for 'RC-50' drew it with the pocket's half section - a part that does not exist
+  const isRail = g.kind === 'RAIL';
   const prof = isRail
     ? [[TI, TU], [0, LG], [0, 0], [F, 0], [F, LG], [F - TI, TU]]
     : [[TI, TU], [0, LG], [0, 0], [F / 2, 0]];
@@ -750,19 +830,22 @@ function clipViews(code) {
   // ---- developed blank: tray plus a flap on every lipped run
   const fl = LG + P.lip;
   const flaps = [];
-  let bx0 = 0, by0 = 0, bx1 = g.bw, by1 = g.bh;
-  for (let i = 0; i < n; i++) {
-    const a = g.base[(i - 1 + n) % n], b = g.base[i];
-    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1;
-    const nx = dy / L, ny = -dx / L;                    // outward normal of a CCW tray
-    for (const [t0, t1] of runs(i)) {
-      const [p0, p1] = edgePts(a, b, t0, t1);
-      const q = [p0, p1, [p1[0] + nx * fl, p1[1] + ny * fl], [p0[0] + nx * fl, p0[1] + ny * fl]];
-      const fold = [[p0[0] + nx * LG, p0[1] + ny * LG], [p1[0] + nx * LG, p1[1] + ny * LG]];
-      flaps.push({q, fold});
-      for (const p of q) {
-        bx0 = Math.min(bx0, p[0]); by0 = Math.min(by0, p[1]);
-        bx1 = Math.max(bx1, p[0]); by1 = Math.max(by1, p[1]);
+  let bx0 = 0, by0 = 0, bx1 = VW, by1 = g.bh;
+  for (const part of parts) {
+    const m = part.base.length;
+    for (let i = 0; i < m; i++) {
+      const a = part.base[(i - 1 + m) % m], b = part.base[i];
+      const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1;
+      const nx = dy / L, ny = -dx / L;                  // outward normal of a CCW tray
+      for (const [t0, t1] of runsOf(part, i)) {
+        const [p0, p1] = edgePts(a, b, t0, t1);
+        const q = [p0, p1, [p1[0] + nx * fl, p1[1] + ny * fl], [p0[0] + nx * fl, p0[1] + ny * fl]];
+        const fold = [[p0[0] + nx * LG, p0[1] + ny * LG], [p1[0] + nx * LG, p1[1] + ny * LG]];
+        flaps.push({q, fold});
+        for (const p of q) {
+          bx0 = Math.min(bx0, p[0]); by0 = Math.min(by0, p[1]);
+          bx1 = Math.max(bx1, p[0]); by1 = Math.max(by1, p[1]);
+        }
       }
     }
   }
@@ -786,25 +869,29 @@ function clipViews(code) {
       markerHeight="4.5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="${col}"/></marker></defs>
     ${flaps.map(f => `<polygon points="${f.q.map(mp).join(' ')}" fill="#f6efe9"
       stroke="${MUT}" stroke-width="1"/>`).join('')}
-    <polygon points="${g.base.map(mp).join(' ')}" fill="#efece6" stroke="${INK}"
-      stroke-width="1.1"/>
+    ${parts.map(part => `<polygon points="${part.base.map(mp).join(' ')}" fill="#efece6"
+      stroke="${INK}" stroke-width="1.1"/>`).join('')}
     ${flaps.map(f => `<line x1="${mp(f.fold[0]).split(',')[0]}" y1="${mp(f.fold[0]).split(',')[1]}"
       x2="${mp(f.fold[1]).split(',')[0]}" y2="${mp(f.fold[1]).split(',')[1]}"
       stroke="${col}" stroke-width=".9" stroke-dasharray="4 2.5"/>`).join('')}
     ${arrows}
-    ${g.holes.map(h => `<circle cx="${mp(h).split(',')[0]}" cy="${mp(h).split(',')[1]}"
-      r="${Math.max(1.5, P.hole / 2 * S3).toFixed(1)}" fill="#fff" stroke="${MUT}"
-      stroke-width=".9"/>`).join('')}</svg>`;
+    ${parts.flatMap(part => part.holes).map(h => `<circle cx="${mp(h).split(',')[0]}"
+      cy="${mp(h).split(',')[1]}" r="${Math.max(1.5, P.hole / 2 * S3).toFixed(1)}" fill="#fff"
+      stroke="${MUT}" stroke-width=".9"/>`).join('')}</svg>`;
 
-  const across = code === 'RC-50' ? `${P.lip}+${P.leg}+${P.flat}+${P.leg}+${P.lip} = ${(P.flat + 2 * (P.leg + P.lip)).toFixed(0)}`
+  const tabs = g.tabs || [];
+  const across = isRail ? `${P.lip}+${P.leg}+${P.flat}+${P.leg}+${P.lip} = ${(P.flat + 2 * (P.leg + P.lip)).toFixed(0)}`
     : `${Math.round(bw)} × ${Math.round(bh)}`;
   const nfull = g.lipped.filter((v, i) => v && !tabs[i]).length;
   const ntab = g.lipped.filter((v, i) => v && tabs[i]).length;
   return `<div class="cviews">
-    <div class="cview">${plan}<h5>${t('v_plan')}</h5><i>${t('cap_plan')}</i></div>
+    <div class="cview">${plan}<h5>${t('v_plan')}</h5>
+      <i>${brk ? t('cap_brk') : t('cap_plan')}</i></div>
     <div class="cview">${sect}<h5>${t('v_sect')}</h5><i>${t('cap_sect')}</i></div>
-    <div class="cview">${blank}<h5>${t('v_blank')}</h5><i>${t('cap_blank')}</i></div>
-  </div><p class="cdim">${t('fold_note')(nfull, ntab, tabW)}<br>${t('blank_note')(across)}</p>`;
+    <div class="cview">${blank}<h5>${t('v_blank')}</h5>
+      <i>${brk ? t('cap_brk') : t('cap_blank')}</i></div>
+  </div><p class="cdim">${t('fold_note')(nfull, ntab, tabW)}<br>${t('blank_note')(across)}${
+    brk ? `<br>${t('brk_note')(g.bw, g.holes.length, P.hole)}` : ''}</p>`;
 }
 
 /* =====================================================================
@@ -921,7 +1008,8 @@ function prodNote() {
   const P = (D.summary || {}).products || [];
   if (!P.length) return '';
   const f = x => spare ? `${x.product} ${x.spare}` : `${x.product} ${x.qty}`;
-  return (lang === 'zh' ? '　按砖类型：' : '  By product: ') + P.map(f).join('，') + '。';
+  const zh = lang === 'zh';
+  return (zh ? '　按砖类型：' : '  By product: ') + P.map(f).join(zh ? '，' : ', ') + (zh ? '。' : '.');
 }
 
 function longNote() {
@@ -932,51 +1020,165 @@ function longNote() {
     : `  Long clip ${L.code}: ${L.length} long, ${L.holes} holes at ${L.pitch}, ${L.margin} from each end, ${L.qty} off.`;
 }
 
+/* ---------------------------------------------------------------------
+   Grouping.  The catalogue is one set of numbers and three ways of reading it: by what is made
+   (shape, or clip type), by what is ordered (product), and by what is delivered to a board.
+   Nothing is recounted between them - each view sums the same cells - so the foot total is
+   identical in all three, and assertGroups() says so out loud in the console if it ever is not.
+
+   THE ORDERING CELL IS (type, product).  Spare is 15 % rounded UP, and rounding has to happen
+   somewhere definite: round per shape and the split by product orders fractions of a brick, round
+   per board and the same brick is rounded up nine times over.  A product is what a purchase order
+   line is, so that is the cell.  Which is why the board view cannot carry a spare figure: a board
+   is a slice of a cell, not a cell, and 15 % of a slice is not ordered from anybody.  The toggle
+   is disabled there rather than shown with a number nobody would place an order against.
+   --------------------------------------------------------------------- */
+let bgroup = 'shape', cgroup = 'type';
+const PRODOF = {};
+boards.forEach(b => { PRODOF[b.idx] = b.product; });
+const PRODS = () => ((D.summary || {}).products || []).map(x => x.product);
+
+// clips broken to the same (code, product) cell the bricks already use
+function clipCells(e) {
+  const per = {};
+  (e.use || []).forEach(u => {
+    const p = PRODOF[u.board] || '';
+    per[p] = (per[p] || 0) + u.qty;
+  });
+  return Object.keys(per).sort().map(p => ({product: p, qty: per[p], spare: withSpare(per[p])}));
+}
+
+function brickGroups() {
+  const S = D.summary, q = e => spare ? e.spare : e.qty;
+  const row = (e, qty, prod, used) => ({
+    html: `<td class="gly">${sumGlyph(e)}</td><td class="tid">${e.code}</td>
+      <td class="kind">${kindOf(e)}</td><td class="num">${e.dims[0]} × ${e.dims[1]}</td>
+      <td class="ds">${prod}</td><td class="qty">${qty}</td><td class="ds">${used}</td>`,
+    qty,
+  });
+  if (bgroup === 'shape') {
+    return [{rows: S.bricks.map(e => row(e, q(e),
+      (e.products || []).map(x => x.product).join('　'),
+      e.use.map(u => `${u.board}·${u.code}`).join('　')))}];
+  }
+  if (bgroup === 'product') {
+    return PRODS().map(p => ({
+      label: p,
+      rows: S.bricks.filter(e => (e.products || []).some(x => x.product === p)).map(e => {
+        const c = e.products.find(x => x.product === p);
+        return row(e, spare ? c.spare : c.qty, p,
+                   e.use.filter(u => PRODOF[u.board] === p)
+                        .map(u => `${u.board}·${u.code}`).join('　'));
+      }),
+    }));
+  }
+  return boards.map(b => ({
+    label: `${t('g_board_l')} ${b.idx}　${b.product}`,
+    rows: S.bricks.filter(e => e.use.some(u => u.board === b.idx)).map(e => {
+      const u = e.use.find(x => x.board === b.idx);
+      return row(e, u.qty, b.product, `${b.idx}·${u.code}`);
+    }),
+  }));
+}
+
+function clipGroups() {
+  const S = D.summary;
+  const desc = e => `${lang === 'zh' ? e.zh : e.en}${
+    e.length ? ` · ${e.length} mm · ${e.holes}×⌀3.5 @${e.pitch}` : ''}`;
+  const row = (e, qty, used) => ({
+    html: `<td class="tid">${e.code}</td><td class="kind">${desc(e)}</td>
+      <td class="qty">${qty}</td><td class="ds">${used}</td>`,
+    qty,
+  });
+  if (cgroup === 'type') {
+    return [{rows: S.clips.map(e => {
+      const cells = clipCells(e);
+      return row(e, spare ? cells.reduce((s, c) => s + c.spare, 0) : e.qty,
+                 e.use.map(u => u.board).join('　'));
+    })}];
+  }
+  if (cgroup === 'product') {
+    return PRODS().map(p => ({
+      label: p,
+      rows: S.clips.map(e => [e, clipCells(e).find(c => c.product === p)])
+        .filter(([, c]) => c)
+        .map(([e, c]) => row(e, spare ? c.spare : c.qty,
+                             e.use.filter(u => PRODOF[u.board] === p)
+                                  .map(u => u.board).join('　'))),
+    })).filter(g => g.rows.length);
+  }
+  return boards.map(b => ({
+    label: `${t('g_board_l')} ${b.idx}　${b.product}`,
+    rows: S.clips.map(e => [e, (e.use || []).find(u => u.board === b.idx)])
+      .filter(([, u]) => u)
+      .map(([e, u]) => row(e, u.qty, `${b.idx}`)),
+  }));
+}
+
+function paintGroups(el, groups, span) {
+  el.innerHTML = groups.map(g => {
+    const sub = g.rows.reduce((s, r) => s + r.qty, 0);
+    const head = g.label
+      ? `<tr class="grp"><td colspan="${span}">${g.label}<span class="gq">${sub}</span></td></tr>`
+      : '';
+    return head + g.rows.map(r => `<tr>${r.html}</tr>`).join('');
+  }).join('');
+  return groups.reduce((s, g) => s + g.rows.reduce((a, r) => a + r.qty, 0), 0);
+}
+
 function summary() {
   const S = D.summary;
   if (!S) return;
-  const q = n => spare ? withSpare(n) : n;
-  // Every slip takes exactly one clip, so a spare slip needs a spare clip.  Rounding the two up
-  // independently gave 1633 slips against 1628 clips: correct arithmetic, and plainly wrong to
-  // anybody reading it.  The clip figure is derived from the brick figures it serves.
-  // The clip count comes from the clip schedule, not from the bricks it serves.  That derivation
-  // held only while every slip took exactly one clip: a long clip covers a whole run, so B01 is
-  // now served by both the long clip and RC-50 and each claimed all 1115 of it - the page read 2700
-  // clips against 884.  site_export counts the clips themselves.
-  const cq = e => q(e.qty);
-  $('#sumbricks').innerHTML = S.bricks.map(e => `
-    <tr>
-      <td class="gly">${sumGlyph(e)}</td>
-      <td class="tid">${e.code}</td>
-      <td class="kind">${kindOf(e)}</td>
-      <td class="num">${e.dims[0]} × ${e.dims[1]}</td>
-      <td class="ds">${(e.products || []).map(x => x.product).join('　')}</td>
-      <td class="qty">${q(e.qty)}</td>
-      <td class="ds">${e.use.map(u => `${u.board}·${u.code}`).join('　')}</td>
-    </tr>`).join('');
-  $('#sumclips').innerHTML = S.clips.map(e => `
-    <tr>
-      <td class="tid">${e.code}</td>
-      <td class="kind">${lang === 'zh' ? e.zh : e.en}${
-        e.length ? ` · ${e.length} mm · ${e.holes}×⌀3.5 @${e.pitch}` : ''}</td>
-      <td class="qty">${cq(e)}</td>
-      <td class="ds">${e.use.map(u => u.board).join('　')}</td>
-    </tr>`).join('');
-  // the totals are summed AFTER rounding, because each type is ordered on its own; adding 15% to
-  // the grand total instead would under-order every small type
-  const bt = S.bricks.reduce((s, e) => s + q(e.qty), 0);
-  const ct = S.clips.reduce((s, e) => s + cq(e), 0);
+  // the board view is a slice of an ordering cell, so it can only show the net figure
+  const noSpare = bgroup === 'board' || cgroup === 'board';
+  if (noSpare && spare) setSpare(false);
+  $$('#bgroup button, #cgroup button').forEach(b => b.classList
+    .toggle('on', b.dataset.g === (b.parentNode.id === 'bgroup' ? bgroup : cgroup)));
+  $$('#spare button').forEach(b => { b.disabled = noSpare && b.dataset.s === 'spare'; });
+
+  const bt = paintGroups($('#sumbricks'), brickGroups(), 7);
+  const ct = paintGroups($('#sumclips'), clipGroups(), 4);
   $('#sumbtot').textContent = bt;
   $('#sumctot').textContent = ct;
-  $('#sumnote').textContent = t(spare ? 'note_spare' : 'note_exact')(bt, ct);
+  $('#sumnote').textContent = t(spare ? 'note_spare' : 'note_exact')(bt, ct)
+    + (noSpare ? t('note_board') : '');
+}
+
+function setSpare(on) {
+  spare = on;
+  $$('#spare button').forEach(x => x.classList.toggle('on', (x.dataset.s === 'spare') === on));
+  $('#summary').classList.toggle('sparing', on);
 }
 
 $$('#spare button').forEach(b => b.onclick = () => {
-  spare = b.dataset.s === 'spare';
-  $$('#spare button').forEach(x => x.classList.toggle('on', x === b));
-  $('#summary').classList.toggle('sparing', spare);
+  setSpare(b.dataset.s === 'spare');
   summary();
 });
+$$('#bgroup button').forEach(b => b.onclick = () => { bgroup = b.dataset.g; summary(); });
+$$('#cgroup button').forEach(b => b.onclick = () => { cgroup = b.dataset.g; summary(); });
+
+/* Regrouping must never change a total.  Checked here rather than trusted, because the failure
+   this guards against - a shape counted under two products, a board missing from a use list -
+   looks entirely plausible on the page. */
+function assertGroups() {
+  const S = D.summary;
+  if (!S) return;
+  const was = [bgroup, cgroup, spare];
+  const tot = (gs) => gs.reduce((s, g) => s + g.rows.reduce((a, r) => a + r.qty, 0), 0);
+  const out = [];
+  for (const sp of [false, true]) {
+    spare = sp;
+    const bs = ['shape', 'product'].concat(sp ? [] : ['board'])
+      .map(g => { bgroup = g; return tot(brickGroups()); });
+    const cs = ['type', 'product'].concat(sp ? [] : ['board'])
+      .map(g => { cgroup = g; return tot(clipGroups()); });
+    if (new Set(bs).size > 1) out.push(`bricks ${sp ? 'spare' : 'exact'}: ${bs.join(' / ')}`);
+    if (new Set(cs).size > 1) out.push(`clips ${sp ? 'spare' : 'exact'}: ${cs.join(' / ')}`);
+  }
+  [bgroup, cgroup, spare] = was;
+  if (out.length) console.error('summary groupings disagree -', out.join('; '));
+}
+assertGroups();
 
 // The wheel belongs to the page, so zooming needs a control of its own rather than a modifier
 // nobody will discover.
@@ -1012,6 +1214,8 @@ async function files() {
     ['downloads/S9_bricks_CN_EN.svg', t('f_s9svg'), all],
     ['downloads/S9_bricks_CN_EN.png', t('f_s9png'), all],
     ['downloads/08_setout_CN_EN.dxf', t('f_dxf4'), all],
+    ['downloads/brick_schedule.csv', t('f_bcsv'), all],
+    ['downloads/clip_schedule.csv', t('f_ccsv'), all],
     ['downloads/board_comparison.pdf', t('f_cmp'), all],
     ['data/boards.json', t('f_json'), all]
   ];

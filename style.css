@@ -256,6 +256,23 @@ section:nth-of-type(even){background:linear-gradient(#fbfaf7,#f7f6f3)}
   font:500 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;
   color:var(--dim);margin-bottom:12px;
 }
+/* group-by control, one per table.  Smaller than the .qsw above it: that switch changes the
+   NUMBERS, this one only changes how the same numbers are arranged, and the two should not read as
+   equals. */
+.gsw{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 14px}
+.gsw button{
+  padding:6px 12px;border-radius:99px;background:var(--card);border:1px solid var(--line);
+  font:500 12px/1 var(--sans, inherit);color:var(--dim);transition:.2s var(--ease);cursor:pointer;
+}
+.gsw button:hover:not(:disabled){border-color:var(--line2);color:var(--ink)}
+.gsw button.on{border-color:var(--accent);background:#fffaf7;color:var(--accent)}
+.gsw button:disabled{opacity:.4;cursor:not-allowed}
+.tbl.sum tbody tr.grp td{
+  padding-top:16px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line2);
+}
+.tbl.sum tbody tr.grp td .gq{float:right;letter-spacing:0;color:var(--ink);font-size:13px}
+#summary.sparing .tbl.sum tbody tr.grp td .gq{color:var(--accent)}
 .tbl.sum{min-width:0}
 .sumcol:first-child .tbl.sum{min-width:600px}
 .tbl.sum tbody tr{cursor:default}
