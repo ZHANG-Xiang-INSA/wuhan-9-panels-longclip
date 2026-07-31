@@ -734,7 +734,9 @@ function clipViews(code) {
   // Each run now also carries the hook tip, drawn tip_in INSIDE the tray, and a hatch joining the
   // two - the plan of the metal that stands over the slip.  This is what the DXF top view shows.
   const S1 = 108 / Math.max(VW, g.bh);
-  const dimH = brk ? 20 : 0;                             // room under the tray for the dimensions
+  // 26, not 20.  The value sits below the dimension line and a 9 px glyph has a descender: at
+  // 20 the whole row of figures hung past the bottom of the viewBox and was clipped away.
+  const dimH = brk ? 26 : 0;
   const vb1 = `0 0 ${(VW * S1 + pad * 2).toFixed(1)} ${(g.bh * S1 + pad * 2 + dimH).toFixed(1)}`;
   const M1 = q => `${(pad + q[0] * S1).toFixed(1)},${(pad + (g.bh - q[1]) * S1).toFixed(1)}`;
   const body1 = parts.map(part => {
@@ -783,7 +785,7 @@ function clipViews(code) {
     const tick = x => `<line x1="${(pad + x * S1).toFixed(1)}" y1="${(yd - 4).toFixed(1)}"
       x2="${(pad + x * S1).toFixed(1)}" y2="${(yd + 4).toFixed(1)}" stroke="${MUT}"
       stroke-width=".8"/>`;
-    const lab = (x, s) => `<text x="${(pad + x * S1).toFixed(1)}" y="${(yd + 15).toFixed(1)}"
+    const lab = (x, s) => `<text x="${(pad + x * S1).toFixed(1)}" y="${(yd + 11).toFixed(1)}"
       font-size="9" text-anchor="middle" fill="${MUT}">${s}</text>`;
     dims1 = `<line x1="${pad}" y1="${yd.toFixed(1)}" x2="${(pad + VW * S1).toFixed(1)}"
       y2="${yd.toFixed(1)}" stroke="${MUT}" stroke-width=".8"/>
