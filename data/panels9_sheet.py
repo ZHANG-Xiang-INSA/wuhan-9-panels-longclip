@@ -10,6 +10,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Rectangle, FancyArrowPatch
 from matplotlib.gridspec import GridSpec
+import sheetwrap as SW
 from PIL import Image
 from panels9_types import classify
 import labels9 as LB
@@ -68,9 +69,9 @@ for row, p in enumerate(P):
     dim_line(ax, (Wd, 0), (Wd, Ht), '%g' % Ht, (m*0.42, 0), False)
     ax.set_xlim(-m*0.30, Wd+m*0.95); ax.set_ylim(-m*0.30, Ht+m*0.85)
     ax.set_aspect('equal'); ax.axis('off')
-    ax.set_title('%s\n%s\n%g x %g mm    灰缝 joint %g mm    砖片 slip 215 x 65 x 20'
-                 % (zh, en, Wd, Ht, p['J']), fontsize=10.5, color=INK, pad=7,
-                 loc='left', linespacing=1.5)
+    ax.set_title(SW.wrap(fig, '%s\n%s\n%g x %g mm    灰缝 joint %g mm    砖片 slip 215 x 65 x 20'
+                         % (zh, en, Wd, Ht, p['J']), 10.5, SW.cellpx(ax)),
+                 fontsize=10.5, color=INK, pad=7, loc='left', linespacing=1.5)
 
     ax = fig.add_subplot(gs[row, 2])
     ax.axis('off'); ax.set_xlim(0, 1); ax.set_ylim(0, 1)

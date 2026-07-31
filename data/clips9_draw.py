@@ -8,6 +8,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Circle, Rectangle
 from clips9 import PROF, HOLE, SLIP_W, lip_runs, edge_pts, TAB_W
+import sheetwrap as SW
 
 matplotlib.rcParams['font.family'] = ['Microsoft YaHei']
 matplotlib.rcParams['axes.unicode_minus'] = False
@@ -139,6 +140,55 @@ def blank(base, lipped, tabs=None, tab_w=TAB_W):
     return flaps
 
 
+BRK_KEEP, BRK_GAP = 210.0, 60.0
+
+
+def broken(base):
+    """is this part too long and thin to draw whole?
+
+    LC-1366 is 1366 along and 68 across.  Drawn to fit a column beside two other views it is a
+    hairline: the sheet shows a part 20 times as long as it is wide and nothing can be read off
+    it.  Over 6:1 the part is drawn broken, which is what any drawing of a long section does.
+    """
+    xs = [q[0] for q in base]; ys = [q[1] for q in base]
+    return (max(xs)-min(xs)) > 6.0*(max(ys)-min(ys))
+
+
+def break_parts(base):
+    """-> ([(base, lipped), ...], [x of each break])  BRK_KEEP off each end, the middle omitted
+
+    The two cut faces are not ends of the part and carry no lip, which is why the flags are built
+    here rather than copied: lipped[i] is the edge base[i-1] -> base[i], so on each half the two
+    long edges are lipped and the two vertical ones are not.
+    """
+    xs = [q[0] for q in base]; ys = [q[1] for q in base]
+    x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
+    shift = (x1-x0)-(2*BRK_KEEP+BRK_GAP)
+    rect = lambda a, b: [(a, y0), (b, y0), (b, y1), (a, y1)]
+    lip = [False, True, False, True]
+    return ([(rect(x0, x0+BRK_KEEP), lip),
+             (rect(x0+BRK_KEEP+BRK_GAP, x1-shift), lip)],
+            [x0+BRK_KEEP, x0+BRK_KEEP+BRK_GAP], shift)
+
+
+def zig(ax, x, y0, y1, w=2.6, n=6):
+    """the break line: a shallow zigzag down the cut face"""
+    k = (y1-y0)/n
+    px = [x]+[x+(w if j % 2 else -w) for j in range(1, n+1)]+[x]
+    py = [y0]+[y0+k*(j-0.5) for j in range(1, n+1)]+[y1]
+    ax.plot(px, py, color=INK, lw=1.1, solid_joinstyle='miter')
+
+
+def title(ax, s, fontsize=10):
+    """set_title, wrapped to the axes it belongs to
+
+    These titles run to two and three clauses in two languages and were each set as one line.
+    Nothing clips a title, so the long ones simply ran out of their column and over the next one.
+    """
+    ax.set_title(SW.wrap(ax.figure, s, fontsize, SW.cellpx(ax)),
+                 fontsize=fontsize, color=INK, loc='left', pad=6, linespacing=1.5)
+
+
 def tabs_of(c):
     return list(c.get('tabs') or [False]*len(c.get('lipped') or [])) or [False]*4
 
@@ -172,21 +222,55 @@ def geom(c):
 n = len(CLIPS)
 fig = plt.figure(figsize=(19.0, 4.4*n+1.0))
 fig.patch.set_facecolor('white')
-gs = fig.add_gridspec(n, 3, width_ratios=[1.0, 1.15, 2.05], hspace=0.42, wspace=0.10,
+# Four columns, not three.  The note used to be written at 1.005 of the blank's axes, which is off
+# the right of the paper: matplotlib's own wrap measures against the figure, found no room, and
+# left the block running 200 to 560 px past the sheet edge on every row.  It now has a column of
+# its own and is wrapped to it.
+gs = fig.add_gridspec(n, 4, width_ratios=[1.0, 0.95, 1.35, 1.30], hspace=0.42, wspace=0.10,
                       left=0.02, right=0.985, top=0.955, bottom=0.012)
 
 for row, c in enumerate(CLIPS):
     base, lipped, hs, flaps = geom(c)
+    brk = broken(base)
+    if brk:
+        parts, cuts, shift = break_parts(base)
+        # a hole in the omitted middle is omitted with it; one past the break moves with its half
+        x1 = max(q[0] for q in base)
+        hs = [q for q in hs if q[0] <= BRK_KEEP+1e-6] + \
+             [(q[0]-shift, q[1]) for q in hs if q[0] >= x1-BRK_KEEP-1e-6]
+        flaps = [f for p, lp in parts for f in blank(p, lp)]
+    else:
+        parts, cuts = [(base, lipped)], []
 
     ax = fig.add_subplot(gs[row, 0])
-    ax.add_patch(Polygon(base, closed=True, fc='#eeeeea', ec=INK, lw=1.4))
-    for i in range(len(base)):
-        a, b = base[i-1], base[i]
-        for (t0, t1) in lip_runs(a, b, lipped[i], tabs_of(c)[i], tabw_of(c)):
-            q0, q1 = edge_pts(a, b, t0, t1)
-            ax.plot([q0[0], q1[0]], [q0[1], q1[1]], color=LIPC, lw=2.6, solid_capstyle='butt')
+    for p, lp in parts:
+        ax.add_patch(Polygon(p, closed=True, fc='#eeeeea', ec=INK, lw=1.4))
+        for i in range(len(p)):
+            a, b = p[i-1], p[i]
+            tb_i = tabs_of(c)[i] if not brk else False
+            for (t0, t1) in lip_runs(a, b, lp[i], tb_i, tabw_of(c)):
+                q0, q1 = edge_pts(a, b, t0, t1)
+                ax.plot([q0[0], q1[0]], [q0[1], q1[1]], color=LIPC, lw=2.6, solid_capstyle='butt')
+    ys = [q[1] for q in base]
+    for x in cuts:
+        zig(ax, x, min(ys), max(ys))
     for q in hs:
         ax.add_patch(Circle(q, HOLE/2.0, fc='white', ec=INK, lw=1.0))
+    if brk:
+        # a broken view without the real length on it is a drawing of the wrong part
+        xa = min(q[0] for p, _ in parts for q in p)
+        xb = max(q[0] for p, _ in parts for q in p)
+        ax.annotate('', xy=(xa, -22), xytext=(xb, -22),
+                    arrowprops=dict(arrowstyle='<->', lw=0.8))
+        ax.text((xa+xb)/2.0, -26, '%g' % c['length'], ha='center', va='top', fontsize=8.5)
+        ax.annotate('', xy=(xa, -46), xytext=(hs[0][0], -46),
+                    arrowprops=dict(arrowstyle='<->', lw=0.8))
+        ax.text((xa+hs[0][0])/2.0, -50, '%g' % hs[0][0], ha='center', va='top', fontsize=8.5)
+        ax.annotate('', xy=(hs[0][0], -46), xytext=(hs[1][0], -46),
+                    arrowprops=dict(arrowstyle='<->', lw=0.8))
+        ax.text((hs[0][0]+hs[1][0])/2.0, -50, '%g' % (hs[1][0]-hs[0][0]),
+                ha='center', va='top', fontsize=8.5)
+        ax.set_ylim(-62, max(ys)+14)
     ax.set_aspect('equal'); ax.axis('off')
     tb = tabs_of(c)
     nfull = sum(1 for i in range(len(base)) if lipped[i] and not tb[i])
@@ -196,9 +280,9 @@ for row, c in enumerate(CLIPS):
         how.append('%d 条整边折起 / %d full' % (nfull, nfull))
     if ntab:
         how.append('%d 条中部 %g 宽小卡扣 / %d tab' % (ntab, tabw_of(c), ntab))
-    ax.set_title('%s\n平面 PLAN   红线为折边\nred = fold, always INWARD%s'
-                 % (c['code'], ('\n'+'，'.join(how)) if how else ''),
-                 fontsize=10, color=INK, loc='left', pad=6, linespacing=1.5)
+    title(ax, '%s\n平面 PLAN   红线为折边\nred = fold, always INWARD%s%s'
+          % (c['code'], ('\n'+'，'.join(how)) if how else '',
+             '\n断开画法，中间等断面省略 / broken, identical middle omitted' if brk else ''))
 
     ax = fig.add_subplot(gs[row, 1])
     if c['kind'] == 'RAIL':
@@ -239,12 +323,14 @@ for row, c in enumerate(CLIPS):
         ttl = ('边缘断面 EDGE SECTION   沿任一折边剖开\n唇尖向内压住砖片 %g   lip tip %g over the slip'
                % (round(SLIP_W/2.0-(FLAT/2.0-TIP_IN), 2), round(SLIP_W/2.0-(FLAT/2.0-TIP_IN), 2)))
     ax.set_aspect('equal'); ax.axis('off')
-    ax.set_title('%s\n立边 leg %g，唇边 lip %g @ %g°，料厚 t %g'
-                 % (ttl, LEG, LIP, PROF['lip_angle'], PROF['sheet']),
-                 fontsize=10, color=INK, loc='left', pad=6, linespacing=1.5)
+    title(ax, '%s\n立边 leg %g，唇边 lip %g @ %g°，料厚 t %g'
+          % (ttl, LEG, LIP, PROF['lip_angle'], PROF['sheet']))
 
     ax = fig.add_subplot(gs[row, 2])
-    ax.add_patch(Polygon(base, closed=True, fc='#eeeeea', ec=INK, lw=1.3))
+    for p, _ in parts:
+        ax.add_patch(Polygon(p, closed=True, fc='#eeeeea', ec=INK, lw=1.3))
+    for x in cuts:
+        zig(ax, x, min(ys), max(ys))
     for fp, fold in flaps:
         ax.add_patch(Polygon(fp, closed=True, fc='#f7ece9', ec=INK, lw=1.0))
         ax.plot([fold[0][0], fold[1][0]], [fold[0][1], fold[1][1]], color=LIPC, lw=1.0, ls='--')
@@ -257,20 +343,21 @@ for row, c in enumerate(CLIPS):
     for q in hs:
         ax.add_patch(Circle(q, HOLE/2.0, fc='white', ec=INK, lw=1.0))
     ax.set_aspect('equal'); ax.axis('off')
-    xs = [q[0] for f in flaps for q in f[0]]+[q[0] for q in base]
-    ys = [q[1] for f in flaps for q in f[0]]+[q[1] for q in base]
-    ax.set_xlim(min(xs)-14, max(xs)+14); ax.set_ylim(min(ys)-14, max(ys)+14)
-    ax.set_title('展开料 FLAT BLANK   虚线为折线 dashed = fold line\n'
-                 '箭头为折弯方向，均折向托盘内侧   arrow = fold direction, '
-                 'always in toward the tray', fontsize=10,
-                 color=INK, loc='left', pad=6, linespacing=1.5)
-    # Anchored at the top of the panel, not part way down it.  Hung at 0.62 the block ran below the
-    # row and the last line of PK-3T03's note printed straight through the second line of the row
-    # beneath it, leaving both illegible over about 30 mm of the sheet.
-    ax.text(1.005, 1.0, '%s  %s\n数量 qty %d\n\n%s\n\n%s'
-            % (c['zh'], c['en'], c['qty'], c['note_zh'], c['note_en']),
+    xs = [q[0] for f in flaps for q in f[0]]+[q[0] for p, _ in parts for q in p]
+    ys2 = [q[1] for f in flaps for q in f[0]]+[q[1] for p, _ in parts for q in p]
+    ax.set_xlim(min(xs)-14, max(xs)+14); ax.set_ylim(min(ys2)-14, max(ys2)+14)
+    title(ax, '展开料 FLAT BLANK   虚线为折线 dashed = fold line\n'
+          '箭头为折弯方向，均折向托盘内侧   arrow = fold direction, always in toward the tray%s' %
+          ('\n断开画法，中间等断面省略 / broken, identical middle omitted' if brk else ''))
+
+    # the note, in a column of its own and wrapped to it
+    ax = fig.add_subplot(gs[row, 3])
+    ax.axis('off'); ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+    body = '%s  %s\n数量 qty %d\n\n%s\n\n%s' % (c['zh'], c['en'], c['qty'],
+                                               c['note_zh'], c['note_en'])
+    ax.text(0.0, 1.0, SW.wrap(fig, body, 8.6, SW.cellpx(ax, 10)),
             transform=ax.transAxes, va='top', ha='left', fontsize=8.6, color=INK,
-            linespacing=1.6, wrap=True)
+            linespacing=1.6)
 
 fig.suptitle('武汉摄影展板　卡扣详图\nWuhan photography boards - clip details',
              fontsize=15, color=INK, y=0.988, linespacing=1.5)

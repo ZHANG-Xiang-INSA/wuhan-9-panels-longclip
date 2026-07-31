@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, FancyArrowPatch, Arc
 from matplotlib.gridspec import GridSpec
 from bricks9 import types, SLIP
+import sheetwrap as SW
 
 matplotlib.rcParams['font.family'] = ['Microsoft YaHei']
 matplotlib.rcParams['axes.unicode_minus'] = False
@@ -82,8 +83,9 @@ for k, t in enumerate(T):
     ax.set_ylim(t['bh']/2-SPAN/2*0.62, t['bh']/2+SPAN/2*0.62)
     ax.set_aspect('equal'); ax.axis('off')
     use = '，'.join('板 %d x%d' % (u['board'], u['qty']) for u in t['use'])
-    ax.set_title('%s   %s\n%s   %d 边 sides   面积 area %.0f mm²   数量 qty %d\n%s'
-                 % (t['code'], t['label'], KIND[t['kind']], n, t['area'], t['qty'], use),
+    ax.set_title(SW.wrap(fig, '%s   %s\n%s   %d 边 sides   面积 area %.0f mm²   数量 qty %d\n%s'
+                         % (t['code'], t['label'], KIND[t['kind']], n, t['area'], t['qty'], use),
+                         9.4, SW.cellpx(ax)),
                  fontsize=9.4, color=INK, pad=8, loc='left', linespacing=1.55)
 
 # the schedule, across the top three cells
@@ -107,8 +109,11 @@ for t in T:
     for x, s in zip(COL, (t['code'], t['label'], KIND[t['kind']], prod, str(t['qty']),
                           '%.0f' % t['area'], use)):
         ax.text(x, y, s, va='top', ha='left', fontsize=8.6, color=INK)
-    y -= 0.062
-ax.plot([0.0, 1.0], [y+0.030, y+0.030], color=INK, lw=0.8)
+    # 0.055, not 0.062: wrapping the note under the table took it from two lines to three, and at
+    # the old pitch its last line came down over the title of the B01 panel in the row beneath.
+    y -= 0.055
+# the closing rule drops with the pitch: at +0.030 it came up under the descenders of the last row
+ax.plot([0.0, 1.0], [y+0.018, y+0.018], color=INK, lw=0.8)
 ax.text(0.0, y-0.004, '合计 TOTAL', va='top', ha='left', fontsize=9.2, color=INK)
 ptot = {}
 for t in T:
@@ -118,7 +123,7 @@ ax.text(COL[3], y-0.004, '，'.join('%s %d' % (k, ptot[k]) for k in sorted(ptot)
         va='top', ha='left', fontsize=9.2, color=INK)
 ax.text(COL[4], y-0.004, '%d' % sum(t['qty'] for t in T), va='top', ha='left',
         fontsize=9.2, color=INK)
-ax.text(0.0, y-0.075,
+ax.text(0.0, y-0.075, SW.wrap(fig,
         '砖片 slip %g x %g x %g mm。各零件以其最长边摆正绘制，非按铺贴角度；'
         '仅标注非 90° 的角。砖类型三种，均为 L10：Yellow 用于板 1 至 3，B2 用于板 4 至 6，'
         'Grey 用于板 7 至 9；同一形状若跨板则分列。数量为九块板合计，未计损耗，'
@@ -129,6 +134,7 @@ ax.text(0.0, y-0.075,
         'product. Quantities are the nine boards total and carry no allowance - the +15%% ordering '
         'figure is on schedule S7. Measure off dxf/07.'
         % (SLIP[0], SLIP[1], SLIP[2], SLIP[0], SLIP[1], SLIP[2]),
+        8.6, SW.cellpx(ax)),
         va='top', ha='left', fontsize=8.6, color='#6d6a63', linespacing=1.6)
 
 fig.suptitle('武汉摄影展板　砖片下料图\nWuhan photography boards - brick slips, cutting drawing',

@@ -136,6 +136,11 @@ def _seg_box(a, b, x0, y0, x1, y1):
     return False
 
 
+def _bbox(poly):
+    xs = [q[0] for q in poly]; ys = [q[1] for q in poly]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
 def box_in(poly, c, w, h, pad=1.5):
     """is the label box at c wholly inside poly?
 
@@ -177,8 +182,11 @@ def _spots(poly, w, h, ko, step=4.0):
     return out
 
 
-def place(slip, tray, ko, tcode, ccode):
+def place(slip, tray, ko, tcode, ccode, extra=()):
     """where the two codes go, and how big they are
+
+    extra is any OTHER tray lying across this slip - a long clip whose end falls inside it.  The
+    brick code keeps off those the same way it keeps off the piece's own tray.
 
     The brick code goes in the brick and the clip code in the clip, so the brick code keeps off
     the tray.  On a pocket clip that is impossible - the tray IS the slip's outline pushed 1.5 out,
@@ -200,15 +208,20 @@ def place(slip, tray, ko, tcode, ccode):
         # first choice: the brick code beside the tray, each code in its own outline.  The whole
         # box has to be clear of the tray, not just its centre - testing the centre alone left 172
         # brick codes straddling a tray edge.
+        clean = lambda t: all(_outside(x, t, tw_, ch_) or box_in(x, t, tw_, ch_) for x in extra)
         for _, t in _spots(slip, tw_, ch_, ko):
-            if _outside(tray, t, tw_, ch_) and not _overlap(t, tw_, ch_, cl, cw_, ch_):
+            if _outside(tray, t, tw_, ch_) and clean(t) \
+                    and not _overlap(t, tw_, ch_, cl, cw_, ch_):
                 return t, cl, h, False
         # the tray covers the slip, so they stack.  Wholly inside the tray for preference, so
         # the code does not straddle the tray outline; inside the slip at worst.
         cands = [t for _, t in _spots(slip, tw_, ch_, ko)
                  if not _overlap(t, tw_, ch_, cl, cw_, ch_)]
         for t in cands:
-            if box_in(tray, t, tw_, ch_):
+            if box_in(tray, t, tw_, ch_) and clean(t):
+                return t, cl, h, True
+        for t in cands:
+            if clean(t):
                 return t, cl, h, True
         if cands:
             return cands[0], cl, h, True
@@ -284,10 +297,13 @@ def board(idx):
     CG = D['clipgeo']
     # which long clip lies on each covered piece, so its brick code can keep off that tray
     covered = {}
+    LONGS = []
     for lc in b.get('longs', []):
+        tray = [tuple(q) for q in lc['k']]
+        ko = [(hx, hy, HOLE_KEEP) for hx, hy in lc['holes']]
+        LONGS.append((tray, ko, _bbox(tray)))
         for i in lc['covers']:
-            covered[i] = ([tuple(q) for q in lc['k']],
-                          [(hx, hy, HOLE_KEEP) for hx, hy in lc['holes']])
+            covered[i] = (tray, ko)
     out = []
     for pi, pc in enumerate(b['pieces']):
         slip = [tuple(q) for q in pc['p']]
@@ -305,10 +321,19 @@ def board(idx):
                     tl, th = sp[0], h
                     break
             if tl is None:
-                # nothing fits beside the long clip on a piece this small, so the code sits ON it:
-                # still inside its own slip, still clear of the holes, just over the tray
+                # Nothing fits beside the long clip on a piece this small - a 104 x 65 closer is
+                # narrower than the 68 tray, so every point of it is under the rail - and the code
+                # sits ON the tray instead: still inside its own slip, still clear of the holes.
+                # WHOLLY inside the tray for preference.  Taking the best clear spot outright put
+                # board 2's ten T02 codes across the end line of the long clip they sit on, the
+                # one place on the piece where a tray outline crosses it.
                 for h in (TXT_H, 8.0, 7.0, 6.0, 5.0, 4.0):
-                    sp = _spots(slip, strw(tcode, h), h, lko)
+                    w = strw(tcode, h)
+                    sp = _spots(slip, w, h, lko)
+                    inner = [c for _, c in sp if box_in(ltray, c, w, h)]
+                    if inner:
+                        tl, th = inner[0], h
+                        break
                     if sp:
                         tl, th = sp[0][1], h
                         break
@@ -326,9 +351,20 @@ def board(idx):
             mv, ang = _fit(base, tray)
             holes = [mv(tuple(q)) for q in g['holes']]
         ko = [(hx, hy, HOLE_KEEP) for hx, hy in holes]
+        # A piece that keeps its own clip can still have a LONG clip lying across part of it: the
+        # last slip of a run is only partly past the long clip's end, and that end line runs
+        # through it.  place() only ever knew about the piece's own tray, so board 2's ten T02
+        # closers printed their code straight across it.  Every long clip whose box reaches this
+        # slip is handed over as well, tray and holes both.
+        sb = _bbox(slip)
+        near = [(t, k) for t, k, tb in LONGS
+                if tb[0] <= sb[2] and sb[0] <= tb[2] and tb[1] <= sb[3] and sb[1] <= tb[3]]
+        for _, k in near:
+            ko = ko+k
         tcode = b['types'][pc['t']]['code']
         ccode = SHORT.get(pc['c'], pc['c'])
-        tl, cl, th, stacked = place(slip, tray, ko, tcode, ccode)
+        tl, cl, th, stacked = place(slip, tray, ko, tcode, ccode,
+                                    extra=[t for t, _ in near])
         out.append(dict(slip=slip, tray=tray, holes=holes, angle=ang, stacked=stacked,
                         tcode=tcode, tlab=tl, ccode=ccode, clab=cl, th=th))
     longs = []
