@@ -35,8 +35,7 @@ from matplotlib.patches import Patch
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-SHEETS = {'S7': 'panels9_sheet', 'S8': 'clips9_draw', 'S9': 'bricks9_draw',
-          'R': 'clips9_sheet'}
+SHEETS = {'S7': 'panels9_sheet', 'S8': 'clips9_draw', 'S9': 'bricks9_draw'}
 PAD = 1.0          # pixels of slack: two boxes touching at the edge are not an overlap
 
 

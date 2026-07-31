@@ -431,8 +431,8 @@ glTF 会把带两个材质的网格拆成两个 primitive，到浏览器就是�
 | 9 | `python data/web_assets.py` | `site/renders/*.webp` |
 | 10 | `python data/joint_report_figs.py` | 重画 `docs/joint_report.html` 里的六张生成图与说明 |
 | 11 | `python data/proposal_compare.py` | `docs/board_comparison.pdf`，要求与最终设计对照 |
-| 9a | `blender -b -P data/clips9_render.py` | `site/renders/clip_*_*.png`，四种卡扣各六个视角的正交渲染 |
-| 9b | `python data/clips9_sheet.py` | `drawings/R1..R4_*_CN_EN.png/.svg`，给制造商看的卡扣实物图 |
+| 9a | `blender -b -P data/clips9_photo.py` | `_clip_renders/frames/*.png`，四种卡扣的影棚渲染，长卡扣按全长 1366 渲，不截断 |
+| 9b | `python data/clips9_photo_sheet.py` | `_clip_renders/<型号>.png`，图上只写型号与数量。**不上网**，`_clip_renders/` 在 `site/` 之外 |
 | 10a | `python data/check_sheets.py` | 图面压字、压线、出列自检（会重写 S7/S8/S9，须在第 12 步之前跑） |
 | 11a | `python data/schedules_csv.py` | `site/downloads/brick_schedule.csv`、`clip_schedule.csv`（三种分组各一段，自带总数一致性断言） |
 | 12 | `python data/pack_downloads.py` | `site/downloads/wuhan-9-panels.zip`，网页一键下载用 |

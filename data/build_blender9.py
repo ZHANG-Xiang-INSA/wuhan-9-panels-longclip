@@ -991,7 +991,7 @@ def build(b):
     return tris
 
 
-# Everything below runs only when this file IS the script Blender was given.  clips9_render.py
+# Everything below runs only when this file IS the script Blender was given.  clips9_photo.py
 # imports it for the clip builders, the light rig and the materials, so that the renders it
 # makes are the same metal, lit the same way, as the model the client already has - and an
 # import must not rebuild all nine boards as a side effect.
