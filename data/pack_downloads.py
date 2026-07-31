@@ -32,6 +32,15 @@ MIRROR = [('dxf/05_nine_boards_CN_EN.dxf', '05_nine_boards_CN_EN.dxf'),
           # the +15% ordering copies: same parts, same positions, order quantities
           ('dxf/07_bricks_spare15_CN_EN.dxf', '07_bricks_spare15_CN_EN.dxf'),
           ('dxf/08_setout_spare15_CN_EN.dxf', '08_setout_spare15_CN_EN.dxf'),
+          # the four clip sheets: the formed part, for the shop that folds them
+          ('drawings/R1_LC-1366_CN_EN.png', 'R1_LC-1366_CN_EN.png'),
+          ('drawings/R1_LC-1366_CN_EN.svg', 'R1_LC-1366_CN_EN.svg'),
+          ('drawings/R2_RC-50_CN_EN.png', 'R2_RC-50_CN_EN.png'),
+          ('drawings/R2_RC-50_CN_EN.svg', 'R2_RC-50_CN_EN.svg'),
+          ('drawings/R3_PK-3T03_CN_EN.png', 'R3_PK-3T03_CN_EN.png'),
+          ('drawings/R3_PK-3T03_CN_EN.svg', 'R3_PK-3T03_CN_EN.svg'),
+          ('drawings/R4_PK-8T02_CN_EN.png', 'R4_PK-8T02_CN_EN.png'),
+          ('drawings/R4_PK-8T02_CN_EN.svg', 'R4_PK-8T02_CN_EN.svg'),
           ('docs/board_comparison.pdf', 'board_comparison.pdf')]
 for src, dst in MIRROR:
     s = os.path.join(ROOT, src)
@@ -58,6 +67,14 @@ items = [('downloads/05_nine_boards_CN_EN.dxf', '01_drawings/05_nine_boards_CN_E
           '01_drawings/07_bricks_spare15_CN_EN.dxf'),
          ('downloads/08_setout_spare15_CN_EN.dxf',
           '01_drawings/08_setout_spare15_CN_EN.dxf'),
+         ('downloads/R1_LC-1366_CN_EN.png', '01_drawings/clips/R1_LC-1366_CN_EN.png'),
+         ('downloads/R1_LC-1366_CN_EN.svg', '01_drawings/clips/R1_LC-1366_CN_EN.svg'),
+         ('downloads/R2_RC-50_CN_EN.png', '01_drawings/clips/R2_RC-50_CN_EN.png'),
+         ('downloads/R2_RC-50_CN_EN.svg', '01_drawings/clips/R2_RC-50_CN_EN.svg'),
+         ('downloads/R3_PK-3T03_CN_EN.png', '01_drawings/clips/R3_PK-3T03_CN_EN.png'),
+         ('downloads/R3_PK-3T03_CN_EN.svg', '01_drawings/clips/R3_PK-3T03_CN_EN.svg'),
+         ('downloads/R4_PK-8T02_CN_EN.png', '01_drawings/clips/R4_PK-8T02_CN_EN.png'),
+         ('downloads/R4_PK-8T02_CN_EN.svg', '01_drawings/clips/R4_PK-8T02_CN_EN.svg'),
          ('downloads/board_comparison.pdf', '01_drawings/board_comparison.pdf'),
          # the two schedules as CSV: what a buyer needs, without opening a drawing
          ('downloads/brick_schedule.csv', '03_data/brick_schedule.csv'),

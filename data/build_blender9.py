@@ -991,64 +991,69 @@ def build(b):
     return tris
 
 
-ARGS = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
-ONLY = None
-DO_GLB = '--no-glb' not in ARGS
-DO_PNG = '--no-png' not in ARGS
-DO_BLEND = '--no-blend' not in ARGS
-for a in ARGS:
-    if a.startswith('--board='):
-        ONLY = int(a.split('=')[1])
+# Everything below runs only when this file IS the script Blender was given.  clips9_render.py
+# imports it for the clip builders, the light rig and the materials, so that the renders it
+# makes are the same metal, lit the same way, as the model the client already has - and an
+# import must not rebuild all nine boards as a side effect.
+if __name__ == '__main__':
+    ARGS = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
+    ONLY = None
+    DO_GLB = '--no-glb' not in ARGS
+    DO_PNG = '--no-png' not in ARGS
+    DO_BLEND = '--no-blend' not in ARGS
+    for a in ARGS:
+        if a.startswith('--board='):
+            ONLY = int(a.split('=')[1])
 
-if '--probe' in ARGS:
-    probe()
-    sys.exit(0)
+    if '--probe' in ARGS:
+        probe()
+        sys.exit(0)
 
-for b in BOARDS:
-    if ONLY and b['idx'] != ONLY:
-        continue
-    setup_render()
-    tris = build(b)
-    print('BOARD %d  %s  %.0f x %.0f  %d pieces  %d types  %d tris'
-          % (b['idx'], b['en'], b['w'], b['h'], len(b['pieces']), len(b['types']), tris))
+    for b in BOARDS:
+        if ONLY and b['idx'] != ONLY:
+            continue
+        setup_render()
+        tris = build(b)
+        print('BOARD %d  %s  %.0f x %.0f  %d pieces  %d types  %d tris'
+              % (b['idx'], b['en'], b['w'], b['h'], len(b['pieces']), len(b['types']), tris))
 
-    if DO_GLB:
-        glb = os.path.join(MODELS, 'board_%d.glb' % b['idx'])
-        for ob in bpy.context.scene.objects:
-            ob.select_set(ob.type == 'MESH')
-        kw = dict(filepath=glb, export_format='GLB', use_selection=True, export_apply=True,
-                  export_yup=True, export_texcoords=True, export_normals=True,
-                  export_cameras=False, export_lights=False)
-        for k, v in (('export_vertex_color', 'ACTIVE'), ('export_all_vertex_colors', True),
-                     ('export_attributes', True)):
-            if k in bpy.ops.export_scene.gltf.get_rna_type().properties:
-                kw[k] = v
-        bpy.ops.export_scene.gltf(**kw)
-        print('   glb  %s  %.0f KB' % (os.path.basename(glb), os.path.getsize(glb)/1024))
+        if DO_GLB:
+            glb = os.path.join(MODELS, 'board_%d.glb' % b['idx'])
+            for ob in bpy.context.scene.objects:
+                ob.select_set(ob.type == 'MESH')
+            kw = dict(filepath=glb, export_format='GLB', use_selection=True, export_apply=True,
+                      export_yup=True, export_texcoords=True, export_normals=True,
+                      export_cameras=False, export_lights=False)
+            for k, v in (('export_vertex_color', 'ACTIVE'), ('export_all_vertex_colors', True),
+                         ('export_attributes', True)):
+                if k in bpy.ops.export_scene.gltf.get_rna_type().properties:
+                    kw[k] = v
+            bpy.ops.export_scene.gltf(**kw)
+            print('   glb  %s  %.0f KB' % (os.path.basename(glb), os.path.getsize(glb)/1024))
 
-    if DO_BLEND:
-        # a .blend as well as the GLB: glTF carries no collections, so the mortar can only be
-        # switched with the Outliner's eye if the file the client opens is a Blender file.  MORTAR
-        # is its own collection and is left visible, so the board opens finished and one click
-        # strips it back to bare brickwork.
-        bl = os.path.join(BLEND, 'board_%d.blend' % b['idx'])
-        # No .blend1 rolling backup.  site/ is uploaded as it stands, and every rebuild was leaving
-        # nine backups of the PREVIOUS build in it - 3.8 MB of superseded models shipping alongside
-        # the current ones under a name nobody would think to check.
-        bpy.context.preferences.filepaths.save_version = 0
-        bpy.ops.wm.save_as_mainfile(filepath=bl, copy=True)
-        print('   blend %s  %.0f KB' % (os.path.basename(bl), os.path.getsize(bl)/1024))
+        if DO_BLEND:
+            # a .blend as well as the GLB: glTF carries no collections, so the mortar can only be
+            # switched with the Outliner's eye if the file the client opens is a Blender file.  MORTAR
+            # is its own collection and is left visible, so the board opens finished and one click
+            # strips it back to bare brickwork.
+            bl = os.path.join(BLEND, 'board_%d.blend' % b['idx'])
+            # No .blend1 rolling backup.  site/ is uploaded as it stands, and every rebuild was leaving
+            # nine backups of the PREVIOUS build in it - 3.8 MB of superseded models shipping alongside
+            # the current ones under a name nobody would think to check.
+            bpy.context.preferences.filepaths.save_version = 0
+            bpy.ops.wm.save_as_mainfile(filepath=bl, copy=True)
+            print('   blend %s  %.0f KB' % (os.path.basename(bl), os.path.getsize(bl)/1024))
 
-    if DO_PNG:
-        for tag, dirv, fov, pad, res, crop in VIEWS:
-            setup_render(res)
-            for ob in list(bpy.context.scene.objects):
-                if ob.type == 'CAMERA':
-                    bpy.data.objects.remove(ob, do_unlink=True)
-            fit_camera(dirv, fov, pad, crop)
-            bpy.context.scene.render.filepath = \
-                os.path.join(RENDERS, 'b%d_%s.png' % (b['idx'], tag))
-            bpy.ops.render.render(write_still=True)
-            print('   png  b%d_%s.png  %dx%d' % (b['idx'], tag, res[0], res[1]))
+        if DO_PNG:
+            for tag, dirv, fov, pad, res, crop in VIEWS:
+                setup_render(res)
+                for ob in list(bpy.context.scene.objects):
+                    if ob.type == 'CAMERA':
+                        bpy.data.objects.remove(ob, do_unlink=True)
+                fit_camera(dirv, fov, pad, crop)
+                bpy.context.scene.render.filepath = \
+                    os.path.join(RENDERS, 'b%d_%s.png' % (b['idx'], tag))
+                bpy.ops.render.render(write_still=True)
+                print('   png  b%d_%s.png  %dx%d' % (b['idx'], tag, res[0], res[1]))
 
-print('ALL DONE')
+    print('ALL DONE')

@@ -35,7 +35,8 @@ from matplotlib.patches import Patch
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-SHEETS = {'S7': 'panels9_sheet', 'S8': 'clips9_draw', 'S9': 'bricks9_draw'}
+SHEETS = {'S7': 'panels9_sheet', 'S8': 'clips9_draw', 'S9': 'bricks9_draw',
+          'R': 'clips9_sheet'}
 PAD = 1.0          # pixels of slack: two boxes touching at the edge are not an overlap
 
 
@@ -99,8 +100,21 @@ def segments(fig):
 
 
 def check(tag, mod):
-    __import__(mod)
-    fig = plt.gcf()
+    # a module that makes several sheets hands them over in FIGS; the rest leave one current
+    os.environ['SHEET_CHECK'] = '1'
+    m = __import__(mod)
+    if hasattr(m, 'build_all'):
+        m.FIGS.clear()
+        m.build_all()
+    figs = list(getattr(m, 'FIGS', None) or [plt.gcf()])
+    n = 0
+    for k, f in enumerate(figs):
+        n += check_fig('%s%s' % (tag, k+1 if len(figs) > 1 else ''), mod, f)
+    plt.close('all')
+    return n
+
+
+def check_fig(tag, mod, fig):
     fig.canvas.draw()
     B = boxes(fig)
     W, H = fig.canvas.get_width_height()
@@ -142,7 +156,7 @@ def check(tag, mod):
                 faults.append(('TEXT/LINE', '%.50r' % s))
                 break
 
-    print('%-4s %-22s %5d texts  %5d segments  %d faults'
+    print('%-5s %-22s %5d texts  %5d segments  %d faults'
           % (tag, os.path.basename(mod)+'.py', len(B), len(SEG), len(faults)))
     seen = set()
     for kind, msg in faults:
@@ -151,7 +165,6 @@ def check(tag, mod):
             continue
         seen.add(k)
         print('     %-12s %s' % (kind, msg))
-    plt.close('all')
     return len(faults)
 
 

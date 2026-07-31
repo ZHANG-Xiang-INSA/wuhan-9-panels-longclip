@@ -1,0 +1,14 @@
+# AutoCAD leaves these beside a drawing the moment anyone opens one: a .bak of the previous
+# save, a .dwg if it is saved in AutoCAD's own format, a lock file while it is open, a plot log,
+# and Explorer's "- Copy" duplicates.  None of them is a deliverable, and the publish step copies
+# dxf/ wholesale, so without this they would end up in the public repo beside the real drawings
+# with no way for a reader to tell which is which.
+*.bak
+*.dwg
+*.dwl
+*.dwl2
+*.sv$
+*.ac$
+plot.log
+* - Copy.*
+*.err
