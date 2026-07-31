@@ -13,10 +13,14 @@ can be isolated and plotted on its own, and the holes can be sent to a driller o
 """
 import ezdxf, math, os
 from ezdxf.enums import TextEntityAlignment as TA
-from setout9 import board, TXT_H, SHORT
+from setout9 import board, TXT_H, SHORT, load
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HOLE_D = 3.5
+# the long clip is described in the notes, and its length is read rather than repeated: it is a
+# searched result and the drawing must not be able to disagree with the schedule about it
+LSTD = load()['summary']['longclip']
+LCODE = LSTD['code']
 COLS, GAPX, GAPY = 3, 1000.0, 760.0
 
 doc = ezdxf.new('R2010', setup=True); doc.header['$INSUNITS'] = 4
@@ -66,7 +70,10 @@ def wrap(s, h, width, indent=''):
 
 def panel(B, ox, oy):
     i = B['idx']
-    for nm, col in (('SLIP', 7), ('CLIP', 4), ('HOLE', 1), ('TXT_B', 7), ('TXT_C', 4)):
+    # slips black, clips blue, holes red - the same three colours the baked texture and the website
+    # legend use, so a fitter reading the plot and a fitter reading the model see the same thing.
+    # Clips were cyan (4), which plots the same weight as the black slip line on a mono printer.
+    for nm, col in (('SLIP', 7), ('CLIP', 5), ('HOLE', 1), ('TXT_B', 7), ('TXT_C', 5)):
         lay = 'P%d_%s' % (i, nm)
         if lay not in doc.layers:
             doc.layers.add(lay, color=col)
@@ -121,7 +128,8 @@ def panel(B, ox, oy):
     TX((ox, ty), '%d   %s   %s' % (i, B['zh'], B['en']), 54, 'TITLE'); ty -= 68
     TX((ox, ty), '板面 board %g x %g     灰缝 joint %g     砖片 slip 215 x 65 x 20     '
                  '共 %d 片砖、%d 个卡扣'
-       % (B['w'], B['h'], B['joint'], len(B['pieces']), len(B['pieces'])), 30, 'TITLE'); ty -= 46
+       % (B['w'], B['h'], B['joint'], len(B['pieces']),
+          sum(c[2] for c in B['clips'])), 30, 'TITLE'); ty -= 46
     TX((ox, ty), '砖型 bricks: ' + '，'.join('%s %s x%d' % t for t in B['types']), 26, 'TITLE')
     ty -= 40
     TX((ox, ty), '卡扣 clips: ' + '，'.join('%s = %s x%d' % c for c in B['clips']), 26, 'TITLE')
@@ -136,11 +144,13 @@ def legend(x, y):
         '1. ALL DIMENSIONS IN MILLIMETRES.  Every board is drawn 1:1 - plot at 1:1 and the lines '
         'are where the slips go.   全部尺寸单位为毫米，各板均按 1:1 绘制；按 1:1 出图，图上的线'
         '就是砖片的位置。',
-        '2. WHAT IS DRAWN.  For every slip: its own outline (layer P#_SLIP), the tray of the clip '
-        'that holds it (P#_CLIP), and the two dia %g fixing holes under that clip (P#_HOLE).  '
-        'One clip per slip on all nine boards.   每片砖画三样：砖片轮廓（图层 P#_SLIP）、'
-        '压住它的卡扣托盘（P#_CLIP）、卡扣下的两个 %g 固定孔（P#_HOLE）。九块板均为一砖一扣。'
-        % (HOLE_D, HOLE_D),
+        '2. WHAT IS DRAWN, AND IN WHAT COLOUR.  The slip outlines are BLACK (layer P#_SLIP), the '
+        'clip trays BLUE (P#_CLIP) and the dia %g fixing holes RED (P#_HOLE).  Where a course runs '
+        'unbroken one %s spans several slips, so its tray crosses the slip lines under it; '
+        'everywhere else one RC-50 or one pocket clip sits on its own slip.   '
+        '画的内容与颜色：砖片轮廓为黑色（图层 P#_SLIP），卡扣托盘为蓝色（P#_CLIP），'
+        '%g 固定孔为红色（P#_HOLE）。整排连续处由一根 %s 横跨数片砖，其托盘会压过下面的砖线；'
+        '其余位置仍为一砖一扣（RC-50 或包边卡扣）。' % (HOLE_D, LCODE, HOLE_D, LCODE),
         '3. THE CODES ARE WRITTEN INSIDE.  The brick code sits in the brick, the clip code in the '
         'clip, both %g high.  A fitter reads the board, not a schedule.   '
         '编号写在框里：砖型写在砖片轮廓内，卡扣型写在卡扣托盘内，字高均为 %g。'
@@ -149,10 +159,13 @@ def legend(x, y):
         '.  Shortened only so the code fits inside a 50 x 68 tray; the full designation is on '
         'dxf/06 and S8.   卡扣编号为缩写，只因要写进 50 x 68 的托盘内；全称见 dxf/06 与 S8。',
         '5. THE HOLES ARE THE ONLY THING DRILLED.  Slip and tray outlines are surface marks.  '
-        'Hole positions are 12.5 from each end on the 68 centreline for RC-50, and eroded off the '
-        'tray for a pocket - 8 clear of a plain edge, 12 of a folded one.   '
+        'RC-50: 12.5 from each end on the 68 centreline.  %s: %d holes at %g pitch on the same '
+        'centreline, %g from each end.  Pocket clips are eroded off the tray - 8 clear of a plain '
+        'edge, 12 of a folded one.   '
         '只有孔需要钻；砖片与托盘轮廓仅为表面画线。RC-50 孔位为距两端各 12.5、在 68 中线上；'
-        '包边卡扣按托盘内缩定位——距普通边 8，距折边 12。',
+        '%s 为同一中线上 %d 个孔，孔距 %g，距两端各 %g；包边卡扣按托盘内缩定位，距普通边 8，'
+        '距折边 12。' % (LCODE, LSTD['holes'], LSTD['pitch'], LSTD['margin'],
+                         LCODE, LSTD['holes'], LSTD['pitch'], LSTD['margin']),
         '6. LAYERS ARE PER BOARD.  Freeze all but P3_* to plot board 3 alone, or plot P#_HOLE by '
         'itself for the driller.   图层按板分组：只留 P3_* 即可单独出板 3；单独打开 P#_HOLE '
         '可只出钻孔图。',
@@ -186,6 +199,9 @@ PL([(mn[0]-pad, mn[1]-pad), (mx[0]+pad, mn[1]-pad), (mx[0]+pad, mx[1]+pad),
 q = os.path.join(HERE, '..', 'dxf', '08_setout_CN_EN.dxf')
 doc.saveas(q)
 print('SAVED', os.path.normpath(q), '| entities', len(list(msp)),
-      '| %d slips, %d holes' % (sum(len(b['pieces']) for b in BD),
-                                sum(len(p['holes']) for b in BD for p in b['pieces'])))
+      '| %d slips, %d clips, %d holes'
+      % (sum(len(b['pieces']) for b in BD),
+         sum(c[2] for b in BD for c in b['clips']),
+         sum(len(p['holes']) for b in BD for p in b['pieces'])
+         + sum(len(lc['holes']) for b in BD for lc in b['longs'])))
 print('  x[%.0f..%.0f] y[%.0f..%.0f] mm' % (mn[0], mx[0], mn[1], mx[1]))

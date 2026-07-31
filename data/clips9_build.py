@@ -143,10 +143,11 @@ CLIPS, ASSIGN = [], []
 # is searched against the boards by longclip9 and must not be stated twice.  Absent on a first run
 # from an empty tree, and then the drawings simply carry the rail and the pockets.
 _bj = os.path.join(HERE, '..', 'site', 'data', 'boards.json')
-LONG = None
+LONG, SCHED = None, {}
 if os.path.exists(_bj):
     _s = json.load(open(_bj, encoding='utf-8'))['summary']
     LONG = _s.get('longclip')
+    SCHED = {e['code']: e['qty'] for e in _s.get('clips', [])}
     if LONG:
         CLIPS.append(dict(
             code=LONG['code'], kind='RAIL', zh='通用长卡扣', en='Universal long clip',
@@ -154,7 +155,7 @@ if os.path.exists(_bj):
             holes=[(LONG['margin']+k*LONG['pitch'], FLAT/2.0) for k in range(LONG['holes'])],
             note_zh='断面与 RC-50 完全相同：平板 %g 宽贴砖背面，两侧立边 %g 高，边缘 %g mm 唇边内折 '
                     '%g 度，开口收至 %g。直段 %g mm，%d 个 %g 直径固定孔，孔距 %g，两端各留 %g。'
-                    '连续排砖处以一根长卡扣代替整排 R50；每段两端各留 20–30 mm 不铺满，'
+                    '连续排砖处以一根长卡扣代替整排 R50；每段两端各留 20 至 30 mm 不铺满，'
                     '零头仍用 R50 补。'
                     % (FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
                        LONG['length'], LONG['holes'], HOLE, LONG['pitch'], LONG['margin']),
@@ -173,6 +174,9 @@ CLIPS.append(dict(code='RC-50', kind='RAIL', zh='通用导轨卡扣', en='Univer
                   note_en='M-section snap clamp, 50 mm long. 68 flat behind the slip, 15 legs, '
                           '10 lips folded 16 deg in, mouth 62.5 so the slip snaps past. '
                           '2 off dia 3.5 fixing holes.'))
+# by code, not by position: the long clip goes in at index 0 when there is one, and counting into
+# CLIPS[0] then filed all 1364 rail pieces against the long clip and left RC-50 reading zero
+RC = next(c for c in CLIPS if c['code'] == 'RC-50')
 
 for p in P:
     types, pieces = classify(p)
@@ -188,7 +192,7 @@ for p in P:
         area = poly_area(loc) or 1.0
         kind, ln, grip, run, t0, t1, axis = assign(loc, w, h, area)
         if kind != 'POCKET':
-            CLIPS[0]['qty'] += 1
+            RC['qty'] += 1
             ASSIGN.append(dict(panel=p['idx'], type=t['code'], clip='RC-50', grip=round(grip, 3)))
             continue
         code = pocket_code(p['idx'], t['code'], loc)
@@ -248,15 +252,25 @@ for p in P:
         ex['qty'] += 1
         ASSIGN.append(dict(panel=p['idx'], type=t['code'], clip=code, grip=1.0))
 
+# This file knows only that a piece needs a rail; it cannot know which of those rails a long clip
+# has already taken over, because that is decided against the runs in site_export.  Where the
+# schedule exists it is the authority, and the counted numbers are only the fallback for a first
+# run from an empty tree.
+for c in CLIPS:
+    if c['code'] in SCHED:
+        c['qty'] = SCHED[c['code']]
+
 json.dump(dict(clips=CLIPS, assign=ASSIGN), open(os.path.join(HERE, 'clips9.json'), 'w'), indent=1)
 
+COVERS = {'RC-50': 'one slip each, wherever no long clip runs',
+          'LONG': 'a continuous run of slips, several to a clip'}
 print('%-9s %-8s %-6s %s' % ('clip', 'kind', 'qty', 'covers'))
 print('-'*78)
 for c in CLIPS:
     if c['kind'] == 'RAIL':
-        print('%-9s %-8s %-6d %s' % (c['code'], c['kind'], c['qty'],
-                                     'every whole slip, every standard component, every cut piece '
-                                     'with a 20 mm run'))
+        print('%-9s %-8s %-6d %s'
+              % (c['code'], c['kind'], c['qty'],
+                 COVERS['LONG' if c.get('length', 0) > RAIL[0] else 'RC-50']))
     else:
         print('%-9s %-8s %-6d board %d %s   edges %s   %d lips'
               % (c['code'], c['kind'], c['qty'], c['panel'], c['type'],

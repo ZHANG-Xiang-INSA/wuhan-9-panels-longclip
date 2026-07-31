@@ -6,7 +6,7 @@
    "zh": "\u901a\u7528\u957f\u5361\u6263",
    "en": "Universal long clip",
    "length": 1366.0,
-   "qty": 1463,
+   "qty": 77,
    "holes": [
     [
      58.0,
@@ -53,7 +53,7 @@
      34.0
     ]
    ],
-   "note_zh": "\u65ad\u9762\u4e0e RC-50 \u5b8c\u5168\u76f8\u540c\uff1a\u5e73\u677f 68 \u5bbd\u8d34\u7816\u80cc\u9762\uff0c\u4e24\u4fa7\u7acb\u8fb9 15 \u9ad8\uff0c\u8fb9\u7f18 10 mm \u5507\u8fb9\u5185\u6298 16 \u5ea6\uff0c\u5f00\u53e3\u6536\u81f3 62.5\u3002\u76f4\u6bb5 1366 mm\uff0c11 \u4e2a 3.5 \u76f4\u5f84\u56fa\u5b9a\u5b54\uff0c\u5b54\u8ddd 125\uff0c\u4e24\u7aef\u5404\u7559 58\u3002\u8fde\u7eed\u6392\u7816\u5904\u4ee5\u4e00\u6839\u957f\u5361\u6263\u4ee3\u66ff\u6574\u6392 R50\uff1b\u6bcf\u6bb5\u4e24\u7aef\u5404\u7559 20\u201330 mm \u4e0d\u94fa\u6ee1\uff0c\u96f6\u5934\u4ecd\u7528 R50 \u8865\u3002",
+   "note_zh": "\u65ad\u9762\u4e0e RC-50 \u5b8c\u5168\u76f8\u540c\uff1a\u5e73\u677f 68 \u5bbd\u8d34\u7816\u80cc\u9762\uff0c\u4e24\u4fa7\u7acb\u8fb9 15 \u9ad8\uff0c\u8fb9\u7f18 10 mm \u5507\u8fb9\u5185\u6298 16 \u5ea6\uff0c\u5f00\u53e3\u6536\u81f3 62.5\u3002\u76f4\u6bb5 1366 mm\uff0c11 \u4e2a 3.5 \u76f4\u5f84\u56fa\u5b9a\u5b54\uff0c\u5b54\u8ddd 125\uff0c\u4e24\u7aef\u5404\u7559 58\u3002\u8fde\u7eed\u6392\u7816\u5904\u4ee5\u4e00\u6839\u957f\u5361\u6263\u4ee3\u66ff\u6574\u6392 R50\uff1b\u6bcf\u6bb5\u4e24\u7aef\u5404\u7559 20 \u81f3 30 mm \u4e0d\u94fa\u6ee1\uff0c\u96f6\u5934\u4ecd\u7528 R50 \u8865\u3002",
    "note_en": "Section identical to RC-50: 68 flat behind the slip, 15 legs, 10 lips folded 16 deg in, mouth 62.5. 1366 mm long, 11 off dia 3.5 fixing holes at 125 pitch, 58 from each end. One of these replaces the row of R50s along a continuous run; it stops 20-30 mm short of each end and the remainder keeps its R50s."
   },
   {
@@ -62,7 +62,7 @@
    "zh": "\u901a\u7528\u5bfc\u8f68\u5361\u6263",
    "en": "Universal rail clip",
    "length": 50.0,
-   "qty": 0,
+   "qty": 859,
    "note_zh": "M \u578b\u5361\u6263\uff0c\u76f4\u6bb5 50 mm\u3002\u5e73\u677f 68 \u5bbd\u8d34\u7816\u80cc\u9762\uff0c\u4e24\u4fa7\u7acb\u8fb9 15 \u9ad8\uff0c\u8fb9\u7f18 10 mm \u5507\u8fb9\u5185\u6298 16 \u5ea6\uff0c\u5f00\u53e3\u6536\u81f3 62.5\uff0c\u7816\u7247\u9700\u538b\u5165\u5361\u7d27\u30022 \u4e2a 3.5 \u76f4\u5f84\u56fa\u5b9a\u5b54\u3002",
    "note_en": "M-section snap clamp, 50 mm long. 68 flat behind the slip, 15 legs, 10 lips folded 16 deg in, mouth 62.5 so the slip snaps past. 2 off dia 3.5 fixing holes."
   },

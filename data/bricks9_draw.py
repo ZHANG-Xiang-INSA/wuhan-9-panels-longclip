@@ -90,28 +90,44 @@ for k, t in enumerate(T):
 ax = fig.add_subplot(gs[0, :])
 ax.axis('off'); ax.set_xlim(0, 1); ax.set_ylim(0, 1)
 ax.text(0.0, 0.985, '明细表  SCHEDULE', va='top', ha='left', fontsize=13, color=INK)
-COL = (0.0, 0.055, 0.185, 0.300, 0.375, 0.470)
-HDR = ('件号 CODE', '规格 SIZE mm', '类别 KIND', '数量 QTY', '面积 AREA mm²', '用在 USED ON')
+COL = (0.0, 0.055, 0.185, 0.300, 0.440, 0.505, 0.600)
+HDR = ('件号 CODE', '规格 SIZE mm', '类别 KIND', '砖类型 PRODUCT', '数量 QTY', '面积 AREA mm²',
+       '用在 USED ON')
 for x, s in zip(COL, HDR):
     ax.text(x, 0.905, s, va='top', ha='left', fontsize=9.2, color=INK)
 ax.plot([0.0, 1.0], [0.875, 0.875], color=INK, lw=0.8)
+# One shape is cut from more than one product - the plain 215 x 65 is on all nine boards and so is
+# all three - so the column carries the split, not a single name.  Shortened to the part of the
+# designation that differs; all three are L10, which the note under the table says once.
+short = lambda s: s.replace('L10 ', '')
 y = 0.845
 for t in T:
     use = '，'.join('板 %d x%d' % (u['board'], u['qty']) for u in t['use'])
-    for x, s in zip(COL, (t['code'], t['label'], KIND[t['kind']], str(t['qty']),
+    prod = '，'.join('%s %d' % (short(x['product']), x['qty']) for x in t['products'])
+    for x, s in zip(COL, (t['code'], t['label'], KIND[t['kind']], prod, str(t['qty']),
                           '%.0f' % t['area'], use)):
         ax.text(x, y, s, va='top', ha='left', fontsize=8.6, color=INK)
     y -= 0.062
 ax.plot([0.0, 1.0], [y+0.030, y+0.030], color=INK, lw=0.8)
 ax.text(0.0, y-0.004, '合计 TOTAL', va='top', ha='left', fontsize=9.2, color=INK)
-ax.text(COL[3], y-0.004, '%d' % sum(t['qty'] for t in T), va='top', ha='left',
+ptot = {}
+for t in T:
+    for x in t['products']:
+        ptot[short(x['product'])] = ptot.get(short(x['product']), 0)+x['qty']
+ax.text(COL[3], y-0.004, '，'.join('%s %d' % (k, ptot[k]) for k in sorted(ptot)),
+        va='top', ha='left', fontsize=9.2, color=INK)
+ax.text(COL[4], y-0.004, '%d' % sum(t['qty'] for t in T), va='top', ha='left',
         fontsize=9.2, color=INK)
 ax.text(0.0, y-0.075,
         '砖片 slip %g x %g x %g mm。各零件以其最长边摆正绘制，非按铺贴角度；'
-        '仅标注非 90° 的角。数量为九块板合计，未计损耗。测量请用 dxf/07。\n'
+        '仅标注非 90° 的角。砖类型三种，均为 L10：Yellow 用于板 1 至 3，B2 用于板 4 至 6，'
+        'Grey 用于板 7 至 9；同一形状若跨板则分列。数量为九块板合计，未计损耗，'
+        '备料 +15%% 见 S7 明细表。测量请用 dxf/07。\n'
         'Slip %g x %g x %g. Each part is drawn squared up on its longest edge, not at the angle it '
-        'is laid; angles are dimensioned only where they are not 90°. Quantities are the nine '
-        'boards total and carry no allowance. Measure off dxf/07.'
+        'is laid; angles are dimensioned only where they are not 90°. Three products, all L10: '
+        'Yellow on boards 1-3, B2 on 4-6, Grey on 7-9; a shape used across boards is split by '
+        'product. Quantities are the nine boards total and carry no allowance - the +15%% ordering '
+        'figure is on schedule S7. Measure off dxf/07.'
         % (SLIP[0], SLIP[1], SLIP[2], SLIP[0], SLIP[1], SLIP[2]),
         va='top', ha='left', fontsize=8.6, color='#6d6a63', linespacing=1.6)
 

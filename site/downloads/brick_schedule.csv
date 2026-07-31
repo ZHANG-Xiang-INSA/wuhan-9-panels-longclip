@@ -1,0 +1,51 @@
+﻿分组 GROUP,分组值 GROUP VALUE,件号 CODE,类别 KIND,规格 SIZE mm,砖类型 PRODUCT,数量 QTY,备料+15% ORDER,用在 USED ON
+按形状 by shape,B01,B01,整砖片 whole slip,215 x 65,L10 B2 358; L10 Grey 411; L10 Yellow 346,1115,1283,1.T01 x132; 2.T01 x120; 3.T01 x94; 4.T01 x90; 5.T01 x121; 6.T01 x147; 7.T01 x137; 8.T01 x120; 9.T01 x154
+按形状 by shape,B02,B02,标准件 standard,104 x 65,L10 B2 95; L10 Grey 20,115,133,4.T02 x95; 7.T02 x20
+按形状 by shape,B03,B03,标准件 standard,102.5 x 65,L10 Yellow 56,56,65,1.T02 x16; 2.T02 x20; 3.T02 x20
+按形状 by shape,B04,B04,切割件 cut piece,53.5 x 99.5,L10 Yellow 34,34,40,3.T03 x34
+按形状 by shape,B05,B05,切割件 cut piece,91.6 x 45.8,L10 Grey 16,16,19,8.T02 x16
+按形状 by shape,B06,B06,切割件 cut piece,144.8 x 98.8,L10 Grey 16,16,19,8.T03 x16
+按形状 by shape,B07,B07,切割件 cut piece,197.8 x 151.9,L10 Grey 16,16,19,8.T04 x16
+按形状 by shape,B08,B08,切割件 cut piece,65 x 140,L10 B2 12,12,14,5.T02 x12
+按形状 by shape,B09,B09,切割件 cut piece,65 x 65,L10 B2 12,12,14,5.T03 x12
+按形状 by shape,B10,B10,切割件 cut piece,198 x 160.1,L10 Yellow 10,10,12,3.T04 x10
+按形状 by shape,B11,B11,切割件 cut piece,153.1 x 107.1,L10 Yellow 8,8,10,3.T05 x8
+按形状 by shape,B12,B12,切割件 cut piece,147.5 x 65,L10 Grey 4,4,5,8.T05 x4
+按砖类型 by product,L10 B2,B01,整砖片 whole slip,215 x 65,L10 B2,358,412,4.T01 x90; 5.T01 x121; 6.T01 x147
+按砖类型 by product,L10 B2,B02,标准件 standard,104 x 65,L10 B2,95,110,4.T02 x95
+按砖类型 by product,L10 B2,B08,切割件 cut piece,65 x 140,L10 B2,12,14,5.T02 x12
+按砖类型 by product,L10 B2,B09,切割件 cut piece,65 x 65,L10 B2,12,14,5.T03 x12
+按砖类型 by product,L10 Grey,B01,整砖片 whole slip,215 x 65,L10 Grey,411,473,7.T01 x137; 8.T01 x120; 9.T01 x154
+按砖类型 by product,L10 Grey,B02,标准件 standard,104 x 65,L10 Grey,20,23,7.T02 x20
+按砖类型 by product,L10 Grey,B05,切割件 cut piece,91.6 x 45.8,L10 Grey,16,19,8.T02 x16
+按砖类型 by product,L10 Grey,B06,切割件 cut piece,144.8 x 98.8,L10 Grey,16,19,8.T03 x16
+按砖类型 by product,L10 Grey,B07,切割件 cut piece,197.8 x 151.9,L10 Grey,16,19,8.T04 x16
+按砖类型 by product,L10 Grey,B12,切割件 cut piece,147.5 x 65,L10 Grey,4,5,8.T05 x4
+按砖类型 by product,L10 Yellow,B01,整砖片 whole slip,215 x 65,L10 Yellow,346,398,1.T01 x132; 2.T01 x120; 3.T01 x94
+按砖类型 by product,L10 Yellow,B03,标准件 standard,102.5 x 65,L10 Yellow,56,65,1.T02 x16; 2.T02 x20; 3.T02 x20
+按砖类型 by product,L10 Yellow,B04,切割件 cut piece,53.5 x 99.5,L10 Yellow,34,40,3.T03 x34
+按砖类型 by product,L10 Yellow,B10,切割件 cut piece,198 x 160.1,L10 Yellow,10,12,3.T04 x10
+按砖类型 by product,L10 Yellow,B11,切割件 cut piece,153.1 x 107.1,L10 Yellow,8,10,3.T05 x8
+按板号 by board,板 board 1,B01,整砖片 whole slip,215 x 65,L10 Yellow,132,,1.T01
+按板号 by board,板 board 1,B03,标准件 standard,102.5 x 65,L10 Yellow,16,,1.T02
+按板号 by board,板 board 2,B01,整砖片 whole slip,215 x 65,L10 Yellow,120,,2.T01
+按板号 by board,板 board 2,B03,标准件 standard,102.5 x 65,L10 Yellow,20,,2.T02
+按板号 by board,板 board 3,B01,整砖片 whole slip,215 x 65,L10 Yellow,94,,3.T01
+按板号 by board,板 board 3,B03,标准件 standard,102.5 x 65,L10 Yellow,20,,3.T02
+按板号 by board,板 board 3,B04,切割件 cut piece,53.5 x 99.5,L10 Yellow,34,,3.T03
+按板号 by board,板 board 3,B10,切割件 cut piece,198 x 160.1,L10 Yellow,10,,3.T04
+按板号 by board,板 board 3,B11,切割件 cut piece,153.1 x 107.1,L10 Yellow,8,,3.T05
+按板号 by board,板 board 4,B01,整砖片 whole slip,215 x 65,L10 B2,90,,4.T01
+按板号 by board,板 board 4,B02,标准件 standard,104 x 65,L10 B2,95,,4.T02
+按板号 by board,板 board 5,B01,整砖片 whole slip,215 x 65,L10 B2,121,,5.T01
+按板号 by board,板 board 5,B08,切割件 cut piece,65 x 140,L10 B2,12,,5.T02
+按板号 by board,板 board 5,B09,切割件 cut piece,65 x 65,L10 B2,12,,5.T03
+按板号 by board,板 board 6,B01,整砖片 whole slip,215 x 65,L10 B2,147,,6.T01
+按板号 by board,板 board 7,B01,整砖片 whole slip,215 x 65,L10 Grey,137,,7.T01
+按板号 by board,板 board 7,B02,标准件 standard,104 x 65,L10 Grey,20,,7.T02
+按板号 by board,板 board 8,B01,整砖片 whole slip,215 x 65,L10 Grey,120,,8.T01
+按板号 by board,板 board 8,B05,切割件 cut piece,91.6 x 45.8,L10 Grey,16,,8.T02
+按板号 by board,板 board 8,B06,切割件 cut piece,144.8 x 98.8,L10 Grey,16,,8.T03
+按板号 by board,板 board 8,B07,切割件 cut piece,197.8 x 151.9,L10 Grey,16,,8.T04
+按板号 by board,板 board 8,B12,切割件 cut piece,147.5 x 65,L10 Grey,4,,8.T05
+按板号 by board,板 board 9,B01,整砖片 whole slip,215 x 65,L10 Grey,154,,9.T01

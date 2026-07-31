@@ -1,0 +1,29 @@
+﻿分组 GROUP,分组值 GROUP VALUE,件号 CODE,类别 KIND,名称 NAME,长度 LENGTH mm,孔数 HOLES,孔距 PITCH mm,砖类型 PRODUCT,数量 QTY,备料+15% ORDER,用在 USED ON
+按型号 by type,RC-50,RC-50,RAIL,Universal rail clip,50,2,,L10 B2 372; L10 Grey 307; L10 Yellow 180,859,989,1 x38; 2 x10; 3 x132; 4 x80; 5 x145; 6 x147; 7 x21; 8 x132; 9 x154
+按型号 by type,LC-1366,LC-1366,RAIL,Universal long clip,50,2,,L10 B2 15; L10 Grey 25; L10 Yellow 37,77,90,1 x17; 2 x20; 4 x15; 7 x21; 8 x4
+按型号 by type,PK-3T03,PK-3T03,POCKET,Dedicated pocket clip,,2,,L10 Yellow 34,34,40,3 x34
+按型号 by type,PK-8T02,PK-8T02,POCKET,Dedicated pocket clip,,2,,L10 Grey 16,16,19,8 x16
+按砖类型 by product,L10 B2,RC-50,RAIL,Universal rail clip,50,2,,L10 B2,372,428,4 x80; 5 x145; 6 x147
+按砖类型 by product,L10 B2,LC-1366,RAIL,Universal long clip,50,2,,L10 B2,15,18,4 x15
+按砖类型 by product,L10 Grey,RC-50,RAIL,Universal rail clip,50,2,,L10 Grey,307,354,7 x21; 8 x132; 9 x154
+按砖类型 by product,L10 Grey,LC-1366,RAIL,Universal long clip,50,2,,L10 Grey,25,29,7 x21; 8 x4
+按砖类型 by product,L10 Grey,PK-8T02,POCKET,Dedicated pocket clip,,2,,L10 Grey,16,19,8 x16
+按砖类型 by product,L10 Yellow,RC-50,RAIL,Universal rail clip,50,2,,L10 Yellow,180,207,1 x38; 2 x10; 3 x132
+按砖类型 by product,L10 Yellow,LC-1366,RAIL,Universal long clip,50,2,,L10 Yellow,37,43,1 x17; 2 x20
+按砖类型 by product,L10 Yellow,PK-3T03,POCKET,Dedicated pocket clip,,2,,L10 Yellow,34,40,3 x34
+按板号 by board,板 board 1,RC-50,RAIL,Universal rail clip,50,2,,L10 Yellow,38,,1
+按板号 by board,板 board 1,LC-1366,RAIL,Universal long clip,50,2,,L10 Yellow,17,,1
+按板号 by board,板 board 2,RC-50,RAIL,Universal rail clip,50,2,,L10 Yellow,10,,2
+按板号 by board,板 board 2,LC-1366,RAIL,Universal long clip,50,2,,L10 Yellow,20,,2
+按板号 by board,板 board 3,RC-50,RAIL,Universal rail clip,50,2,,L10 Yellow,132,,3
+按板号 by board,板 board 3,PK-3T03,POCKET,Dedicated pocket clip,,2,,L10 Yellow,34,,3
+按板号 by board,板 board 4,RC-50,RAIL,Universal rail clip,50,2,,L10 B2,80,,4
+按板号 by board,板 board 4,LC-1366,RAIL,Universal long clip,50,2,,L10 B2,15,,4
+按板号 by board,板 board 5,RC-50,RAIL,Universal rail clip,50,2,,L10 B2,145,,5
+按板号 by board,板 board 6,RC-50,RAIL,Universal rail clip,50,2,,L10 B2,147,,6
+按板号 by board,板 board 7,RC-50,RAIL,Universal rail clip,50,2,,L10 Grey,21,,7
+按板号 by board,板 board 7,LC-1366,RAIL,Universal long clip,50,2,,L10 Grey,21,,7
+按板号 by board,板 board 8,RC-50,RAIL,Universal rail clip,50,2,,L10 Grey,132,,8
+按板号 by board,板 board 8,LC-1366,RAIL,Universal long clip,50,2,,L10 Grey,4,,8
+按板号 by board,板 board 8,PK-8T02,POCKET,Dedicated pocket clip,,2,,L10 Grey,16,,8
+按板号 by board,板 board 9,RC-50,RAIL,Universal rail clip,50,2,,L10 Grey,154,,9

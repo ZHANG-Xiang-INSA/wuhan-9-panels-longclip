@@ -12,6 +12,10 @@ Change a board and the length changes with it.
 
 Long clips are laid from the run's datum end, and whatever is left over at the far end keeps the
 RC-50s it always had.
+
+Not every board can take one.  See long_ok(): board 9's 3 mm joint puts the courses at exactly the
+clip's own flat, and a clip that runs the whole course cannot be staggered out of the way, so board
+9 keeps the RC-50s it was designed with.
 """
 import json, math, os
 
@@ -28,7 +32,26 @@ END_GAP = 20.0                 # a long clip stops short of each end of its run 
 END_GAP_MAX = 30.0             # and by no more than this where the arithmetic allows it.  Running
                                # a clip hard into the end of a course buys nothing and costs metal
 FLAT = 68.0
+SLIP_W = 65.0
 _CACHE = {}
+
+
+def long_ok(board):
+    """can this board take long clips at all?
+
+    The flat is 68 across a 65 slip, so a clip stands 1.5 proud on each side and wants 3 mm of
+    joint to itself.  Where the joint is smaller than that, the rails of two neighbouring courses
+    meet face to face.  The RC-50 answer is to slide each rail wholly to one side of its own slip
+    and alternate the side course by course, so the two pass at a corner - see bias() in
+    site_export - but that answer is not open to a clip which runs the whole length of a course:
+    there is no course left to alternate against.
+
+    Board 9 is laid on 3.  65 + 3 = 68 is exactly the flat, so long clips in successive courses
+    would butt along their whole length and the board would finish with no joint down it at all.
+    It keeps its staggered RC-50s, unchanged from the original design.  Board 7 is laid on 5, which
+    leaves 2 mm between courses, and is fine.
+    """
+    return board['joint'] > FLAT-SLIP_W+1e-9
 
 
 def holes_for(L):
@@ -47,8 +70,11 @@ def _score(L, ALL):
         return None
     n, m = h
     long_n = r50_n = 0
-    for R in ALL.values():
+    for ok, R in ALL.values():
         for r in R:
+            if not ok:
+                r50_n += r['n']      # a board no long clip may go on still costs its RC-50s, and
+                continue             # counting them keeps the reported totals the job's totals
             usable = r['length']-2*END_GAP
             k = int((usable+1e-9)//L) if usable >= L else 0
             left = r['length']-END_GAP-k*L
@@ -114,7 +140,7 @@ def standard(D=None):
     if 'std' in _CACHE:
         return _CACHE['std']
     D = D or load()
-    ALL = {bd['idx']: runs(bd) for bd in D['boards']}
+    ALL = {bd['idx']: (long_ok(bd), runs(bd)) for bd in D['boards']}
     best, x = None, 150.0
     while x <= 1600.0:
         e = _score(x, ALL)
@@ -168,8 +194,9 @@ def plan(board, std=None):
     L = std['L']
     R = runs(board)
     longs, keep = [], []
+    ok = long_ok(board)
     for r in R:
-        usable = r['length']-2*END_GAP
+        usable = r['length']-2*END_GAP if ok else -1.0
         k = int((usable+1e-9)//L) if usable >= L else 0
         if not k:
             keep.extend(dict(piece=p, tray=list(p['k']), moved=False) for p in r['pieces'])

@@ -327,7 +327,7 @@ def title_block(x, y):
         'because every 1 of setback there costs 1.41 of the short edge opposite.  The top edge '
         'sits in a 10 mm joint, never within 7.5 of a board edge, so the tray runs flush with it.   '
         'PK-3T03 的斜边与顶边不折：34 片中有 29 片的斜边就落在板边上，折唇会高出成品板面 1.5。'
-        '托盘在斜边处后退 0.5，够挡住金属不外露，且不多退——斜边每退 1 就吃掉对面短边 1.41。'
+        '托盘在斜边处后退 0.5，够挡住金属不外露，且不多退：斜边每退 1 就吃掉对面短边 1.41。'
         '顶边落在 10 mm 灰缝里，离板边最近也有 7.5，故托盘与顶边取齐。',
     ]
     yy = y-96

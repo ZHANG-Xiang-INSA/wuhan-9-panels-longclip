@@ -14,7 +14,10 @@ exported on its own in CAD - the same convention dxf/05 uses for the board layou
 """
 import ezdxf, math, os
 from ezdxf.enums import TextEntityAlignment as TA
-from bricks9 import types, SLIP
+from bricks9 import types, SLIP, load
+
+# which product each board is cut from, read rather than repeated
+PROD = {b['idx']: b['product'] for b in load()['boards']}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASZ = 6.0
@@ -224,8 +227,14 @@ def title_block(x, y):
         '5. ANGLES ARE DIMENSIONED ONLY WHERE THEY ARE NOT 90 DEGREES.  An unmarked corner is a '
         'right angle.   仅标注非 90 度的角，未标注的转角均为直角。',
         '6. QUANTITIES ARE THE NINE BOARDS TOTAL and are listed per board beside each part.  They '
-        'carry no cutting allowance and no breakage allowance.   '
-        '数量为九块板合计，并在每个零件旁按板列出。未计切割损耗与破损备料。',
+        'carry no cutting allowance and no breakage allowance; the +15% ordering figure is on '
+        'schedule S7.   数量为九块板合计，并在每个零件旁按板列出。未计切割损耗与破损备料，'
+        '备料 +15% 见 S7 明细表。',
+        '6a. THREE PRODUCTS, ALL L10: Yellow on boards 1-3, B2 on boards 4-6, Grey on boards 7-9.  '
+        'The shapes are identical whichever product they are cut from, so one row of the schedule '
+        'can be several products and the PRODUCT column carries the split.   '
+        '砖类型三种，均为 L10：Yellow 用于板 1 至 3，B2 用于板 4 至 6，Grey 用于板 7 至 9。'
+        '同一形状在不同砖类型上完全一致，故明细表一行可能跨多种砖类型，砖类型列给出拆分。',
         '7. ONE LAYER PER TYPE, named B01_WHOLE, B04_CUT and so on and carrying that type\'s '
         'colour, so a single type can be isolated or counted in CAD.  dxf/05 uses the same '
         'convention for the board layouts.   '
@@ -246,24 +255,35 @@ def title_block(x, y):
 def schedule(x, y):
     """the cut list, before the panels, so the sheet opens on the numbers"""
     TX((x, y), 'SCHEDULE  明细表', 24, 'TITLE', al='BL')
-    cols = (0, 130, 430, 600, 710, 870)
-    hdr = ('件号 CODE', '规格 SIZE mm', '类别 KIND', '数量 QTY', '面积 AREA mm2', '用在 USED ON')
+    cols = (0, 130, 430, 600, 890, 1000, 1160)
+    hdr = ('件号 CODE', '规格 SIZE mm', '类别 KIND', '砖类型 PRODUCT', '数量 QTY',
+           '面积 AREA mm2', '用在 USED ON')
+    W = 1830
     yy = y-40
     for cx, s in zip(cols, hdr):
         TX((x+cx, yy), s, 15, 'TITLE', al='BL')
     yy -= 10
-    Ln_((x, yy), (x+1540, yy), 'DIM')
+    Ln_((x, yy), (x+W, yy), 'DIM')
     yy -= 30
     KIND = {'WHOLE': '整砖片 whole', 'STD': '标准件 standard', 'CUT': '切割件 cut'}
+    # a shape can be cut from more than one product, so the column carries the split
+    short = lambda s: s.replace('L10 ', '')
     for t in T:
         use = ', '.join('%d x%d' % (u['board'], u['qty']) for u in t['use'])
-        for cx, s in zip(cols, (t['code'], t['label'], KIND[t['kind']], str(t['qty']),
+        prod = ', '.join('%s %d' % (short(p['product']), p['qty']) for p in t['products'])
+        for cx, s in zip(cols, (t['code'], t['label'], KIND[t['kind']], prod, str(t['qty']),
                                 '%.0f' % t['area'], use)):
             TX((x+cx, yy), s, 15, 'TXT', al='BL')
         yy -= 30
     yy -= 6
-    Ln_((x, yy), (x+1540, yy), 'DIM')
-    TX((x+cols[3], yy-30), '%d' % sum(t['qty'] for t in T), 15, 'TITLE', al='BL')
+    Ln_((x, yy), (x+W, yy), 'DIM')
+    ptot = {}
+    for t in T:
+        for p in t['products']:
+            ptot[short(p['product'])] = ptot.get(short(p['product']), 0)+p['qty']
+    TX((x+cols[3], yy-30), ', '.join('%s %d' % (k, ptot[k]) for k in sorted(ptot)),
+       15, 'TITLE', al='BL')
+    TX((x+cols[4], yy-30), '%d' % sum(t['qty'] for t in T), 15, 'TITLE', al='BL')
     TX((x, yy-30), '合计 TOTAL', 15, 'TITLE', al='BL')
     return yy-70
 
@@ -324,8 +344,8 @@ def panel(t, ox, oy):
     TX((tx, ty), '%s   %d 边 sides   面积 area %.0f mm2   数量 qty %d'
        % (KIND[t['kind']], len(t['poly']), t['area'], t['qty']), 15, 'TXT', al='BL'); ty -= 30
     for u in t['use']:
-        TX((tx, ty), '板 board %d   %s   x %d' % (u['board'], u['code'], u['qty']),
-           14, 'TXT', al='BL')
+        TX((tx, ty), '板 board %d   %s   %s   x %d'
+           % (u['board'], u['code'], PROD[u['board']], u['qty']), 14, 'TXT', al='BL')
         ty -= 24
     return ty
 

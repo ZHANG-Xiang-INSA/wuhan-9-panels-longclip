@@ -25,9 +25,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', 'site', 'textures')
 os.makedirs(OUT, exist_ok=True)
 PXMM = 2.6              # pixels per millimetre: a 1565 board comes out about 4070 px
-INK = '#39332c'         # the scribe line
-CLIP = '#1d5f86'
-HOLE = '#a8321e'
+# Three colours a fitter can name across a room.  The first version drew the slips in #39332c and
+# the clips in #1d5f86, which are a different hue but the same darkness: at hairline width on a
+# pale board both simply read as "a dark line" and nobody could tell which was which.  The clip is
+# now a light-valued blue against a near-black slip, so the two differ in brightness as well as
+# hue, which is what the eye actually separates at this size.
+INK = '#141414'         # the slip outline, and its brick code
+CLIP = '#0d6efd'        # the clip tray, and its clip code
+HOLE = '#d92b2b'        # the fixing holes
 COL = json.load(open(os.path.join(HERE, 'pdf_colours.json'), encoding='utf-8'))
 
 

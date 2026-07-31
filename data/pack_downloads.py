@@ -52,6 +52,9 @@ items = [('downloads/05_nine_boards_CN_EN.dxf', '01_drawings/05_nine_boards_CN_E
          ('downloads/S9_bricks_CN_EN.png', '01_drawings/S9_bricks.png'),
          ('downloads/08_setout_CN_EN.dxf', '01_drawings/08_setout_CN_EN.dxf'),
          ('downloads/board_comparison.pdf', '01_drawings/board_comparison.pdf'),
+         # the two schedules as CSV: what a buyer needs, without opening a drawing
+         ('downloads/brick_schedule.csv', '03_data/brick_schedule.csv'),
+         ('downloads/clip_schedule.csv', '03_data/clip_schedule.csv'),
          ('data/boards.json', '03_data/boards.json')]
 for b in D['boards']:
     i = b['idx']
