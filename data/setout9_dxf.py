@@ -15,12 +15,28 @@ import ezdxf, math, os
 from ezdxf.enums import TextEntityAlignment as TA
 from setout9 import board, TXT_H, SHORT, load
 
+import dxftext as DT
 HERE = os.path.dirname(os.path.abspath(__file__))
 HOLE_D = 3.5
 # the long clip is described in the notes, and its length is read rather than repeated: it is a
 # searched result and the drawing must not be able to disagree with the schedule about it
 LSTD = load()['summary']['longclip']
 LCODE = LSTD['code']
+
+# Two drawings out of one source.  --spare writes the ORDERING copy.  The GEOMETRY IS IDENTICAL,
+# and has to be: this drawing is where things go, and 15 % more slips do not go anywhere.  What
+# changes is the quantities, and an ORDER SUMMARY block under the notes carrying the figures a
+# buyer actually places, which are per product and per clip type.
+#
+# The per-board line on the spare copy is that board's own share rounded up.  Nine of those sum
+# to more than the project order, because each is rounded on its own; note 9 says so rather than
+# letting the reader find it.
+import sys as _sys, math as _math
+SPARE = '--spare' in _sys.argv
+FNAME = '08_setout_spare15_CN_EN.dxf' if SPARE else '08_setout_CN_EN.dxf'
+SUM = load()['summary']
+up = lambda n: int(_math.ceil(n*1.15))
+PRODOF = {b['idx']: b['product'] for b in load()['boards']}
 COLS, GAPX, GAPY = 3, 1000.0, 760.0
 
 doc = ezdxf.new('R2010', setup=True); doc.header['$INSUNITS'] = 4
@@ -52,7 +68,8 @@ def PL(pts, lay, close=True, lw=None):
 
 
 def strw(s, h):
-    return h*sum(1.05 if ord(c) > 0x2E80 else 0.62 for c in s)
+    # measured in the real font, not guessed: see dxftext.py
+    return DT.width(s, h)
 
 
 def wrap(s, h, width, indent=''):
@@ -124,19 +141,35 @@ def panel(B, ox, oy):
                            angle=90.0, dimstyle='MM', dxfattribs={'layer': 'DIM'}); d.render()
     TX((sx, sy+110), '比例校核 SCALE CHECK   整砖片 whole slip', 26, 'DIM')
 
-    ty = oy+B['h']+300
-    TX((ox, ty), '%d   %s   %s' % (i, B['zh'], B['en']), 54, 'TITLE'); ty -= 68
-    TX((ox, ty), '板面 board %g x %g     灰缝 joint %g     砖片 slip 215 x 65 x 20     '
-                 '共 %d 片砖、%d 个卡扣'
-       % (B['w'], B['h'], B['joint'], len(B['pieces']),
-          sum(c[2] for c in B['clips'])), 30, 'TITLE'); ty -= 46
-    TX((ox, ty), '砖型 bricks: ' + '，'.join('%s %s x%d' % t for t in B['types']), 26, 'TITLE')
-    ty -= 40
-    TX((ox, ty), '卡扣 clips: ' + '，'.join('%s = %s x%d' % c for c in B['clips']), 26, 'TITLE')
+    # The title block is wrapped to the COLUMN, not written as one line per item.  Board 4's bond
+    # name and board 5's are 2.3 m of text between them on a 2.57 m pitch, so the two ran into
+    # each other; the same for 8 and 9.  Nothing clips a TEXT, so it simply printed over its
+    # neighbour.  block() writes as many lines as it needs and returns where it got to.
+    # Laid out bottom-up, not top-down.  The block is anchored 90 above the board and grows
+    # UPWARD, so a line more or less - the spare copy carries an extra clause on every board -
+    # moves the top of the block and never the bottom.  Anchored at a fixed top instead, the
+    # ordering copy's extra line pushed the last line down onto the board outline.
+    npc, ncl = len(B['pieces']), sum(c[2] for c in B['clips'])
+    parts = [('%d   %s   %s' % (i, B['zh'], B['en']), 54, 16),
+             ('板面 board %g x %g     灰缝 joint %g     砖片 slip 215 x 65 x 20     '
+              '共 %d 片砖、%d 个卡扣%s'
+              % (B['w'], B['h'], B['joint'], npc, ncl,
+                 ('     备料 order +15%%: %d 片砖、%d 个卡扣' % (up(npc), up(ncl)))
+                 if SPARE else ''), 30, 8),
+             ('砖型 bricks: ' + '，'.join('%s %s x%d' % t for t in B['types']), 26, 6),
+             ('卡扣 clips: ' + '，'.join('%s = %s x%d' % c for c in B['clips']), 26, 0)]
+    lines = [(DT.wrap(s, h, CW-GAPX*0.28, '    '), h, gap) for s, h, gap in parts]
+    tall = sum(len(ls)*h*1.42+gap for ls, h, gap in lines)
+    ty = oy+B['h']+90+tall
+    for ls, h, gap in lines:
+        for ln in ls:
+            TX((ox, ty), ln, h, 'TITLE'); ty -= h*1.42
+        ty -= gap
 
 
 def legend(x, y):
-    TX((x, y), 'WUHAN PHOTOGRAPHY BOARDS  -  SETTING OUT ON THE BACKING BOARD', 66, 'TITLE')
+    TX((x, y), 'WUHAN PHOTOGRAPHY BOARDS  -  SETTING OUT ON THE BACKING BOARD%s'
+       % ('  -  ORDER QUANTITIES +15%' if SPARE else ''), 66, 'TITLE')
     TX((x, y-84), '武汉摄影展板　背板放线图　　3 Monahan Avenue (HA23007)   |   nine boards, 1:1   |   '
                   'scribe this on the board before any slip is laid', 30, 'TITLE')
     notes = [
@@ -175,11 +208,52 @@ def legend(x, y):
         'Do not add a joint - lay each slip to its own line.   '
         '灰缝已含在轮廓之间，各板不同（3、5、7、10 mm）。不要另留缝，照线贴即可。',
     ]
+    if SPARE:
+        notes.append(
+            '9. THIS IS THE ORDERING COPY.  THE LAYOUT IS UNCHANGED - it is where things go, and '
+            '15 % more slips do not go anywhere.  Only the quantities differ.  The figure beside '
+            'each board is that BOARD ALONE, rounded up on its own, so the nine of them sum to '
+            'more than the project order below; a purchase order is placed per product and per '
+            'clip type, which is what the ORDER SUMMARY carries.  Set out from '
+            '08_setout_CN_EN.dxf.   '
+            '本图为备料版：排布完全未变，因为本图讲的是位置，多出的 15% 无处可放；'
+            '只有数量不同。各板旁的备料数为该板单独向上取整，故九板相加大于下方的'
+            '工程总订货量；订货按砖类型与卡扣型号下单，即 ORDER SUMMARY 一栏。'
+            '放线请用 08_setout_CN_EN.dxf。')
     yy = y-140
     for s in notes:
         for ln in wrap(s, 26, 3400, '    '):
             TX((x, yy), ln, 26, 'NOTE'); yy -= 44
         yy -= 10
+    if SPARE:
+        yy -= 24
+        TX((x, yy), 'ORDER SUMMARY  订货总表  (+15%, rounded up per line)', 34, 'TITLE')
+        yy -= 56
+        rows = [['砖类型 PRODUCT', '净用 NET', '备料 ORDER +15%']]
+        for pz in SUM['products']:
+            rows.append([pz['product'], str(pz['qty']), str(pz['spare'])])
+        rows.append(['合计 TOTAL', str(SUM['brick_total']), str(SUM['brick_spare'])])
+        rows.append(['', '', ''])
+        rows.append(['卡扣 CLIP', '净用 NET', '备料 ORDER +15%'])
+        ct = cs = 0
+        for e in SUM['clips']:
+            per = {}
+            for u in e['use']:
+                pr = PRODOF[u['board']]
+                per[pr] = per.get(pr, 0)+u['qty']
+            sp = sum(up(v) for v in per.values())
+            ct += e['qty']; cs += sp
+            rows.append([e['code'], str(e['qty']), str(sp)])
+        rows.append(['合计 TOTAL', str(ct), str(cs)])
+        w = [max(strw(r[i], 26) for r in rows) for i in range(3)]
+        for r in rows:
+            xx = x
+            for i, cell in enumerate(r):
+                if cell:
+                    TX((xx, yy), cell, 26, 'TITLE' if r[0].startswith(('砖类型', '卡扣', '合计'))
+                       else 'NOTE')
+                xx += w[i]+70
+            yy -= 44
     return yy
 
 
@@ -188,7 +262,9 @@ BD = [board(i) for i in range(1, 10)]
 CW = max(b['w'] for b in BD)+GAPX
 CH = max(b['h'] for b in BD)+GAPY
 yend = legend(0, 0)
-top = yend-420
+# clear of the tallest title block, which grows upward from each board and is one line taller
+# on the ordering copy
+top = yend-620
 for k, B in enumerate(BD):
     panel(B, (k % COLS)*CW, top-(k//COLS)*CH-B['h'])
 
@@ -196,7 +272,7 @@ import ezdxf.bbox as bb
 ext = bb.extents(msp); mn, mx = ext.extmin, ext.extmax; pad = 120
 PL([(mn[0]-pad, mn[1]-pad), (mx[0]+pad, mn[1]-pad), (mx[0]+pad, mx[1]+pad),
     (mn[0]-pad, mx[1]+pad)], 'BORDER')
-q = os.path.join(HERE, '..', 'dxf', '08_setout_CN_EN.dxf')
+q = os.path.join(HERE, '..', 'dxf', FNAME)
 doc.saveas(q)
 print('SAVED', os.path.normpath(q), '| entities', len(list(msp)),
       '| %d slips, %d clips, %d holes'

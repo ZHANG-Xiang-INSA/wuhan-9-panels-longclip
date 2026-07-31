@@ -6,11 +6,14 @@ Bounding boxes are no good here: the sheet border's box contains every entity, a
 line's box is far larger than the line.  So this tests the text rectangle against each segment
 directly, and skips the border.
 """
-import ezdxf, math, sys
+import ezdxf, math, sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import dxftext as DT
 
 
 def tw(s, h):
-    return h*sum(1.05 if ord(c) > 0x2E80 else 0.62 for c in s)
+    # measured in the real font, not guessed: see dxftext.py
+    return DT.width(s.replace('%%c', 'O'), h)
 
 
 def text_box(e):
@@ -119,6 +122,15 @@ def check(path, skip_layers=('BORDER',)):
         return out
 
     on_geom = [t for t in T if any(seg_rect(S[k][0], S[k][1], t[0]) for k in near(t[0]))]
+    # Each box is widened by a third of its own height before the pair test.  Two labels that stop
+    # exactly where the next one starts do not overlap arithmetically and are unreadable on paper:
+    # dxf/07's PRODUCT column came within half a character of the quantity beside it and this test
+    # passed.  A gutter is part of the layout, not a nicety.
+    def gut(box):
+        r, org, ang = box
+        g = (r[3]-r[1])/3.0
+        return ((r[0]-g, r[1], r[2]+g, r[3]), org, ang)
+    T = [(gut(b), s, lay) for b, s, lay in T]
     on_text = []
     for i, a in enumerate(T):
         for b in T[i+1:]:
@@ -130,15 +142,40 @@ def check(path, skip_layers=('BORDER',)):
             crn = [(ob[0]+p[0]*c-p[1]*s, ob[1]+p[0]*s+p[1]*c) for p in crn]
             if any(seg_rect(crn[k-1], crn[k], a[0]) for k in range(4)):
                 on_text.append((a[1], b[1]))
-    print('%-34s TEXT %3d  segments %4d   text-on-geometry %3d   text-on-text %3d'
-          % (path.split('\\')[-1], len(T), len(S), len(on_geom), len(on_text)))
-    return on_geom, on_text
+    # Text outside the sheet border.  The border is on the skip list for the geometry test, because
+    # a rule round the sheet is not something a label "sits on" - but a label reaching PAST it is
+    # off the paper, and nothing was checking that.
+    out_bor = []
+    bor = [e for e in q(('LWPOLYLINE',)) if e.dxf.layer == 'BORDER']
+    if bor:
+        p = [(x, y) for x, y, *_ in bor[0].get_points()]
+        bx0, bx1 = min(v[0] for v in p), max(v[0] for v in p)
+        by0, by1 = min(v[1] for v in p), max(v[1] for v in p)
+        for box, s, lay in T:
+            r, org, ang = box
+            cs = [(r[0], r[1]), (r[2], r[1]), (r[2], r[3]), (r[0], r[3])]
+            c, si = math.cos(ang), math.sin(ang)
+            cs = [(org[0]+v[0]*c-v[1]*si, org[1]+v[0]*si+v[1]*c) for v in cs]
+            over = max(max(v[0] for v in cs)-bx1, bx0-min(v[0] for v in cs),
+                       max(v[1] for v in cs)-by1, by0-min(v[1] for v in cs))
+            if over > 0.5:
+                out_bor.append((over, s))
+        out_bor.sort(reverse=True)
+    print('%-34s TEXT %4d  segments %5d   on-geometry %4d   on-text %3d   past-border %3d'
+          % (path.split('\\')[-1].split('/')[-1], len(T), len(S),
+             len(on_geom), len(on_text), len(out_bor)))
+    return on_geom, on_text, out_bor
 
 
 if __name__ == '__main__':
+    bad = 0
     for p in sys.argv[1:]:
-        g, t = check(p)
+        g, t, o = check(p)
+        bad += len(g)+len(t)+len(o)
         for b in g[:6]:
             print('   on geometry:', b[1][:64])
         for a, b in t[:6]:
             print('   on text:', a[:34], '||', b[:34])
+        for over, s in o[:6]:
+            print('   past border by %.0f mm:' % over, s[:60])
+    sys.exit(1 if bad else 0)

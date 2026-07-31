@@ -29,6 +29,9 @@ MIRROR = [('dxf/05_nine_boards_CN_EN.dxf', '05_nine_boards_CN_EN.dxf'),
           ('drawings/S9_bricks_CN_EN.svg', 'S9_bricks_CN_EN.svg'),
           ('drawings/S9_bricks_CN_EN.png', 'S9_bricks_CN_EN.png'),
           ('dxf/08_setout_CN_EN.dxf', '08_setout_CN_EN.dxf'),
+          # the +15% ordering copies: same parts, same positions, order quantities
+          ('dxf/07_bricks_spare15_CN_EN.dxf', '07_bricks_spare15_CN_EN.dxf'),
+          ('dxf/08_setout_spare15_CN_EN.dxf', '08_setout_spare15_CN_EN.dxf'),
           ('docs/board_comparison.pdf', 'board_comparison.pdf')]
 for src, dst in MIRROR:
     s = os.path.join(ROOT, src)
@@ -51,6 +54,10 @@ items = [('downloads/05_nine_boards_CN_EN.dxf', '01_drawings/05_nine_boards_CN_E
          ('downloads/S9_bricks_CN_EN.svg', '01_drawings/S9_bricks.svg'),
          ('downloads/S9_bricks_CN_EN.png', '01_drawings/S9_bricks.png'),
          ('downloads/08_setout_CN_EN.dxf', '01_drawings/08_setout_CN_EN.dxf'),
+         ('downloads/07_bricks_spare15_CN_EN.dxf',
+          '01_drawings/07_bricks_spare15_CN_EN.dxf'),
+         ('downloads/08_setout_spare15_CN_EN.dxf',
+          '01_drawings/08_setout_spare15_CN_EN.dxf'),
          ('downloads/board_comparison.pdf', '01_drawings/board_comparison.pdf'),
          # the two schedules as CSV: what a buyer needs, without opening a drawing
          ('downloads/brick_schedule.csv', '03_data/brick_schedule.csv'),

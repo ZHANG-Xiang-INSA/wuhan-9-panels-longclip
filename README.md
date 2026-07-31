@@ -424,12 +424,14 @@ glTF 会把带两个材质的网格拆成两个 primitive，到浏览器就是�
 | 6a | `python data/bricks9_dxf.py` | `dxf/07_bricks_CN_EN.dxf`（读 `boards.json` 里的 B01..B12 编号，故必须排在第 6 步之后） |
 | 6b | `python data/bricks9_draw.py` | `drawings/S9_*` |
 | 6c | `python data/setout9_dxf.py` | `dxf/08_setout_CN_EN.dxf` 背板放线图 |
+| 6c2 | `python data/bricks9_dxf.py --spare`、`python data/setout9_dxf.py --spare` | `dxf/07_bricks_spare15_CN_EN.dxf`、`dxf/08_setout_spare15_CN_EN.dxf`（备料 +15% 版，几何与位置完全相同，只换数量） |
 | 6d | `python data/setout9_tex.py` | `site/textures/setout_board_1..9.png`，第 7 步的背板贴图，必须在它之前跑 |
 | 7 | `blender -b -P data/build_blender9.py` | `site/models/*.glb`、`site/blend/*.blend`、`site/renders/*.png` |
 | 8 | `python data/calibrate_albedo.py` | `data/albedo_gain.json`，然后重跑第 7 步 |
 | 9 | `python data/web_assets.py` | `site/renders/*.webp` |
 | 10 | `python data/joint_report_figs.py` | 重画 `docs/joint_report.html` 里的六张生成图与说明 |
 | 11 | `python data/proposal_compare.py` | `docs/board_comparison.pdf`，要求与最终设计对照 |
+| 10a | `python data/check_sheets.py` | 图面压字、压线、出列自检（会重写 S7/S8/S9，须在第 12 步之前跑） |
 | 11a | `python data/schedules_csv.py` | `site/downloads/brick_schedule.csv`、`clip_schedule.csv`（三种分组各一段，自带总数一致性断言） |
 | 12 | `python data/pack_downloads.py` | `site/downloads/wuhan-9-panels.zip`，网页一键下载用 |
 

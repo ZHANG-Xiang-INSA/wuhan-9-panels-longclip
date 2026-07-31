@@ -12,6 +12,7 @@ One clip per slip on all nine boards, so a slip outline and a clip outline are a
 """
 import json, math, os
 
+import dxftext as DT
 HERE = os.path.dirname(os.path.abspath(__file__))
 # One text height for every label, brick and clip alike.  The tightest cases are the RC-50 tray at
 # 50 x 68 and board 3's T03 slip, and both hold this with room to spare; see setout9_dxf --check.
@@ -112,7 +113,8 @@ def _inside_dist(poly, p):
 
 
 def strw(s, h):
-    return h*sum(1.05 if ord(c) > 0x2E80 else 0.62 for c in s)
+    # measured in the real font, not guessed: see dxftext.py
+    return DT.width(s, h)
 
 
 def _rad(code, h):
@@ -240,7 +242,15 @@ def _outside(poly, c, w, h, pad=1.5):
     return True
 
 
-def _overlap(a, aw, ah, b, bw, bh, gap=2.5):
+def _overlap(a, aw, ah, b, bw, bh, gap=None):
+    """do two labels sit too close?
+
+    The gutter is a third of each label's height, which is the rule check_dxf.py applies.  It was
+    a flat 2.5 mm, and at a 9 mm cap height that leaves a brick code and a clip code all but
+    touching: six pairs on board 3 read as one word.
+    """
+    if gap is None:
+        gap = (ah+bh)/3.0+1.0
     return (abs(a[0]-b[0]) < (aw+bw)/2+gap) and (abs(a[1]-b[1]) < (ah+bh)/2+gap)
 
 

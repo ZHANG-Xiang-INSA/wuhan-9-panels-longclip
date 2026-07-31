@@ -30,6 +30,7 @@ DIA = '%%c'                     # the DXF code for the diameter symbol.  It must
 HD = 3.5; TIPH = W/2-RIN                                                     # 31.25 half-opening
 EDGE_MIN, LIP_CLR = 8.0, 12.0                                                # hole clearances
 
+import dxftext as DT
 HERE = os.path.dirname(os.path.abspath(__file__))
 D = json.load(open(os.path.join(HERE, 'clips9.json')))
 CLIPS = D['clips']
@@ -77,7 +78,8 @@ def hole(x, y):
 
 
 def strw(s, h):
-    return h*sum(1.05 if ord(c) > 0x2E80 else 0.62 for c in s.replace('%%c', 'O'))
+    # measured in the real font, not guessed: see dxftext.py
+    return DT.width(s, h)
 
 
 def wrap(s, h, width, indent=''):

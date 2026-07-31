@@ -19,6 +19,19 @@ from bricks9 import types, SLIP, load
 # which product each board is cut from, read rather than repeated
 PROD = {b['idx']: b['product'] for b in load()['boards']}
 
+# Two drawings out of one source.  --spare writes the ORDERING copy: identical parts, identical
+# sizes, quantities replaced by the +15 % figure.  Keeping it as a flag rather than a second file
+# is the point - a shape added to one is added to both, and the two cannot drift apart.
+#
+# The +15 % is rounded up per (shape x product), because a product is what a purchase order line
+# is.  That is also why the per-part block on the spare copy lists PRODUCTS and not boards: a
+# board is a slice of an order line, and 15 % of a slice is not ordered from anybody.
+import sys as _sys
+SPARE = '--spare' in _sys.argv
+QTY = (lambda t: t['spare']) if SPARE else (lambda t: t['qty'])
+FNAME = '07_bricks_spare15_CN_EN.dxf' if SPARE else '07_bricks_CN_EN.dxf'
+
+import dxftext as DT
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASZ = 6.0
 # The edge dimensions stand this far off the part, and an angle value sits between the corner and
@@ -112,7 +125,8 @@ def arr(p, ang):
 
 
 def strw(s, h):
-    return h*sum(1.05 if ord(c) > 0x2E80 else 0.62 for c in s)
+    # measured in the real font, not guessed: see dxftext.py
+    return DT.width(s, h)
 
 
 def wrap(s, h, width, indent=''):
@@ -200,11 +214,12 @@ def dim_ang(c, r, a0, a1, txt, th=9):
 
 
 def title_block(x, y):
-    TX((x, y), 'WUHAN PHOTOGRAPHY BOARDS  -  BRICK SLIPS  -  CUTTING DRAWING', 40, 'TITLE',
-       al='BL')
-    TX((x, y-54), '武汉摄影展板　砖片下料图　　3 Monahan Avenue (HA23007)   |   %d types, '
+    TX((x, y), 'WUHAN PHOTOGRAPHY BOARDS  -  BRICK SLIPS  -  CUTTING DRAWING%s'
+       % ('  -  ORDER QUANTITIES +15%' if SPARE else ''), 40, 'TITLE', al='BL')
+    TX((x, y-54), '武汉摄影展板　砖片下料图%s　　3 Monahan Avenue (HA23007)   |   %d types, '
                   '%d slips   |   one panel per type, 1:1'
-       % (len(T), sum(t['qty'] for t in T)), 16, 'TITLE', al='BL')
+       % ('（备料 +15%）' if SPARE else '', len(T), sum(QTY(t) for t in T)),
+       16, 'TITLE', al='BL')
     notes = [
         'NOTES  说明:',
         '1. ALL DIMENSIONS IN MILLIMETRES.  Every part is drawn 1:1.   '
@@ -226,10 +241,17 @@ def title_block(x, y):
         '45 度，按铺贴角度画则同一零件会出现四个方向。零件的实际位置见 dxf/05 与 S7 图。',
         '5. ANGLES ARE DIMENSIONED ONLY WHERE THEY ARE NOT 90 DEGREES.  An unmarked corner is a '
         'right angle.   仅标注非 90 度的角，未标注的转角均为直角。',
-        '6. QUANTITIES ARE THE NINE BOARDS TOTAL and are listed per board beside each part.  They '
-        'carry no cutting allowance and no breakage allowance; the +15% ordering figure is on '
-        'schedule S7.   数量为九块板合计，并在每个零件旁按板列出。未计切割损耗与破损备料，'
-        '备料 +15% 见 S7 明细表。',
+        ('6. THESE ARE ORDER QUANTITIES: the nine boards total plus 15%, rounded UP per '
+         '(shape x product), which is the line a purchase order is placed on.  Rounding per '
+         'board instead would round the same brick up nine times, so the per-part block '
+         'lists PRODUCTS, not boards.  The net figures are on 07_bricks_CN_EN.dxf.   '
+         '本图数量为备料量：九块板合计加 15%，按（形状 × 砖类型）逐项向上取整，'
+         '因为一条采购单就是一个砖类型；按板取整会把同一块砖向上取整九次，'
+         '故零件旁列砖类型而非板号。净用量见 07_bricks_CN_EN.dxf。') if SPARE else
+        ('6. QUANTITIES ARE THE NINE BOARDS TOTAL and are listed per board beside each part.  '
+         'They carry no cutting allowance and no breakage allowance; the +15% ordering copy '
+         'is 07_bricks_spare15_CN_EN.dxf.   数量为九块板合计，并在每个零件旁按板列出。'
+         '未计切割损耗与破损备料，备料 +15% 版见 07_bricks_spare15_CN_EN.dxf。'),
         '6a. THREE PRODUCTS, ALL L10: Yellow on boards 1-3, B2 on boards 4-6, Grey on boards 7-9.  '
         'The shapes are identical whichever product they are cut from, so one row of the schedule '
         'can be several products and the PRODUCT column carries the split.   '
@@ -252,39 +274,68 @@ def title_block(x, y):
     return yy
 
 
-def schedule(x, y):
-    """the cut list, before the panels, so the sheet opens on the numbers"""
-    TX((x, y), 'SCHEDULE  明细表', 24, 'TITLE', al='BL')
-    cols = (0, 130, 430, 600, 890, 1000, 1160)
-    hdr = ('件号 CODE', '规格 SIZE mm', '类别 KIND', '砖类型 PRODUCT', '数量 QTY',
-           '面积 AREA mm2', '用在 USED ON')
-    W = 1830
-    yy = y-40
-    for cx, s in zip(cols, hdr):
-        TX((x+cx, yy), s, 15, 'TITLE', al='BL')
-    yy -= 10
-    Ln_((x, yy), (x+W, yy), 'DIM')
-    yy -= 30
+TH = 15.0                 # schedule text height
+GUT = 26.0                # gutter between one column's widest cell and the next column's left
+
+
+def _columns(rows, h=TH, gut=GUT):
+    """-> (x of each column, table width), from what the columns actually hold
+
+    The positions used to be written down.  They were laid out against a width model that ran up
+    to 30 % narrow, so the PRODUCT column's widest entry - "B2 358, Grey 411, Yellow 346" - came
+    within 16 mm of the quantity beside it at a 15 mm text height, and the AREA header within 8 mm
+    of USED ON.  Measured, they are not written down at all: each column is as wide as its widest
+    cell and every gutter is the same.
+    """
+    n = max(len(r) for r in rows)
+    w = [max(strw(r[i], h) for r in rows if i < len(r)) for i in range(n)]
+    x, out = 0.0, []
+    for i in range(n):
+        out.append(x)
+        x += w[i]+gut
+    return out, x-gut
+
+
+def schedule(x, y, qty_of=lambda t: t['qty'], tag=''):
+    """the cut list, before the panels, so the sheet opens on the numbers
+
+    qty_of picks the number in the QTY column, so the same table serves the net drawing and the
+    +15 % ordering copy without a second layout to keep in step.
+    """
+    TX((x, y), 'SCHEDULE  明细表' + tag, 24, 'TITLE', al='BL')
+    hdr = ['件号 CODE', '规格 SIZE mm', '类别 KIND', '砖类型 PRODUCT', '数量 QTY',
+           '面积 AREA mm2', '用在 USED ON']
     KIND = {'WHOLE': '整砖片 whole', 'STD': '标准件 standard', 'CUT': '切割件 cut'}
     # a shape can be cut from more than one product, so the column carries the split
     short = lambda s: s.replace('L10 ', '')
+    body = []
     for t in T:
         use = ', '.join('%d x%d' % (u['board'], u['qty']) for u in t['use'])
         prod = ', '.join('%s %d' % (short(p['product']), p['qty']) for p in t['products'])
-        for cx, s in zip(cols, (t['code'], t['label'], KIND[t['kind']], prod, str(t['qty']),
-                                '%.0f' % t['area'], use)):
-            TX((x+cx, yy), s, 15, 'TXT', al='BL')
-        yy -= 30
-    yy -= 6
-    Ln_((x, yy), (x+W, yy), 'DIM')
+        body.append([t['code'], t['label'], KIND[t['kind']], prod, str(qty_of(t)),
+                     '%.0f' % t['area'], use])
     ptot = {}
     for t in T:
         for p in t['products']:
             ptot[short(p['product'])] = ptot.get(short(p['product']), 0)+p['qty']
-    TX((x+cols[3], yy-30), ', '.join('%s %d' % (k, ptot[k]) for k in sorted(ptot)),
-       15, 'TITLE', al='BL')
-    TX((x+cols[4], yy-30), '%d' % sum(t['qty'] for t in T), 15, 'TITLE', al='BL')
-    TX((x, yy-30), '合计 TOTAL', 15, 'TITLE', al='BL')
+    foot = ['合计 TOTAL', '', '', ', '.join('%s %d' % (k, ptot[k]) for k in sorted(ptot)),
+            '%d' % sum(qty_of(t) for t in T), '', '']
+    cols, W = _columns([hdr]+body+[foot])
+    yy = y-40
+    for cx, s in zip(cols, hdr):
+        TX((x+cx, yy), s, TH, 'TITLE', al='BL')
+    yy -= 10
+    Ln_((x, yy), (x+W, yy), 'DIM')
+    yy -= 30
+    for row in body:
+        for cx, s in zip(cols, row):
+            TX((x+cx, yy), s, TH, 'TXT', al='BL')
+        yy -= 30
+    yy -= 6
+    Ln_((x, yy), (x+W, yy), 'DIM')
+    for cx, s in zip(cols, foot):
+        if s:
+            TX((x+cx, yy-30), s, TH, 'TITLE', al='BL')
     return yy-70
 
 
@@ -341,19 +392,28 @@ def panel(t, ox, oy):
     ty = oy+t['bh']+40.0
     KIND = {'WHOLE': '整砖片 WHOLE SLIP', 'STD': '标准件 STANDARD', 'CUT': '切割件 CUT PIECE'}
     TX((tx, ty), '%s   %s' % (t['code'], t['label']), 26, 'TITLE', al='BL'); ty -= 40
-    TX((tx, ty), '%s   %d 边 sides   面积 area %.0f mm2   数量 qty %d'
-       % (KIND[t['kind']], len(t['poly']), t['area'], t['qty']), 15, 'TXT', al='BL'); ty -= 30
-    for u in t['use']:
-        TX((tx, ty), '板 board %d   %s   %s   x %d'
-           % (u['board'], u['code'], PROD[u['board']], u['qty']), 14, 'TXT', al='BL')
-        ty -= 24
+    TX((tx, ty), '%s   %d 边 sides   面积 area %.0f mm2   %s %d'
+       % (KIND[t['kind']], len(t['poly']), t['area'],
+          '备料 order' if SPARE else '数量 qty', QTY(t)), 15, 'TXT', al='BL')
+    ty -= 30
+    if SPARE:
+        # per product, which is the line an order is placed on; the net figure is on the other copy
+        for pz in t['products']:
+            TX((tx, ty), '%s   净用 net %d   备料 order %d'
+               % (pz['product'], pz['qty'], pz['spare']), 14, 'TXT', al='BL')
+            ty -= 24
+    else:
+        for u in t['use']:
+            TX((tx, ty), '板 board %d   %s   %s   x %d'
+               % (u['board'], u['code'], PROD[u['board']], u['qty']), 14, 'TXT', al='BL')
+            ty -= 24
     return ty
 
 
 # ---------------------------------------------------------------- build
 T = types()
 yend = title_block(0, 0)
-gtop = schedule(0, yend-40)
+gtop = schedule(0, yend-40, QTY, '　备料 ORDER +15%' if SPARE else '')
 
 ROW = 430.0
 for i, t in enumerate(T):
@@ -363,7 +423,7 @@ import ezdxf.bbox as bb
 ext = bb.extents(msp); mn, mx = ext.extmin, ext.extmax; pad = 60
 PL([(mn[0]-pad, mn[1]-pad), (mx[0]+pad, mn[1]-pad), (mx[0]+pad, mx[1]+pad),
     (mn[0]-pad, mx[1]+pad)], 'BORDER', close=True)
-q = os.path.join(HERE, '..', 'dxf', '07_bricks_CN_EN.dxf')
+q = os.path.join(HERE, '..', 'dxf', FNAME)
 doc.saveas(q)
 print('SAVED', os.path.normpath(q), '| entities', len(list(msp)),
       '| x[%.0f..%.0f] y[%.0f..%.0f]' % (mn[0], mx[0], mn[1], mx[1]))
