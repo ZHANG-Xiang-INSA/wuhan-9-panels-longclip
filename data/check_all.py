@@ -131,12 +131,29 @@ for b in D['boards']:
         if not mine:
             continue
         mine.sort()
-        ck(mine[0][0] <= END_MAX+1e-6 and L-mine[-1][1] <= END_MAX+1e-6,
-           'board %d: a run is open %.1f / %.1f at its ends, the rule is %g'
-           % (b['idx'], mine[0][0], L-mine[-1][1], END_MAX))
-        ck(abs(mine[0][0]-(L-mine[-1][1])) < 1e-6,
-           'board %d: a run is open %.1f at one end and %.1f at the other'
-           % (b['idx'], mine[0][0], L-mine[-1][1]))
+        # Two kinds of run, and each is held to its own rule.  A run of nothing but part slips -
+        # board 4's four border courses, 104 stacked on 104 - gets one R50 on the MIDDLE of each
+        # slip and deliberately leaves its ends open; anything else is FILLED, both end clips
+        # flush with the ends of the course.  Which one this is, is read off the geometry.
+        span = [(min(min(q[0]*u[0]+q[1]*u[1]-s0 for q in p['p']),
+                     max(q[0]*u[0]+q[1]*u[1]-s0 for q in p['p'])),
+                 max(q[0]*u[0]+q[1]*u[1]-s0 for q in p['p'])) for p in r['pieces']]
+        part = all(hi-lo <= 120.0+1e-9 for lo, hi in span)
+        if part:
+            ck(len(mine) == len(span),
+               'board %d: a run of %d part slips carries %d clips'
+               % (b['idx'], len(span), len(mine)))
+            for (lo, hi), (a0, a1) in zip(sorted(span), mine):
+                ck(abs((a0+a1)/2.0-(lo+hi)/2.0) < 0.01,
+                   'board %d: a clip on a part slip is %.2f off its middle'
+                   % (b['idx'], abs((a0+a1)/2.0-(lo+hi)/2.0)))
+        else:
+            ck(mine[0][0] <= END_MAX+1e-6 and L-mine[-1][1] <= END_MAX+1e-6,
+               'board %d: a run is open %.1f / %.1f at its ends, the rule is %g'
+               % (b['idx'], mine[0][0], L-mine[-1][1], END_MAX))
+            ck(abs(mine[0][0]-(L-mine[-1][1])) < 1e-6,
+               'board %d: a run is open %.1f at one end and %.1f at the other'
+               % (b['idx'], mine[0][0], L-mine[-1][1]))
         for i in range(1, len(mine)):
             ck(mine[i][0]-mine[i-1][1] >= GAP-1e-6,
                'board %d: two rails are %.2f apart, the rule is %g'

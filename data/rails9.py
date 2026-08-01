@@ -179,6 +179,26 @@ def layout(L):
         _LAYOUT[k] = place(L, pick(L))
     return _LAYOUT[k]
 
+
+# A PART SLIP - a 102.5 or a 104 closer - is not a whole slip with room to spare.  Where one is
+# the only thing a clip has to hold, the clip goes on the MIDDLE of it and nothing else: pushed to
+# one end of a 104 it reads as a mistake and holds the piece off-centre.  Board 4's four border
+# courses are nothing but these, stacked in pairs, and filling those pairs the way a course is
+# filled put an R100 on each and both of them hard against an end.
+HALF_MAX = 120.0
+
+
+def all_part(r):
+    """is every slip in this run a part slip, so that none of them can take a long clip?"""
+    return all(b-a <= HALF_MAX+1e-9 for a, b, _p in _slips1d(r))
+
+
+def centred(r):
+    """-> [(code, start)]  one R50 on the middle of each slip"""
+    L = length(SHORT)
+    return [(SHORT, round((a+b)/2.0-L/2.0, 4)) for a, b, _p in _slips1d(r)]
+
+
 def in_scope(board):
     from runs9 import runs as _runs
     if not big_span(board):
@@ -192,7 +212,13 @@ def _solve_board(board):
     R = _runs(board)
     big = big_span(board)
     scope = [r for r in R if big and r['n'] >= MIN_SLIPS]
-    return R, scope, {round(r['length'], 3): layout(r['length']) for r in scope}
+    # keyed on run length, so every course of a length is set out alike; a run of nothing but part
+    # slips is keyed on its slips as well, because what it gets is one clip centred on each
+    sol = {}
+    for r in scope:
+        k = round(r['length'], 3)
+        sol[k] = centred(r) if all_part(r) else layout(r['length'])
+    return R, scope, sol
 
 
 def choose_stock(boards):

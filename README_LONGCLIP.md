@@ -14,7 +14,7 @@
 | 项 | 原目录 | 本分支 |
 |---|---|---|
 | 砖片 | 1414 片 | **1414 片,逐个多边形相同** |
-| 卡扣 | 1414 个,全 RC-50 加包边 | 1086 个:R1000 × 4、R700 × 154、R100 × 130、R50 × 748、包边 50 |
+| 卡扣 | 1414 个,全 RC-50 加包边 | 1086 个:R1000 × 4、R700 × 154、R100 × 50、R50 × 828、包边 50 |
 | 卡扣命名 | RC-50 | R50,与供应商图一致;整排用 R1000/R700/R100,收口处也用 R50 |
 | 板 9 | 154 个错开 R50 | **完全相同**(缝 3 mm 装不下整排导轨,见 `rails9.long_ok()`) |
 | 板 3、5、6 | | 无连续段够长,不变 |
@@ -35,6 +35,7 @@ python data/rails9.py           # 每种排长的拼法、逐板的导轨与 R50
 python data/schedules_csv.py    # 写 CSV,并断言三种分组合计相等
 python data/check_coverage.py   # 板面无重叠、无空档
 python data/check_dxf.py dxf/06_clips_CN_EN.dxf dxf/08_setout_CN_EN.dxf
+python data/check_files.py      # 交付清单:每个文件在不在、里面的数与几何对不对得上
 python data/check_all.py        # 持有量、明细与几何、备料算术、下载区与母本一致，
                                 # 并且逐块板打开 GLB 数卡扣、核对 CSV 的长度与孔数
 python data/check_sheets.py     # S7/S8/S9 上的文字压线、压格、出血
