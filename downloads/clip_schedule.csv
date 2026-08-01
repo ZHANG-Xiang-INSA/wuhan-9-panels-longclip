@@ -1,13 +1,12 @@
 ﻿分组 GROUP,分组值 GROUP VALUE,件号 CODE,类别 KIND,名称 NAME,长度 LENGTH mm,孔数 HOLES,孔距 PITCH mm,砖类型 PRODUCT,数量 QTY,备料+15% ORDER,用在 USED ON
-按型号 by type,R50,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 B2 292; L10 Grey 266; L10 Yellow 190,748,861,1 x38; 2 x20; 3 x132; 5 x145; 6 x147; 8 x112; 9 x154
+按型号 by type,R50,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 B2 372; L10 Grey 266; L10 Yellow 190,828,953,1 x38; 2 x20; 3 x132; 4 x80; 5 x145; 6 x147; 8 x112; 9 x154
 按型号 by type,R700,R700,RAIL,Universal rail clip 700,700.0,5,125.0,L10 B2 30; L10 Grey 50; L10 Yellow 74,154,179,1 x34; 2 x40; 4 x30; 7 x42; 8 x8
-按型号 by type,R100,R100,RAIL,Universal rail clip 100,100.0,2,50.0,L10 B2 80; L10 Grey 33; L10 Yellow 17,130,150,1 x17; 4 x80; 7 x21; 8 x12
+按型号 by type,R100,R100,RAIL,Universal rail clip 100,100.0,2,50.0,L10 Grey 33; L10 Yellow 17,50,58,1 x17; 7 x21; 8 x12
 按型号 by type,R1000,R1000,RAIL,Universal rail clip 1000,1000.0,7,125.0,L10 Grey 4,4,5,8 x4
 按型号 by type,PK-3T03,PK-3T03,POCKET,Dedicated pocket clip,,,,L10 Yellow 34,34,40,3 x34
 按型号 by type,PK-8T02,PK-8T02,POCKET,Dedicated pocket clip,,,,L10 Grey 16,16,19,8 x16
-按砖类型 by product,L10 B2,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 B2,292,336,5 x145; 6 x147
+按砖类型 by product,L10 B2,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 B2,372,428,4 x80; 5 x145; 6 x147
 按砖类型 by product,L10 B2,R700,RAIL,Universal rail clip 700,700.0,5,125.0,L10 B2,30,35,4 x30
-按砖类型 by product,L10 B2,R100,RAIL,Universal rail clip 100,100.0,2,50.0,L10 B2,80,92,4 x80
 按砖类型 by product,L10 Grey,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 Grey,266,306,8 x112; 9 x154
 按砖类型 by product,L10 Grey,R700,RAIL,Universal rail clip 700,700.0,5,125.0,L10 Grey,50,58,7 x42; 8 x8
 按砖类型 by product,L10 Grey,R100,RAIL,Universal rail clip 100,100.0,2,50.0,L10 Grey,33,38,7 x21; 8 x12
@@ -24,8 +23,8 @@
 按板号 by board,板 board 2,R700,RAIL,Universal rail clip 700,700.0,5,125.0,L10 Yellow,40,,2
 按板号 by board,板 board 3,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 Yellow,132,,3
 按板号 by board,板 board 3,PK-3T03,POCKET,Dedicated pocket clip,,,,L10 Yellow,34,,3
+按板号 by board,板 board 4,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 B2,80,,4
 按板号 by board,板 board 4,R700,RAIL,Universal rail clip 700,700.0,5,125.0,L10 B2,30,,4
-按板号 by board,板 board 4,R100,RAIL,Universal rail clip 100,100.0,2,50.0,L10 B2,80,,4
 按板号 by board,板 board 5,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 B2,145,,5
 按板号 by board,板 board 6,R50,RAIL,Universal rail clip 50,50.0,2,25.0,L10 B2,147,,6
 按板号 by board,板 board 7,R700,RAIL,Universal rail clip 700,700.0,5,125.0,L10 Grey,42,,7
