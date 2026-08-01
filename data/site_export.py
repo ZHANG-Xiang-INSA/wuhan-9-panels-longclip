@@ -259,6 +259,8 @@ for b in boards:
         if k in RAILS.FAMILY:
             e['length'] = RAILS.length(k)
             e['holes'] = len(RAILS.holes(k))
+            _h = RAILS.holes(k)
+            e['pitch'] = round(_h[1]-_h[0], 3) if len(_h) > 1 else ''
             e['zh'], e['en'] = RAIL_ZH[k], RAIL_EN[k]
             e['note_zh'], e['note_en'] = _rail_note(k)
         b['clips'].append(e)
@@ -317,8 +319,13 @@ for e in bricks:
 clipcat = {}
 for b in boards:
     for c in b['clips']:
+        # length, holes and pitch come along.  Dropping them here is why clip_schedule.csv read
+        # 50 mm and 2 holes against every rail on it, R700 included: schedules_csv falls back to
+        # the R50's figures when the catalogue has none, and the catalogue had none.
         e = clipcat.setdefault(c['code'], dict(code=c['code'], kind=c['kind'], zh=c['zh'],
-                                               en=c['en'], qty=0, use=[]))
+                                               en=c['en'], qty=0, use=[],
+                                               length=c.get('length'), holes=c.get('holes'),
+                                               pitch=c.get('pitch')))
         e['qty'] += c['qty']
         e['use'].append(dict(board=b['idx'], qty=c['qty']))
 clips_sum = sorted(clipcat.values(), key=lambda e: (e['kind'] != 'RAIL', -e['qty'], e['code']))

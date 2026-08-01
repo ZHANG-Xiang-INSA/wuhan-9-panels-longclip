@@ -946,32 +946,29 @@ def build(b):
                   'T%02d_%s' % (ti+1, t['code']),
                   m_cut if t['kind'] == 'CUT' else m_brick)
 
-    # A rail is one piece of metal over part of a run, so it is built from the board's `rails`
-    # list and not per slip: the pieces it covers carry its code, but their own 50 mm tray is no
-    # longer a clip, and building one rail per covered piece would put seven short clips where
-    # there are two long ones.
-    LONGC = {r['code'] for r in D['summary'].get('rails', [])}
-    for code in sorted({r['code'] for r in b.get('rails', [])}):
-        bm = bmesh.new()
-        for lc in b['rails']:
-            if lc['code'] == code:
-                clip_rail(bm, cen(lc['k']), PROF)
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-        me = bpy.data.meshes.new(code); bm.to_mesh(me); bm.free()
-        ob = bpy.data.objects.new('CLIP_'+code, me)
-        ob.data.materials.append(m_rail)
-        bpy.context.collection.objects.link(ob)
-
-    for code in sorted({p['c'] for p in b['pieces']}):
-        if code in LONGC:
-            continue
+    # ONE MESH PER CODE, gathered first and built once.  A clip of a given length can reach the
+    # board two ways - as a member of a run, out of b['rails'], or as the one clip on a slip no
+    # rail covers - and R50 now does both.  Built in two passes they came out as two meshes, the
+    # second of which Blender renamed R50.001, so a viewer switching "R50" off switched half of
+    # them off.  Which pass a clip came from is not a property of the clip.
+    #
+    # BY PIECE, not by code, for the second source.  The test used to be "is this code one of the
+    # rail lengths", read off summary.rails - and the day R50 joined that list, because a 50 can
+    # be a member of a run now, every slip that keeps its own R50 stopped being built.  703 clips
+    # vanished out of the nine models and every check still passed, because nothing opened a GLB.
+    covered = {i for lc in b.get('rails', []) for i in lc['covers']}
+    foot = {}
+    for lc in b.get('rails', []):
+        foot.setdefault(lc['code'], []).append(lc['k'])
+    for i, p in enumerate(b['pieces']):
+        if i not in covered:
+            foot.setdefault(p['c'], []).append(p['k'])
+    for code in sorted(foot):
         g = CLIPGEO.get(code, {})
         lip = g.get('lipped')
         bm = bmesh.new()
-        for p in b['pieces']:
-            if p['c'] != code:
-                continue
-            q = cen(p['k'])
+        for k in foot[code]:
+            q = cen(k)
             if g.get('kind') == 'POCKET':
                 tb = g.get('tabs') or [False]*len(q)
                 clip_pocket(bm, q, lip if lip and len(lip) == len(q) else [True]*len(q), PROF,
@@ -982,7 +979,7 @@ def build(b):
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
         me = bpy.data.meshes.new(code); bm.to_mesh(me); bm.free()
         ob = bpy.data.objects.new('CLIP_'+code, me)
-        ob.data.materials.append(m_rail if code == 'R50' else m_pock)
+        ob.data.materials.append(m_pock if g.get('kind') == 'POCKET' else m_rail)
         bpy.context.collection.objects.link(ob)
 
     add_lights()

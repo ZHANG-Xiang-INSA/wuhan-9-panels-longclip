@@ -33,7 +33,8 @@ python data/rails9.py           # 每种排长的拼法、逐板的导轨与 R50
 python data/schedules_csv.py    # 写 CSV,并断言三种分组合计相等
 python data/check_coverage.py   # 板面无重叠、无空档
 python data/check_dxf.py dxf/06_clips_CN_EN.dxf dxf/08_setout_CN_EN.dxf
-python data/check_all.py        # 持有量、明细与几何、备料算术、下载区与母本一致
+python data/check_all.py        # 持有量、明细与几何、备料算术、下载区与母本一致，
+                                # 并且逐块板打开 GLB 数卡扣、核对 CSV 的长度与孔数
 python data/check_sheets.py     # S7/S8/S9 上的文字压线、压格、出血
 ```
 

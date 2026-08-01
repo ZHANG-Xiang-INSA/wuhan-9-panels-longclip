@@ -21,12 +21,14 @@ What is checked:
               identical to the net copy - a setting-out drawing is where things go, and the
               ordering copy must not move anything
   SERVED      site/downloads byte for byte the masters, since the page serves from there
-  CSV         the three groupings in each schedule sum to the same total
+  CSV         the three groupings in each schedule sum to the same total, and the spec columns
+              carry the family's real lengths and hole counts
+  MODEL       every GLB holds as many clips as the schedule says, per board and per code
 
 Run data/check_dxf.py and data/check_sheets.py alongside it for the drawing-quality half:
 this file checks the numbers, those two check that a reader can see them.
 """
-import io, sys, os, json, math, csv, itertools, hashlib
+import io, sys, os, json, math, csv, itertools, hashlib, struct
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 import ezdxf
 
@@ -169,6 +171,89 @@ for b in D['boards']:
            'board %d: courses %g long are not set out alike, %s'
            % (b['idx'], L, sorted(set(got))))
 
+
+# ---------------------------------------------------------------- what is IN the models
+# Nothing here ever opened a GLB, and that is how 703 clips came to be missing from all nine
+# boards with every check green: the model is a deliverable like any other and has to be counted,
+# not assumed.  Each clip is welded into one mesh per code, so what is counted is connected
+# shells - a fixed number per clip, whatever the length, because the section is the same sweep.
+# The number itself is never assumed: it has to divide the schedule exactly and agree across
+# every board that uses that code.
+def _glb(path):
+    raw = open(path, 'rb').read()
+    off, ch = 12, {}
+    while off < len(raw):
+        ln, ty = struct.unpack_from('<II', raw, off)
+        ch[ty] = raw[off+8:off+8+ln]
+        off += 8+ln
+    return json.loads(ch[0x4E4F534A].decode('utf-8')), ch[0x004E4942]
+
+
+def _shells(G, BIN, mesh):
+    n = 0
+    for pr in mesh['primitives']:
+        a = G['accessors'][pr['attributes']['POSITION']]
+        ia = G['accessors'][pr['indices']]
+        bv = G['bufferViews'][ia['bufferView']]
+        o = bv.get('byteOffset', 0)+ia.get('byteOffset', 0)
+        fmt = {5121: 'B', 5123: 'H', 5125: 'I'}[ia['componentType']]
+        ix = struct.unpack_from('<%d%s' % (ia['count'], fmt), BIN, o)
+        par = list(range(a['count']))
+
+        def find(x):
+            while par[x] != x:
+                par[x] = par[par[x]]
+                x = par[x]
+            return x
+
+        for k in range(0, len(ix), 3):
+            r0 = find(ix[k])
+            par[find(ix[k+1])] = r0
+            par[find(ix[k+2])] = r0
+        n += len({find(i) for i in range(a['count'])})
+    return n
+
+
+_per = {}
+for b in D['boards']:
+    q = os.path.join('site', 'models', 'board_%d.glb' % b['idx'])
+    if not os.path.exists(q):
+        ck(False, 'board %d has no model' % b['idx'])
+        continue
+    G, BIN = _glb(q)
+    got = {m['name']: _shells(G, BIN, m) for m in G['meshes']
+           if m['name'] not in ('backing', 'MORTAR') and not m['name'].startswith('T0')}
+    want = {e['code']: e['qty'] for e in b['clips']}
+    for c in sorted(set(got) | set(want)):
+        g, w = got.get(c, 0), want.get(c, 0)
+        ck(w > 0 and g > 0 and g % w == 0,
+           'board %d: the model holds %d shells of %s against %d on the schedule'
+           % (b['idx'], g, c, w))
+        if w and g and g % w == 0:
+            _per.setdefault(c, {})[b['idx']] = g//w
+for c, per in _per.items():
+    ck(len(set(per.values())) == 1,
+       '%s is built %s shells per clip on different boards, so a board is short of some'
+       % (c, sorted(set(per.values()))))
+
+# ---------------------------------------------------------------- the schedules on paper
+# The CSV carries a spec column per clip.  It read 50 mm and 2 holes against every rail on it,
+# R700 included, because the catalogue had dropped length and holes and the writer fell back to
+# the R50's figures.  Held to the family here, which is where the real numbers are.
+sys.path.insert(0, HERE)
+import rails9 as _R9                                                # noqa: E402
+_rows = list(csv.reader(io.open('site/downloads/clip_schedule.csv', encoding='utf-8-sig')))
+_h = _rows[0]
+_ci, _cl, _ch = _h.index('件号 CODE'), _h.index('长度 LENGTH mm'), _h.index('孔数 HOLES')
+for r in _rows[1:]:
+    if r[_ci] not in _R9.FAMILY:
+        continue
+    ck(abs(float(r[_cl])-_R9.length(r[_ci])) < 1e-6,
+       'clip_schedule.csv: %s reads %s mm, the drawing says %g'
+       % (r[_ci], r[_cl], _R9.length(r[_ci])))
+    ck(int(r[_ch]) == len(_R9.holes(r[_ci])),
+       'clip_schedule.csv: %s reads %s holes, the drawing says %d'
+       % (r[_ci], r[_ch], len(_R9.holes(r[_ci]))))
 
 # ---------------------------------------------------------------- clashes
 def _sep(A, B):
