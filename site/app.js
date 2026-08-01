@@ -12,7 +12,8 @@ const LEGOUT = (P.flat - SLIP[1]) / 2;      // 1.5, how far a leg stands outside
 const byIdx = Object.fromEntries(boards.map(b => [b.idx, b]));
 
 const INK = '#1d1d1b', MUT = '#7d7a72', LINE = '#d3ccbd';
-const CLIP_COL = c => c === 'RC-50' ? '#2f6ea8' : c.startsWith('LC-') ? '#1f7a5a' : '#b4491f';
+// R50 blue, the longer rails green, the bespoke pockets rust: three families, three colours
+const CLIP_COL = c => c === 'R50' ? '#2f6ea8' : /^R\d/.test(c) ? '#1f7a5a' : '#b4491f';
 
 /* =====================================================================
    language
@@ -548,7 +549,7 @@ function paint() {
     o.material = dimc ? MAT_DIM
       : (mode === 'clip' || mode === 'type')
         ? metalMat(CLIP_COL(c), 0.45)
-        : metalMat(c === 'RC-50' ? '#8b939c' : '#bd7048', c === 'RC-50' ? 0.42 : 0.36);
+        : metalMat(c === 'R50' ? '#8b939c' : '#bd7048', c === 'R50' ? 0.42 : 0.36);
     o.visible = layer.clips;
   }
   if (cur.mortar) {
@@ -691,7 +692,7 @@ function edgePts(a, b, t0, t1) {
   return [[a[0] + ux * t0, a[1] + uy * t0], [a[0] + ux * t1, a[1] + uy * t1]];
 }
 
-/* A rail 1366 long and 68 across, scaled to fit a card, is a five-pixel hairline: the plan and the
+/* A rail 1000 long and 68 across, scaled to fit a card, is a seven-pixel hairline: the plan and the
    blank are drawn but there is nothing in them to see, which is why the long clip's card read as a
    note with no drawing under it.  Anything longer than six times its own width is therefore drawn
    BROKEN - KEEP mm off each end at a scale that can be read, the identical middle left out between
@@ -810,8 +811,8 @@ function clipViews(code) {
   // part that does not exist.  What the two share is the edge, so a pocket gets one leg and its
   // return lip, with the slip against it, and an arrow on the lip so the direction is not left to
   // be inferred: the tip comes back over the slip, and that interference is the whole retention.
-  // by kind, not by code: the long clip is the same M profile as RC-50 and only its length differs,
-  // and testing for 'RC-50' drew it with the pocket's half section - a part that does not exist
+  // by kind, not by code: the long clip is the same M profile as R50 and only its length differs,
+  // and testing for 'R50' drew it with the pocket's half section - a part that does not exist
   const isRail = g.kind === 'RAIL';
   const prof = isRail
     ? [[TI, TU], [0, LG], [0, 0], [F, 0], [F, LG], [F - TI, TU]]
@@ -1019,11 +1020,16 @@ function prodNote() {
 }
 
 function longNote() {
-  const L = (D.summary || {}).longclip;
-  if (!L) return '';
+  // The one searched length is gone: the shop works to a stock family, so a continuous run is
+  // made up of several of these end to end.  Each carries its own hole positions, taken from the
+  // supplier's drawing, so there is no one pitch to quote.
+  const R = (D.summary || {}).rails || [];
+  if (!R.length) return '';
+  const g = D.summary.rail_gap, e = D.summary.rail_end_max;
+  const list = R.map(r => `${r.code} ${r.length} × ${r.qty}`).join(lang === 'zh' ? '，' : ', ');
   return lang === 'zh'
-    ? `　长卡扣 ${L.code}：长 ${L.length}，${L.holes} 孔 @${L.pitch}，两端各 ${L.margin}，共 ${L.qty} 根。`
-    : `  Long clip ${L.code}: ${L.length} long, ${L.holes} holes at ${L.pitch}, ${L.margin} from each end, ${L.qty} off.`;
+    ? `　整排导轨：${list}；相邻两根间隔 ${g}，每排两端最多空出 ${e}。`
+    : `  Rails on a run: ${list}; ${g} apart, at most ${e} left open at each end of a run.`;
 }
 
 /* ---------------------------------------------------------------------

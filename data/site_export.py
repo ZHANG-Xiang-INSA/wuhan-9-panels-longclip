@@ -142,7 +142,7 @@ for p in P:
             code = pocket_code(p['idx'], t['code'], loc)
             cq = place_tray(loc, CLIP_BY_CODE[code])
         else:
-            code = 'RC-50'
+            code = 'R50'
             cq = rail_quad(loc, w, h, run, t0, t1, axis, RAIL[0], bias=bias(p, obj, rect))
         used[code] = used.get(code, 0)+1
         out_pieces.append(dict(
@@ -167,9 +167,10 @@ for p in P:
                     label=t['label'], desc=LB.describe(t), area=round(t['area']),
                     nsides=t['nsides'],
                     dims=[round(t['dims'][0], 1), round(t['dims'][1], 1)]) for t in types],
-        clips=[dict(code=k, qty=v, kind=CLIP_BY_CODE[k]['kind'],
-                    zh=CLIP_BY_CODE[k]['zh'], en=CLIP_BY_CODE[k]['en'],
-                    note_zh=CLIP_BY_CODE[k]['note_zh'], note_en=CLIP_BY_CODE[k]['note_en'])
+        # provisional; the rails block below rebuilds it once the packing is known, and on a
+        # first run from an empty tree clips9.json may not name the rails at all yet
+        clips=[dict(code=k, qty=v, **{f: CLIP_BY_CODE.get(k, {}).get(f, '')
+                                      for f in ('kind', 'zh', 'en', 'note_zh', 'note_en')})
                for k, v in sorted(used.items())],
         pieces=out_pieces))
 
@@ -183,7 +184,7 @@ for c in CL['clips']:
         base=[[round(q[0]-min(xs), 2), round(q[1]-min(ys), 2)] for q in base],
         lipped=lipped,
         tabs=list(c.get('tabs') or [False]*len(lipped)),
-        tab_w=c.get('tab_w', TAB_W),   # the tab was 2 mm before the fold rule changed; RC-50 has
+        tab_w=c.get('tab_w', TAB_W),   # the tab was 2 mm before the fold rule changed; R50 has
                                        # no tab and was still shipping that 2.0 as its width
         holes=[[round(q[0]-min(xs), 2), round(q[1]-min(ys), 2)] for q in hs],
         bw=round(max(xs)-min(xs), 1), bh=round(max(ys)-min(ys), 1),
@@ -195,46 +196,72 @@ prof = dict(flat=FLAT, leg=PROF['leg'], lip=PROF['lip'], angle=PROF['lip_angle']
             tip_in=round(PROF['lip']*math.sin(math.radians(PROF['lip_angle'])), 3),
             tip_up=round(PROF['leg']-PROF['lip']*math.cos(math.radians(PROF['lip_angle'])), 3))
 
-# ---------------------------------------------------------------- the long clip
-# Where a course runs unbroken, one long clip of the standard length replaces the RC-50s along it.
-# longclip9 finds that length by searching the runs these nine boards actually offer; nothing here
-# assumes it.  Each board gains a `longs` list - one entry per long clip, with its tray, its holes
-# and the pieces it lies on - and the pieces it covers change their `c` to the long clip's code.
-# A piece left over at the end of a run keeps its RC-50, but the tray moves clear of the long
-# clip's end, because an RC-50 centred on its own slip backs into it by up to 16 mm.
-from longclip9 import standard as _lc_std, plan as _lc_plan, code as _lc_code
+# ---------------------------------------------------------------- the rails
+# Where a course runs unbroken, a chain of the supplier's stock lengths replaces the row of R50s
+# along it.  rails9 does the packing against the runs these nine boards actually offer; no length
+# is invented here - the four on offer are 1000, 700, 300 and 100, and their hole positions come
+# from the supplier's own drawing.  Each board gains a `rails` list, one entry per rail with its
+# code, tray, holes and the pieces it lies on, and a covered piece changes its `c` to that code.
+# A piece left over keeps its R50 with the tray the packer put there: clear of the chain's end,
+# and on the last slip of a run pushed out to the end, because how far the system reaches is
+# measured from there.
+import rails9 as RAILS
 
-LCSTD = _lc_std(dict(boards=boards))
-LCODE = _lc_code(LCSTD)
+RAIL_ZH = {'R1000': '通用导轨卡扣 1000', 'R700': '通用导轨卡扣 700', 'R300': '通用导轨卡扣 300',
+           'R100': '通用导轨卡扣 100', 'R50': '通用导轨卡扣 50'}
+RAIL_EN = {c: 'Universal rail clip %g' % RAILS.length(c) for c in RAILS.FAMILY}
+RORD = {c: i for i, c in enumerate(('R1000', 'R700', 'R300', 'R100', 'R50'))}
+
+
+def _rail_note(code):
+    L, hs = RAILS.length(code), RAILS.holes(code)
+    at = '，'.join('%g' % h for h in hs)
+    return ('M 型卡扣，直段 %g mm。平板 %g 宽贴砖背面，两侧立边 %g 高，边缘 %g mm 唇边内折 %g 度，'
+            '开口收至 %g，砖片需压入卡紧。%d 个 %g 直径固定孔，距端部 %s。规格与孔位见'
+            ' dxf/guiding_rail_clip_10_types_orthographic.dxf。'
+            % (L, FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
+               len(hs), 3.5, at),
+            'M-section snap clamp, %g mm long. %g flat behind the slip, %g legs, %g lips folded '
+            '%g deg in, mouth %g so the slip snaps past. %d off dia %g fixing holes at %s from '
+            'the end. Sizes and hole positions per the supplier drawing '
+            'guiding_rail_clip_10_types_orthographic.dxf.'
+            % (L, FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
+               len(hs), 3.5, ', '.join('%g' % h for h in hs)))
+
+
 for b in boards:
-    pl = _lc_plan(b, LCSTD)
+    pl = RAILS.plan(b)
     ix = {id(p): i for i, p in enumerate(b['pieces'])}
-    b['longs'] = [dict(k=[[round(q[0], 2), round(q[1], 2)] for q in lc['tray']],
-                       holes=[[round(q[0], 2), round(q[1], 2)] for q in lc['holes']],
-                       covers=sorted(ix[id(q)] for q in lc['covers']))
-                  for lc in pl['longs']]
-    for lc in pl['longs']:
-        for q in lc['covers']:
-            q['c'] = LCODE
+    b['rails'] = [dict(code=rc['code'],
+                       k=[[round(q[0], 2), round(q[1], 2)] for q in rc['tray']],
+                       holes=[[round(q[0], 2), round(q[1], 2)] for q in rc['holes']],
+                       covers=sorted(ix[id(q)] for q in rc['covers']))
+                  for rc in pl['rails']]
+    for rc in pl['rails']:
+        for q in rc['covers']:
+            q['c'] = rc['code']
     for e in pl['r50']:
         e['piece']['k'] = [[round(v[0], 2), round(v[1], 2)] for v in e['tray']]
-    n_long, n_r50 = len(pl['longs']), len(pl['r50'])
-    b['clips'] = [c for c in b['clips'] if c['code'] != 'RC-50' or n_r50]
-    for c in b['clips']:
-        if c['code'] == 'RC-50':
-            c['qty'] = sum(1 for e in pl['r50'] if e['piece']['c'] == 'RC-50')
-    if n_long:
-        b['clips'].insert(0, dict(
-            code=LCODE, kind='RAIL', qty=n_long, length=LCSTD['L'],
-            holes=LCSTD['holes'], pitch=125.0, margin=LCSTD['margin'],
-            zh='通用长卡扣', en='Universal long clip',
-            note_zh='断面与 RC-50 完全相同：平板 68 宽，两侧立边 15 高，边缘 10 mm 唇边内折 16 度，'
-                    '开口收至 62.5。直段 %g mm，%d 个 3.5 直径固定孔，孔距 125，两端各留 %g。'
-                    % (LCSTD['L'], LCSTD['holes'], LCSTD['margin']),
-            note_en='Section identical to RC-50: 68 flat, 15 legs, 10 lips folded 16 deg in, '
-                    'mouth 62.5. %g mm long, %d off dia 3.5 fixing holes at %g pitch, %g from '
-                    'each end.' % (LCSTD['L'], LCSTD['holes'], 125.0, LCSTD['margin'])))
-    b['clips'] = [c for c in b['clips'] if c['qty']]
+    # a rail counts once, however many slips it lies on; everything else counts per piece
+    cnt = {}
+    for rc in pl['rails']:
+        cnt[rc['code']] = cnt.get(rc['code'], 0)+1
+    covered = {i for rc in b['rails'] for i in rc['covers']}
+    for i, p in enumerate(b['pieces']):
+        if i not in covered:
+            cnt[p['c']] = cnt.get(p['c'], 0)+1
+    b['clips'] = []
+    for k in sorted(cnt, key=lambda c: (RORD.get(c, 99), c)):
+        base = CLIP_BY_CODE.get(k, {})
+        e = dict(code=k, qty=cnt[k], kind=base.get('kind', 'RAIL'),
+                 zh=base.get('zh', ''), en=base.get('en', ''),
+                 note_zh=base.get('note_zh', ''), note_en=base.get('note_en', ''))
+        if k in RAILS.FAMILY:
+            e['length'] = RAILS.length(k)
+            e['holes'] = len(RAILS.holes(k))
+            e['zh'], e['en'] = RAIL_ZH[k], RAIL_EN[k]
+            e['note_zh'], e['note_en'] = _rail_note(k)
+        b['clips'].append(e)
 
 # ---------------------------------------------------------------- brick product
 # The slips are the same size and the same count as before; what is new is which product they are
@@ -324,8 +351,12 @@ summary = dict(bricks=bricks, clips=clips_sum,
                brick_total=sum(e['qty'] for e in bricks),
                brick_spare=sum(e['spare'] for e in bricks),
                products=[prodtot[k] for k in sorted(prodtot)],
-               longclip=dict(code=LCODE, length=LCSTD['L'], holes=LCSTD['holes'],
-                             pitch=125.0, margin=LCSTD['margin'], qty=LCSTD['long']),
+               rails=[dict(code=c, length=RAILS.length(c),
+                           holes=RAILS.holes(c),
+                           qty=sum(1 for b in boards for r in b['rails'] if r['code'] == c))
+                      for c in ('R1000', 'R700', 'R300', 'R100')
+                      if any(r['code'] == c for b in boards for r in b['rails'])],
+               rail_gap=RAILS.GAP, rail_end_max=RAILS.END_MAX,
                clip_total=sum(e['qty'] for e in clips_sum),
                boards=len(boards))
 

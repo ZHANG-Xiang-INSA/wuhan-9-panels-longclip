@@ -294,10 +294,10 @@ def title_block(x, y):
         '1. ALL DIMENSIONS IN MILLIMETRES.  Drawing 1:1, typical cross-section 3:1.   '
         '全部尺寸单位为毫米，图纸 1:1，典型断面 3:1。',
         '2. MATERIAL: formed steel sheet, thickness 0.25.   材料：冷弯钢板，料厚 0.25。',
-        '3. RAIL PROFILE (RC-50 only): flat 68 + leg 15 each side + return lip 10 each side, '
+        '3. RAIL PROFILE (R50 only): flat 68 + leg 15 each side + return lip 10 each side, '
         'developed blank 10+15+68+15+10 = 118.  A POCKET clip has no 68 flat, no second leg and no '
         '62.5 mouth: its tray follows its own piece and only the edges shown folded are folded.   '
-        '导轨卡扣（仅 RC-50）断面：平板 68，两侧立边 15，两侧回折唇边 10，展开料 118。包边卡扣无 68 '
+        '导轨卡扣（仅 R50）断面：平板 68，两侧立边 15，两侧回折唇边 10，展开料 118。包边卡扣无 68 '
         '平板、无对侧立边、无 62.5 开口，托盘随砖形，仅图示折边处折弯。',
         '4. EVERY FOLD ON EVERY TYPE HOOKS INWARD, BACK OVER THE SLIP: leg 15 up, then a 10 lip '
         'returned 16 deg so its tip lands 2.76 inside the leg at 5.39 up.  That is the whole '
@@ -308,8 +308,8 @@ def title_block(x, y):
         '6. Hole centres are kept 8 clear of a plain edge and 12 clear of a lipped edge, so a '
         'screwdriver reaches the screw without fouling the inward hook.   '
         '孔心距普通边不小于 8，距折唇边不小于 12，确保螺丝刀不被内折唇边挡住。',
-        '7. RC-50 hole positions taken from guiding_rail_clip.dwg: 12.5 from each end, on the 68 '
-        'centreline.   RC-50 孔位取自导轨卡扣原图：距两端各 12.5，位于 68 中线。',
+        '7. R50 hole positions taken from guiding_rail_clip.dwg: 12.5 from each end, on the 68 '
+        'centreline.   R50 孔位取自导轨卡扣原图：距两端各 12.5，位于 68 中线。',
         '8. A DEVELOPED BLANK is drawn 1:1 for every type.  It shows the flaps UNFOLDED, lying '
         'flat outside the tray; the arrow on each flap is the direction it is folded, always back '
         'toward the inside of the tray.  Red = the bend on the tray edge, blue = the bend at the '
@@ -342,8 +342,8 @@ def title_block(x, y):
 
 def typical(x, y):
     SC = 3.0
-    TX((x, y), 'RAIL CROSS-SECTION  RC-50  (SCALE 3:1)  -  a pocket has one leg of this, on the '
-               'edges shown folded   导轨卡扣断面（RC-50），包边卡扣仅在图示折边处做同样的单侧立边'
+    TX((x, y), 'RAIL CROSS-SECTION  R50  (SCALE 3:1)  -  a pocket has one leg of this, on the '
+               'edges shown folded   导轨卡扣断面（R50），包边卡扣仅在图示折边处做同样的单侧立边'
                '与唇边', 24, 'TITLE', al='BL')
     cx = x+240; cy = y-190
     b = W/2*SC; lg = LEG*SC; ru = RUP*SC; ri = RIN*SC

@@ -35,7 +35,7 @@ EDGE_MIN, LIP_CLR = 8.0, 12.0
 
 
 def holes_rule(poly, lipped, rail_len=None):
-    """RC-50 takes the reference drawing's positions, 12.5 from each end on the centreline.
+    """R50 takes the reference drawing's positions, 12.5 from each end on the centreline.
     A pocket is eroded instead: 8 clear of a plain edge, 12 of a lipped one, so a driver reaches
     the screw without fouling the inward hook."""
     if rail_len is not None:
@@ -146,8 +146,8 @@ BRK_KEEP, BRK_GAP = 210.0, 60.0
 def broken(base):
     """is this part too long and thin to draw whole?
 
-    LC-1366 is 1366 along and 68 across.  Drawn to fit a column beside two other views it is a
-    hairline: the sheet shows a part 20 times as long as it is wide and nothing can be read off
+    R1000 is 1000 along and 68 across.  Drawn to fit a column beside two other views it is a
+    hairline: the sheet shows a part 15 times as long as it is wide and nothing can be read off
     it.  Over 6:1 the part is drawn broken, which is what any drawing of a long section does.
     """
     xs = [q[0] for q in base]; ys = [q[1] for q in base]

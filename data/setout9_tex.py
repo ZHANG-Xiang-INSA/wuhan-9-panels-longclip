@@ -49,7 +49,7 @@ def bake(i):
 
     # 1.2 mm of ink at any board size, so a line looks the same weight on board 3 as on board 8
     lw = 1.2*PXMM*72/100.0/PXMM*1.0
-    for lc in B['longs']:
+    for lc in B['rails']:
         ax.add_patch(Polygon(lc['tray'], closed=True, fill=False, ec=CLIP, lw=lw*0.85, zorder=3))
         for hx, hy in lc['holes']:
             ax.add_patch(Circle((hx, hy), 1.75, fill=False, ec=HOLE, lw=lw*0.8, zorder=4))

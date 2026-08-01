@@ -56,19 +56,22 @@ def studio():
     ramp = nt.nodes.new('ShaderNodeValToRGB')
     nt.links.new(tc.outputs['Generated'], sep.inputs['Vector'])
     nt.links.new(sep.outputs['Z'], ramp.inputs['Fac'])
-    # generated Z runs 0 at the nadir to 1 at the zenith; the step near the middle is the horizon
-    # the metal reflects, and without it the flat has nothing to show but an even field
-    # 0.24, not 0.09, below the horizon: a vertical face reflects the floor half of the sky and
-    # at 0.09 both legs came out near black, which reads as a hole in the part rather than metal
-    ramp.color_ramp.elements[0].position = 0.30
-    ramp.color_ramp.elements[0].color = (0.26, 0.27, 0.29, 1)
-    # The zenith is 0.58, not 1.0.  A polished face pointing up is a mirror of it, and at 1.0 the
-    # whole plate of a pocket clipped to flat white: the shading that says "metal" went with it.
-    # Held below clipping it renders as bright silver and the folds still read.
-    ramp.color_ramp.elements[1].position = 0.95
-    ramp.color_ramp.elements[1].color = (0.58, 0.60, 0.63, 1)
+    # Generated Z runs 0 at the nadir to 1 at the zenith.  BANDS, not a smooth gradient: a mirror
+    # shows what is in front of it, and a sky that fades evenly gives the flat nothing to show but
+    # an even field - which is what made the first attempt read as grey paper.  Bright and dark
+    # bars put real edges into the reflection, and those edges are what the eye takes for polished
+    # metal.  The floor is 0.26 and not near zero, or a vertical leg reflects only the dark half
+    # of the sky and comes out as a hole in the part.
+    FLOOR = 0.26
+    e = ramp.color_ramp.elements
+    e[0].position, e[0].color = 0.02, (FLOOR*0.5, FLOOR*0.5, FLOOR*0.55, 1)
+    e[1].position, e[1].color = 0.30, (FLOOR, FLOOR, FLOOR*1.08, 1)
+    for pos, v in ((0.42, 0.66), (0.50, FLOOR*1.3), (0.62, 0.82),
+                   (0.72, FLOOR*1.5), (0.84, 0.58), (1.00, 0.34)):
+        n = ramp.color_ramp.elements.new(pos)
+        n.color = (v, v*1.01, v*1.05, 1)
     nt.links.new(ramp.outputs['Color'], bg.inputs['Color'])
-    bg.inputs['Strength'].default_value = 1.45
+    bg.inputs['Strength'].default_value = 2.4
 
     for name, loc, rot, size, energy in (
             ('key',  (-0.55, -0.42, 0.62), (0.72, 0.0, -0.92), 0.55, 150.0),
@@ -82,12 +85,39 @@ def studio():
         bpy.context.scene.collection.objects.link(o)
 
 
+def grade():
+    """the tone curve, set AFTER setup_render, which deliberately turns it off
+
+    build_blender9 renders the boards through 'Standard': albedo in, albedo out, no curve.  That
+    is the whole basis of the colour calibration there, and it is exactly wrong here, because it
+    also means no highlight roll-off - a polished face pointing at a lamp runs straight into the
+    clip and prints as flat white.  AgX rolls the top end off instead, so the bright side of a
+    fold stays the bright side of a fold.  A third of a stop down on top of that, because a part
+    photographed on a light ground wants to sit under the paper rather than on it.
+    """
+    v = bpy.context.scene.view_settings
+    for want in ('AgX', 'Filmic', 'Standard'):
+        try:
+            v.view_transform = want
+            break
+        except Exception:
+            continue
+    for look in ('AgX - Medium High Contrast', 'Medium High Contrast', 'None'):
+        try:
+            v.look = look
+            break
+        except Exception:
+            continue
+    v.exposure = -0.35
+    v.gamma = 1.0
+
+
 def steel():
     m = bpy.data.materials.new('steel'); m.use_nodes = True
     b = m.node_tree.nodes['Principled BSDF']
     b.inputs['Base Color'].default_value = (0.62, 0.645, 0.68, 1.0)
     b.inputs['Metallic'].default_value = 1.0
-    b.inputs['Roughness'].default_value = 0.22
+    b.inputs['Roughness'].default_value = 0.20
     for k, v in (('Anisotropic', 0.45), ('Anisotropic Rotation', 0.0), ('IOR', 2.6)):
         if k in b.inputs:
             b.inputs[k].default_value = v
@@ -187,6 +217,7 @@ if __name__ == '__main__':
         B.wipe()
         studio()
         B.setup_render((1500, 1500), samples=384)
+        grade()                       # after setup_render: it sets the boards' flat transform
         ob = clip_object(c)
         bb = [ob.matrix_world @ Vector(v) for v in ob.bound_box]
         span = max(p.x for p in bb)-min(p.x for p in bb)

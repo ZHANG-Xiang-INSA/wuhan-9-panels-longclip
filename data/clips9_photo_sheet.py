@@ -20,10 +20,22 @@ OUT = os.path.join(ROOT, '_clip_renders')
 CL = json.load(open(os.path.join(HERE, 'clips9.json'), encoding='utf-8'))['clips']
 D = json.load(open(os.path.join(ROOT, 'site', 'data', 'boards.json'), encoding='utf-8'))
 
-# What to write on each picture.  These are the ORDER quantities, +15 % on the net figures the
-# schedules carry and rounded up per product - the number a shop is asked to make, which is the
-# only number that belongs on a picture sent to one.  Checked against the data below.
-QTY = {'RC-50': 989, 'LC-1366': 90, 'PK-3T03': 40, 'PK-8T02': 19}
+# What to write on each picture: the ORDER quantity, +15 % on the net figure and rounded up per
+# product, which is the cell a purchase order line is placed against.  COMPUTED, not typed - the
+# lengths changed once already and a number typed here would have gone on saying 90 of a clip
+# that no longer exists.
+import math as _math
+_PROD = {b['idx']: b['product'] for b in D['boards']}
+
+
+def _order(e):
+    per = {}
+    for u in e['use']:
+        per[_PROD[u['board']]] = per.get(_PROD[u['board']], 0)+u['qty']
+    return sum(_math.ceil(v*1.15) for v in per.values())
+
+
+QTY = {e['code']: _order(e) for e in D['summary']['clips']}
 
 W, H = 2400, 1500
 BG_TOP, BG_BOT = (247, 246, 243), (228, 226, 221)
@@ -85,20 +97,9 @@ def picture(c):
 
 
 if __name__ == '__main__':
-    # the numbers written on the pictures are the +15 % order quantities; say so if they are not
     net = {e['code']: e['qty'] for e in D['summary']['clips']}
-    PROD = {b['idx']: b['product'] for b in D['boards']}
-    import math
-    for e in D['summary']['clips']:
-        per = {}
-        for u in e['use']:
-            per[PROD[u['board']]] = per.get(PROD[u['board']], 0)+u['qty']
-        want = sum(math.ceil(v*1.15) for v in per.values())
-        if QTY[e['code']] != want:
-            print('  NOTE  %s: picture says %d, +15%% on %d works out at %d'
-                  % (e['code'], QTY[e['code']], net[e['code']], want))
     for c in CL:
         q = picture(c)
-        print('  %-22s %-9s net %4d   picture %4d   %6.1f KB'
+        print('  %-22s %-9s net %4d   order +15%% %4d   %6.1f KB'
               % (os.path.basename(q), c['kind'], net[c['code']], QTY[c['code']],
                  os.path.getsize(q)/1024))

@@ -946,23 +946,24 @@ def build(b):
                   'T%02d_%s' % (ti+1, t['code']),
                   m_cut if t['kind'] == 'CUT' else m_brick)
 
-    # The long clip is one piece of metal over a whole run, so it is built from the board's
-    # `longs` list, not per slip: the pieces it covers carry its code but their own 50 mm tray is
-    # no longer a clip, and building one rail per covered piece would put seven short clips where
-    # there is one long one.
-    LONGC = D['summary'].get('longclip', {}).get('code')
-    if b.get('longs'):
+    # A rail is one piece of metal over part of a run, so it is built from the board's `rails`
+    # list and not per slip: the pieces it covers carry its code, but their own 50 mm tray is no
+    # longer a clip, and building one rail per covered piece would put seven short clips where
+    # there are two long ones.
+    LONGC = {r['code'] for r in D['summary'].get('rails', [])}
+    for code in sorted({r['code'] for r in b.get('rails', [])}):
         bm = bmesh.new()
-        for lc in b['longs']:
-            clip_rail(bm, cen(lc['k']), PROF)
+        for lc in b['rails']:
+            if lc['code'] == code:
+                clip_rail(bm, cen(lc['k']), PROF)
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-        me = bpy.data.meshes.new(LONGC); bm.to_mesh(me); bm.free()
-        ob = bpy.data.objects.new('CLIP_'+LONGC, me)
+        me = bpy.data.meshes.new(code); bm.to_mesh(me); bm.free()
+        ob = bpy.data.objects.new('CLIP_'+code, me)
         ob.data.materials.append(m_rail)
         bpy.context.collection.objects.link(ob)
 
     for code in sorted({p['c'] for p in b['pieces']}):
-        if code == LONGC:
+        if code in LONGC:
             continue
         g = CLIPGEO.get(code, {})
         lip = g.get('lipped')
@@ -981,7 +982,7 @@ def build(b):
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
         me = bpy.data.meshes.new(code); bm.to_mesh(me); bm.free()
         ob = bpy.data.objects.new('CLIP_'+code, me)
-        ob.data.materials.append(m_rail if code == 'RC-50' else m_pock)
+        ob.data.materials.append(m_rail if code == 'R50' else m_pock)
         bpy.context.collection.objects.link(ob)
 
     add_lights()

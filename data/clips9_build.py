@@ -140,34 +140,42 @@ def pocket(loc, code=None):
 # ---------------------------------------------------------------- assign every piece
 CLIPS, ASSIGN = [], []
 # The long clip, read from the schedule site_export writes rather than declared here: its length
-# is searched against the boards by longclip9 and must not be stated twice.  Absent on a first run
+# is decided against the boards by rails9 and must not be stated twice.  Absent on a first run
 # from an empty tree, and then the drawings simply carry the rail and the pockets.
 _bj = os.path.join(HERE, '..', 'site', 'data', 'boards.json')
-LONG, SCHED = None, {}
+SCHED = {}
+_RAILS = []
 if os.path.exists(_bj):
     _s = json.load(open(_bj, encoding='utf-8'))['summary']
-    LONG = _s.get('longclip')
     SCHED = {e['code']: e['qty'] for e in _s.get('clips', [])}
-    if LONG:
-        CLIPS.append(dict(
-            code=LONG['code'], kind='RAIL', zh='通用长卡扣', en='Universal long clip',
-            length=LONG['length'], qty=LONG['qty'],
-            holes=[(LONG['margin']+k*LONG['pitch'], FLAT/2.0) for k in range(LONG['holes'])],
-            note_zh='断面与 RC-50 完全相同：平板 %g 宽贴砖背面，两侧立边 %g 高，边缘 %g mm 唇边内折 '
-                    '%g 度，开口收至 %g。直段 %g mm，%d 个 %g 直径固定孔，孔距 %g，两端各留 %g。'
-                    '连续排砖处以一根长卡扣代替整排 R50；每段两端各留 20 至 30 mm 不铺满，'
-                    '零头仍用 R50 补。'
-                    % (FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
-                       LONG['length'], LONG['holes'], HOLE, LONG['pitch'], LONG['margin']),
-            note_en='Section identical to RC-50: %g flat behind the slip, %g legs, %g lips folded '
-                    '%g deg in, mouth %g. %g mm long, %d off dia %g fixing holes at %g pitch, %g '
-                    'from each end. One of these replaces the row of R50s along a continuous run; '
-                    'it stops 20-30 mm short of each end and the remainder keeps its R50s.'
-                    % (FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
-                       LONG['length'], LONG['holes'], HOLE, LONG['pitch'], LONG['margin'])))
+    _RAILS = _s.get('rails', [])
+# The rails, read from the schedule site_export writes rather than declared here: which lengths a
+# run is made up of is decided against the runs by rails9, and the sizes and hole positions come
+# from the supplier's own drawing.  Absent on a first run from an empty tree, and then the
+# drawings carry the R50 and the pockets alone.
+import rails9 as RAILS
+for _r in _RAILS:
+    _hs = RAILS.holes(_r['code'])
+    CLIPS.append(dict(
+        code=_r['code'], kind='RAIL', zh='通用导轨卡扣 %g' % _r['length'],
+        en='Universal rail clip %g' % _r['length'],
+        length=_r['length'], qty=_r['qty'],
+        holes=[(h, FLAT/2.0) for h in _hs],
+        note_zh='M 型卡扣，直段 %g mm。断面全场一致：平板 %g 宽贴砖背面，两侧立边 %g 高，边缘 %g mm '
+                '唇边内折 %g 度，开口收至 %g。%d 个 %g 直径固定孔，距端部 %s。连续排砖处由若干根'
+                '首尾相接组成，相邻两根间隔 %g mm，每排两端最多空出 %g mm，其余仍用 R50。'
+                % (_r['length'], FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
+                   len(_hs), HOLE, '、'.join('%g' % h for h in _hs), RAILS.GAP, RAILS.END_MAX),
+        note_en='M-section snap clamp, %g mm long. Section as everywhere else: %g flat behind the '
+                'slip, %g legs, %g lips folded %g deg in, mouth %g. %d off dia %g fixing holes at '
+                '%s from the end. A continuous run is made up of several of these end to end, %g '
+                'apart, leaving at most %g at each end of the run; the rest keeps its R50.'
+                % (_r['length'], FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
+                   len(_hs), HOLE, ', '.join('%g' % h for h in _hs), RAILS.GAP, RAILS.END_MAX)))
 
-CLIPS.append(dict(code='RC-50', kind='RAIL', zh='通用导轨卡扣', en='Universal rail clip',
-                  length=RAIL[0], qty=0,
+CLIPS.append(dict(code='R50', kind='RAIL', zh='通用导轨卡扣 50',
+                  en='Universal rail clip 50', length=RAIL[0], qty=0,
+                  holes=[(h, FLAT/2.0) for h in RAILS.holes('R50')],
                   note_zh='M 型卡扣，直段 50 mm。平板 68 宽贴砖背面，两侧立边 15 高，'
                           '边缘 10 mm 唇边内折 16 度，开口收至 62.5，砖片需压入卡紧。'
                           '2 个 3.5 直径固定孔。',
@@ -175,8 +183,8 @@ CLIPS.append(dict(code='RC-50', kind='RAIL', zh='通用导轨卡扣', en='Univer
                           '10 lips folded 16 deg in, mouth 62.5 so the slip snaps past. '
                           '2 off dia 3.5 fixing holes.'))
 # by code, not by position: the long clip goes in at index 0 when there is one, and counting into
-# CLIPS[0] then filed all 1364 rail pieces against the long clip and left RC-50 reading zero
-RC = next(c for c in CLIPS if c['code'] == 'RC-50')
+# CLIPS[0] then filed all 1364 rail pieces against the long clip and left R50 reading zero
+RC = next(c for c in CLIPS if c['code'] == 'R50')
 
 for p in P:
     types, pieces = classify(p)
@@ -193,7 +201,7 @@ for p in P:
         kind, ln, grip, run, t0, t1, axis = assign(loc, w, h, area)
         if kind != 'POCKET':
             RC['qty'] += 1
-            ASSIGN.append(dict(panel=p['idx'], type=t['code'], clip='RC-50', grip=round(grip, 3)))
+            ASSIGN.append(dict(panel=p['idx'], type=t['code'], clip='R50', grip=round(grip, 3)))
             continue
         code = pocket_code(p['idx'], t['code'], loc)
         ex = next((c for c in CLIPS if c['code'] == code), None)
@@ -262,7 +270,7 @@ for c in CLIPS:
 
 json.dump(dict(clips=CLIPS, assign=ASSIGN), open(os.path.join(HERE, 'clips9.json'), 'w'), indent=1)
 
-COVERS = {'RC-50': 'one slip each, wherever no long clip runs',
+COVERS = {'R50': 'one slip each, wherever no long clip runs',
           'LONG': 'a continuous run of slips, several to a clip'}
 print('%-9s %-8s %-6s %s' % ('clip', 'kind', 'qty', 'covers'))
 print('-'*78)
@@ -270,7 +278,7 @@ for c in CLIPS:
     if c['kind'] == 'RAIL':
         print('%-9s %-8s %-6d %s'
               % (c['code'], c['kind'], c['qty'],
-                 COVERS['LONG' if c.get('length', 0) > RAIL[0] else 'RC-50']))
+                 COVERS['LONG' if c.get('length', 0) > RAIL[0] else 'R50']))
     else:
         print('%-9s %-8s %-6d board %d %s   edges %s   %d lips'
               % (c['code'], c['kind'], c['qty'], c['panel'], c['type'],

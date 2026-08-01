@@ -34,7 +34,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..'))
 os.chdir(ROOT)
 D = json.load(open('site/data/boards.json', encoding='utf-8'))
-S, L = D['summary'], D['summary']['longclip']
+S = D['summary']
+RAILS = {r['code']: r for r in S['rails']}
+GAP, END_MAX = S['rail_gap'], S['rail_end_max']
 FLAT, SLIP_W = 68.0, 65.0
 bad = []
 
@@ -47,10 +49,11 @@ def ck(cond, msg):
 # ---------------------------------------------------------------- holding and schedule
 cnt = {}
 for b in D['boards']:
-    for _ in b['longs']:
-        cnt[L['code']] = cnt.get(L['code'], 0)+1
-    for p in b['pieces']:
-        if p['c'] != L['code']:
+    for rc in b['rails']:
+        cnt[rc['code']] = cnt.get(rc['code'], 0)+1
+    covered = {i for rc in b['rails'] for i in rc['covers']}
+    for i, p in enumerate(b['pieces']):
+        if i not in covered:
             cnt[p['c']] = cnt.get(p['c'], 0)+1
 ck(cnt == {e['code']: e['qty'] for e in S['clips']},
    'clip schedule %s != clips drawn %s' % ({e['code']: e['qty'] for e in S['clips']}, cnt))
@@ -59,32 +62,40 @@ ck(sum(e['qty'] for e in S['bricks']) == S['brick_total'], 'brick catalogue tota
 ck(sum(e['qty'] for e in S['clips']) == S['clip_total'], 'clip catalogue total')
 for b in D['boards']:
     cov = set()
-    for lc in b['longs']:
+    for lc in b['rails']:
         for i in lc['covers']:
             ck(i not in cov, 'board %d: piece %d held twice' % (b['idx'], i))
             cov.add(i)
-    own = {i for i, p in enumerate(b['pieces']) if p['c'] != L['code']}
+    own = {i for i in range(len(b['pieces'])) if i not in cov}
     ck(own | cov == set(range(len(b['pieces']))) and not (own & cov),
        'board %d: %d own + %d covered != %d pieces' % (b['idx'], len(own), len(cov),
                                                        len(b['pieces'])))
+    for i in cov:
+        ck(b['pieces'][i]['c'] in RAILS, 'board %d: piece %d is covered but reads %s'
+           % (b['idx'], i, b['pieces'][i]['c']))
 
-# ---------------------------------------------------------------- the long clip
-ck(abs(2*L['margin']+(L['holes']-1)*L['pitch']-L['length']) < 1e-6,
-   '2 x %g + %d x %g != %g' % (L['margin'], L['holes']-1, L['pitch'], L['length']))
+# ---------------------------------------------------------------- the rails
+# Every rail is one of the supplier's lengths, drawn at that length, with that length's holes.
 for b in D['boards']:
-    ck(not (b['joint'] <= FLAT-SLIP_W+1e-9 and b['longs']),
-       'board %d has a %g joint and %d long clips' % (b['idx'], b['joint'], len(b['longs'])))
-    for lc in b['longs']:
-        k = lc['k']
+    ck(not (b['joint'] <= FLAT-SLIP_W+1e-9 and b['rails']),
+       'board %d has a %g joint and %d rails' % (b['idx'], b['joint'], len(b['rails'])))
+    for rc in b['rails']:
+        spec = RAILS.get(rc['code'])
+        ck(spec is not None, 'board %d: rail %s is not on the schedule' % (b['idx'], rc['code']))
+        if not spec:
+            continue
+        k = rc['k']
         e = sorted(math.dist(k[i-1], k[i]) for i in range(4))
-        ck(abs(e[3]-L['length']) < 0.05 and abs(e[0]-FLAT) < 0.05,
-           'board %d long clip is %.1f x %.1f' % (b['idx'], e[3], e[0]))
-        ck(len(lc['holes']) == L['holes'], 'board %d long clip has %d holes' % (b['idx'],
-                                                                                len(lc['holes'])))
-        hs = sorted(lc['holes'])
+        ck(abs(e[3]-spec['length']) < 0.05 and abs(e[0]-FLAT) < 0.05,
+           'board %d %s is %.1f x %.1f' % (b['idx'], rc['code'], e[3], e[0]))
+        ck(len(rc['holes']) == len(spec['holes']),
+           'board %d %s has %d holes, the drawing says %d'
+           % (b['idx'], rc['code'], len(rc['holes']), len(spec['holes'])))
+        hs = sorted(rc['holes'])
         d = [math.dist(hs[i], hs[i+1]) for i in range(len(hs)-1)]
-        ck(all(abs(x-L['pitch']) < 0.05 for x in d), 'board %d hole pitch' % b['idx'])
-
+        want = [spec['holes'][i+1]-spec['holes'][i] for i in range(len(spec['holes'])-1)]
+        ck(len(d) == len(want) and all(abs(a-c) < 0.05 for a, c in zip(d, want)),
+           'board %d %s hole spacing %s, the drawing says %s' % (b['idx'], rc['code'], d, want))
 
 # ---------------------------------------------------------------- clashes
 def _sep(A, B):
@@ -102,8 +113,8 @@ def _sep(A, B):
 
 clash = 0
 for b in D['boards']:
-    cov = {i for lc in b['longs'] for i in lc['covers']}
-    Q = [lc['k'] for lc in b['longs']]+[p['k'] for i, p in enumerate(b['pieces']) if i not in cov]
+    cov = {i for lc in b['rails'] for i in lc['covers']}
+    Q = [lc['k'] for lc in b['rails']]+[p['k'] for i, p in enumerate(b['pieces']) if i not in cov]
     cell, g = 200.0, {}
     for i, q in enumerate(Q):
         xs = [p[0] for p in q]; ys = [p[1] for p in q]
@@ -200,8 +211,10 @@ for path, col, want in (('site/downloads/brick_schedule.csv', 6, S['brick_total'
 
 print('slips %d  ->  order %d        clips %d  ->  order %d'
       % (S['brick_total'], S['brick_spare'], S['clip_total'], clip_spare))
-print('%s  %g mm x %d,  %d holes at %g,  %g from each end'
-      % (L['code'], L['length'], L['qty'], L['holes'], L['pitch'], L['margin']))
+print('rails:  ' + ',  '.join('%s %g mm x %d, %d holes'
+                              % (r['code'], r['length'], r['qty'], len(r['holes']))
+                              for r in S['rails'])
+      + '   |   %g apart, at most %g open at each end' % (GAP, END_MAX))
 print('clips drawn:  ' + ',  '.join('%s %d' % kv for kv in sorted(cnt.items())))
 print()
 print('CHECKS FAILED: %d' % len(bad))

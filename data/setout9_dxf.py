@@ -20,8 +20,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 HOLE_D = 3.5
 # the long clip is described in the notes, and its length is read rather than repeated: it is a
 # searched result and the drawing must not be able to disagree with the schedule about it
-LSTD = load()['summary']['longclip']
-LCODE = LSTD['code']
+SUMR = load()['summary']
+RAILS_T = SUMR.get('rails', [])
+RCODES = '、'.join(r['code'] for r in RAILS_T) or 'R50'
+RGAP, REND = SUMR.get('rail_gap', 2.0), SUMR.get('rail_end_max', 20.0)
+_HOLE_TXT = '，'.join('%s %d x %s' % (r['code'], len(r['holes']),
+                                     '/'.join('%g' % h for h in r['holes']))
+                     for r in RAILS_T+[dict(code='R50', holes=[12.5, 37.5])])
 
 # Two drawings out of one source.  --spare writes the ORDERING copy.  The GEOMETRY IS IDENTICAL,
 # and has to be: this drawing is where things go, and 15 % more slips do not go anywhere.  What
@@ -98,7 +103,7 @@ def panel(B, ox, oy):
     TB, TC = 'P%d_TXT_B' % i, 'P%d_TXT_C' % i
 
     PL([(ox, oy), (ox+B['w'], oy), (ox+B['w'], oy+B['h']), (ox, oy+B['h'])], 'BOARD', lw=50)
-    for lc in B['longs']:
+    for lc in B['rails']:
         PL([(ox+q[0], oy+q[1]) for q in lc['tray']], C)
         for hx, hy in lc['holes']:
             msp.add_circle((ox+hx, oy+hy), HOLE_D/2, dxfattribs={'layer': H})
@@ -180,10 +185,10 @@ def legend(x, y):
         '2. WHAT IS DRAWN, AND IN WHAT COLOUR.  The slip outlines are BLACK (layer P#_SLIP), the '
         'clip trays BLUE (P#_CLIP) and the dia %g fixing holes RED (P#_HOLE).  Where a course runs '
         'unbroken one %s spans several slips, so its tray crosses the slip lines under it; '
-        'everywhere else one RC-50 or one pocket clip sits on its own slip.   '
+        'everywhere else one R50 or one pocket clip sits on its own slip.   '
         '画的内容与颜色：砖片轮廓为黑色（图层 P#_SLIP），卡扣托盘为蓝色（P#_CLIP），'
         '%g 固定孔为红色（P#_HOLE）。整排连续处由一根 %s 横跨数片砖，其托盘会压过下面的砖线；'
-        '其余位置仍为一砖一扣（RC-50 或包边卡扣）。' % (HOLE_D, LCODE, HOLE_D, LCODE),
+        '其余位置仍为一砖一扣（R50 或包边卡扣）。' % (HOLE_D, RCODES, HOLE_D, RCODES),
         '3. THE CODES ARE WRITTEN INSIDE.  The brick code sits in the brick, the clip code in the '
         'clip, both %g high.  A fitter reads the board, not a schedule.   '
         '编号写在框里：砖型写在砖片轮廓内，卡扣型写在卡扣托盘内，字高均为 %g。'
@@ -192,13 +197,10 @@ def legend(x, y):
         '.  Shortened only so the code fits inside a 50 x 68 tray; the full designation is on '
         'dxf/06 and S8.   卡扣编号为缩写，只因要写进 50 x 68 的托盘内；全称见 dxf/06 与 S8。',
         '5. THE HOLES ARE THE ONLY THING DRILLED.  Slip and tray outlines are surface marks.  '
-        'RC-50: 12.5 from each end on the 68 centreline.  %s: %d holes at %g pitch on the same '
-        'centreline, %g from each end.  Pocket clips are eroded off the tray - 8 clear of a plain '
-        'edge, 12 of a folded one.   '
-        '只有孔需要钻；砖片与托盘轮廓仅为表面画线。RC-50 孔位为距两端各 12.5、在 68 中线上；'
-        '%s 为同一中线上 %d 个孔，孔距 %g，距两端各 %g；包边卡扣按托盘内缩定位，距普通边 8，'
-        '距折边 12。' % (LCODE, LSTD['holes'], LSTD['pitch'], LSTD['margin'],
-                         LCODE, LSTD['holes'], LSTD['pitch'], LSTD['margin']),
+        'Every hole is on the 68 centreline.  %s.  Pocket clips are eroded off the tray - 8 '
+        'clear of a plain edge, 12 of a folded one.   '
+        '只有孔需要钻；砖片与托盘轮廓仅为表面画线。孔位一律在 68 中线上：%s。'
+        '包边卡扣按托盘内缩定位，距普通边 8，距折边 12。' % (_HOLE_TXT, _HOLE_TXT),
         '6. LAYERS ARE PER BOARD.  Freeze all but P3_* to plot board 3 alone, or plot P#_HOLE by '
         'itself for the driller.   图层按板分组：只留 P3_* 即可单独出板 3；单独打开 P#_HOLE '
         '可只出钻孔图。',
@@ -279,5 +281,5 @@ print('SAVED', os.path.normpath(q), '| entities', len(list(msp)),
       % (sum(len(b['pieces']) for b in BD),
          sum(c[2] for b in BD for c in b['clips']),
          sum(len(p['holes']) for b in BD for p in b['pieces'])
-         + sum(len(lc['holes']) for b in BD for lc in b['longs'])))
+         + sum(len(lc['holes']) for b in BD for lc in b['rails'])))
 print('  x[%.0f..%.0f] y[%.0f..%.0f] mm' % (mn[0], mx[0], mn[1], mx[1]))

@@ -12,3 +12,8 @@
 plot.log
 * - Copy.*
 *.err
+
+# The clip photographs are for sending to a manufacturer, not a deliverable on the drawing
+# register, and the publish step copies whole directories.  Keeping them out of the repo is what
+# keeps them off the website.
+_clip_renders/

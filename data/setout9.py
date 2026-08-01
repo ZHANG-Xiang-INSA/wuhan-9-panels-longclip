@@ -14,7 +14,7 @@ import json, math, os
 
 import dxftext as DT
 HERE = os.path.dirname(os.path.abspath(__file__))
-# One text height for every label, brick and clip alike.  The tightest cases are the RC-50 tray at
+# One text height for every label, brick and clip alike.  The tightest cases are the R50 tray at
 # 50 x 68 and board 3's T03 slip, and both hold this with room to spare; see setout9_dxf --check.
 TXT_H = 9.0
 # clearance a label needs round its anchor: half the widest code plus half the height, and a
@@ -23,11 +23,13 @@ NEED = 16.0
 # how far a label keeps off a fixing hole: the cross drawn through it reaches 6.5, and half a
 # label's height is 4.5, so 12 leaves the drill mark readable.
 HOLE_KEEP = 12.0
-SHORT = {'RC-50': 'R50', 'PK-3T03': 'P3T03', 'PK-8T02': 'P8T02'}
+SHORT = {'R50': 'R50', 'PK-3T03': 'P3T03', 'PK-8T02': 'P8T02'}
 
 
 def short(code):
-    return SHORT.get(code, code.replace('LC-', 'L') if code.startswith('LC-') else code)
+    # the rail codes are already short enough to write inside a 68 tray, so only the pockets
+    # need shortening now
+    return SHORT.get(code, code)
 
 
 def load():
@@ -68,7 +70,7 @@ def pole(poly, step=2.0, avoid=None, keepout=()):
     slip alone is underneath the tray and the two labels printed on top of each other.
 
     keepout is a list of (x, y, r) the point must also stay clear of.  The fixing holes go in it:
-    an RC-50's two holes straddle the centre of its own tray, so the clip label landed straight on
+    an R50's two holes straddle the centre of its own tray, so the clip label landed straight on
     both drill marks - 263 labels across the nine boards sat on a hole before this was added, and
     the hole is the one thing on the drawing that actually gets cut.
     """
@@ -308,20 +310,20 @@ def board(idx):
     # which long clip lies on each covered piece, so its brick code can keep off that tray
     covered = {}
     LONGS = []
-    for lc in b.get('longs', []):
+    for lc in b.get('rails', []):
         tray = [tuple(q) for q in lc['k']]
         ko = [(hx, hy, HOLE_KEEP) for hx, hy in lc['holes']]
         LONGS.append((tray, ko, _bbox(tray)))
         for i in lc['covers']:
-            covered[i] = (tray, ko)
+            covered[i] = (tray, ko, lc['code'])
     out = []
     for pi, pc in enumerate(b['pieces']):
         slip = [tuple(q) for q in pc['p']]
         if pi in covered:
             # held by a long clip: the slip still gets its brick code, but the clip box and its
             # code belong to the long clip, which is drawn once for the whole run.  The code has
-            # to keep off that tray and its holes, exactly as it keeps off an RC-50's.
-            ltray, lko = covered[pi]
+            # to keep off that tray and its holes, exactly as it keeps off an R50's.
+            ltray, lko, _lcode = covered[pi]
             tcode = b['types'][pc['t']]['code']
             tl, th = None, TXT_H
             for h in (TXT_H, 8.0, 7.0, 6.0, 5.0):
@@ -377,15 +379,15 @@ def board(idx):
                                     extra=[t for t, _ in near])
         out.append(dict(slip=slip, tray=tray, holes=holes, angle=ang, stacked=stacked,
                         tcode=tcode, tlab=tl, ccode=ccode, clab=cl, th=th))
-    longs = []
-    lcode = short(D['summary']['longclip']['code'])
+    rails = []
     edges = [(q, r['slip'][j-1]) for r in out for j, q in enumerate(r['slip'])]
-    for lc in b.get('longs', []):
+    for lc in b.get('rails', []):
+        lcode = short(lc['code'])
         tr = [tuple(q) for q in lc['k']]
         hs = [tuple(q) for q in lc['holes']]
-        longs.append(dict(tray=tr, holes=hs, ccode=lcode, th=TXT_H,
+        rails.append(dict(tray=tr, holes=hs, ccode=lcode, th=TXT_H,
                           clab=_long_label(tr, hs, edges, lcode)))
-    return dict(w=b['w'], h=b['h'], joint=b['joint'], idx=idx, longs=longs,
+    return dict(w=b['w'], h=b['h'], joint=b['joint'], idx=idx, rails=rails,
                 zh=b['zh'], en=b['en'], pieces=out,
                 types=[(t['code'], t['label'], t['qty']) for t in b['types']],
                 clips=[(SHORT.get(c['code'], c['code']), c['code'], c['qty'])
