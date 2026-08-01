@@ -97,6 +97,74 @@ for b in D['boards']:
         ck(len(d) == len(want) and all(abs(a-c) < 0.05 for a, c in zip(d, want)),
            'board %d %s hole spacing %s, the drawing says %s' % (b['idx'], rc['code'], d, want))
 
+# ------------------------------------------------------- how the rails sit on their run
+# Read off the exported geometry, not off rails9: the packer saying it obeyed its own rules is
+# not evidence.  Every run is rebuilt from the trays and the slips as they were written out.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
+import runs9                                                        # noqa: E402
+GRIP = 50.0
+
+for b in D['boards']:
+    if not b['rails']:
+        continue
+    for r in runs9.runs(b):
+        u, s0, L = r['u'], r['s0'], r['length']
+        alng = lambda q: q[0]*u[0]+q[1]*u[1]-s0
+        mine = []
+        for rc in b['rails']:
+            e = [alng(q) for q in rc['k']]
+            lo, hi = min(e), max(e)
+            v = r['v']
+            off = sum(q[0]*v[0]+q[1]*v[1] for q in rc['k'])/4.0
+            if -1e-6 <= lo and hi <= L+1e-6 and abs(off-r['t']) < 1e-6:
+                mine.append((lo, hi))
+        if not mine:
+            continue
+        mine.sort()
+        ck(mine[0][0] <= END_MAX+1e-6 and L-mine[-1][1] <= END_MAX+1e-6,
+           'board %d: a run is open %.1f / %.1f at its ends, the rule is %g'
+           % (b['idx'], mine[0][0], L-mine[-1][1], END_MAX))
+        ck(abs(mine[0][0]-(L-mine[-1][1])) < 1e-6,
+           'board %d: a run is open %.1f at one end and %.1f at the other'
+           % (b['idx'], mine[0][0], L-mine[-1][1]))
+        for i in range(1, len(mine)):
+            ck(mine[i][0]-mine[i-1][1] >= GAP-1e-6,
+               'board %d: two rails are %.2f apart, the rule is %g'
+               % (b['idx'], mine[i][0]-mine[i-1][1], GAP))
+        for p in r['pieces']:
+            sp = [alng(q) for q in p['p']]
+            a, bb = min(sp), max(sp)
+            held = max([min(hi, bb)-max(lo, a) for lo, hi in mine
+                        if lo-1e-6 <= (a+bb)/2.0 <= hi+1e-6] or [0.0])
+            ck(held >= GRIP-1e-6 or p['c'] not in RAILS or held == 0.0,
+               'board %d: a rail holds a slip by %.1f over its middle, the rule is %g'
+               % (b['idx'], held, GRIP))
+
+# Every course of the same length on a board is set out identically - a fitter works off the
+# course below, so ends that wander from one course to the next cannot be built to.
+for b in D['boards']:
+    if not b['rails']:
+        continue
+    seen = {}
+    for r in runs9.runs(b):
+        u, s0, L = r['u'], r['s0'], r['length']
+        v = r['v']
+        ends = sorted(round(min(q[0]*u[0]+q[1]*u[1]-s0 for q in rc['k']), 3)
+                      for rc in b['rails']
+                      if abs(sum(q[0]*v[0]+q[1]*v[1] for q in rc['k'])/4.0-r['t']) < 1e-6
+                      and -1e-6 <= min(q[0]*u[0]+q[1]*u[1]-s0 for q in rc['k'])
+                      and max(q[0]*u[0]+q[1]*u[1]-s0 for q in rc['k']) <= L+1e-6)
+        if not ends:
+            continue
+        key = round(L, 3)
+        seen.setdefault(key, []).append(tuple(ends))
+    for L, got in seen.items():
+        base = max(got, key=len)
+        ck(all(set(g) <= set(base) for g in got),
+           'board %d: courses %g long are not set out alike, %s'
+           % (b['idx'], L, sorted(set(got))))
+
+
 # ---------------------------------------------------------------- clashes
 def _sep(A, B):
     for P in (A, B):

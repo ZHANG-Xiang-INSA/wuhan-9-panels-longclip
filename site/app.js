@@ -1021,15 +1021,15 @@ function prodNote() {
 
 function longNote() {
   // The one searched length is gone: the shop works to a stock family, so a continuous run is
-  // made up of several of these end to end.  Each carries its own hole positions, taken from the
-  // supplier's drawing, so there is no one pitch to quote.
+  // made up of several of these.  They are spaced along the run rather than laid end to end, and
+  // each carries its own hole positions from the supplier's drawing, so there is no pitch to quote.
   const R = (D.summary || {}).rails || [];
   if (!R.length) return '';
   const g = D.summary.rail_gap, e = D.summary.rail_end_max;
   const list = R.map(r => `${r.code} ${r.length} × ${r.qty}`).join(lang === 'zh' ? '，' : ', ');
   return lang === 'zh'
-    ? `　整排导轨：${list}；相邻两根间隔 ${g}，每排两端最多空出 ${e}。`
-    : `  Rails on a run: ${list}; ${g} apart, at most ${e} left open at each end of a run.`;
+    ? `　整排导轨：${list}；相邻两根至少隔 ${g}，每排两端空出的一样多、不超过 ${e}。`
+    : `  Rails on a run: ${list}; at least ${g} apart, the same gap at each end of a run, at most ${e}.`;
 }
 
 /* ---------------------------------------------------------------------

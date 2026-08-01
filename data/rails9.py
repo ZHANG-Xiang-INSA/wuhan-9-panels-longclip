@@ -9,8 +9,15 @@ with a small answer.
 
     1000  700  300  100          available, from the supplier
     50                           the short clip that was already in the job, renamed R50
-    2 mm                         between two clips end to end
+    2 mm                         the least there may be between two clips
     20 mm                        the most that may be left unclipped at each end of a run
+
+The clips are SPACED ALONG the run, not laid end to end.  They are separate clips screwed to the
+board and the 2 mm only buys that two of them do not meet; nothing makes them touch.  Two R700 with
+52.5 mm of air between them reach both ends of board 2's 1452.5 course on their own, where a tight
+chain of the same two stops 50 short and the course needs a third clip.  Both ends of a run are
+left the same gap, and every course of the same length on a board is set out identically, because
+a fitter sets a rail off the course below and cannot work to ends that wander.
 
 GEOMETRY AND HOLE POSITIONS COME FROM THE SUPPLIER'S OWN DRAWING, dxf/guiding_rail_clip_10_types
 _orthographic.dxf, and are not derived here.  They do not follow one rule - R1000 is 7 holes at
@@ -162,11 +169,145 @@ def solve_run(r, stock):
     return best[1] if best else None
 
 
+GRIP = 50.0     # the least of a slip a rail may hold it by
+
+
+def _slips1d(r):
+    """the run's slips as (start, end, piece) measured along the run from its datum end"""
+    u, s0 = r['u'], r['s0']
+    out = [(_span(p, u)[0]-s0, _span(p, u)[1]-s0, p) for p in r['pieces']]
+    out.sort()
+    return out
+
+
+def _held(t, Lc, a, b):
+    """does a rail from t to t+Lc hold the slip that runs from a to b
+
+    It has to reach the MIDDLE of the slip and hold 50 mm of it.  The middle because that is the
+    rule this job has always worked to - one R50 on the centre of a whole slip is the entire
+    fixing - and 50 because that is how much of the slip an R50 holds.
+
+    Overlap on its own is not the same thing.  50 mm taken off one end of a 215 leaves 165 hanging,
+    and on that reading board 7 came out at two clips a course when it wants three.
+    """
+    return t-1e-9 <= (a+b)/2.0 <= t+Lc+1e-9 and min(t+Lc, b)-max(t, a) >= GRIP-1e-9
+
+
+def _rails_for(r, placed):
+    """the group's placement as it lands on THIS run -> [(code, t, [pieces])]
+
+    A rail that holds nothing on this particular course comes off it.  Board 7's odd courses close
+    on a 105 and its even ones open on a 104, so the middle clip that the odd ones need falls
+    between two slips on the even ones and holds neither.  Dropping it costs nothing that matters:
+    the two long rails keep the positions the whole board is set out to, so the ends still line up
+    course to course, which is the thing that has to be true.  Unless dropping it opens up one of
+    the run's own ends by more than the rule allows, in which case it stays.
+    """
+    codes, pos = placed
+    sl = _slips1d(r)
+    out = [(c, t, [p for a, b, p in sl if _held(t, length(c), a, b)]) for c, t in zip(codes, pos)]
+    kept = [x for x in out if x[2]]
+    if not kept:
+        return out
+    if kept[0][1] > END_MAX+1e-9 or r['length']-(kept[-1][1]+length(kept[-1][0])) > END_MAX+1e-9:
+        return out
+    return kept
+
+
+def _place(groups, codes, e, L):
+    """where the rails go, both ends e clear of the run's ends -> [t] or None
+
+    RAILS DO NOT HAVE TO TOUCH.  A run was being made up as a chain laid end to end with 2 mm
+    between, and that is not what a run is: they are separate clips screwed to the board, and the
+    2 mm only buys that two of them do not meet.  Let the space between open up and two R700 reach
+    both ends of board 2's 1452.5 on their own.  Held to a tight chain the same two lengths stop
+    50 short of one end, so the run took an R1000 and two R100 instead - three clips, and the
+    little ones at that.
+
+    Both ends are the same e by construction.  A fitter sets a course's rails off the course
+    below; ends that wander 10 or 20 mm from one course to the next cannot be worked to.
+    """
+    k = len(codes)
+    Ls = [length(c) for c in codes]
+    if k > 3:
+        return None                      # more than one free rail: left to the tight chain
+    t = [e]*k
+    if k > 1:
+        t[k-1] = L-e-Ls[k-1]
+        if t[k-1] < t[0]+Ls[0]+GAP-1e-9:
+            return None
+    elif abs(L-2*e-Ls[0]) > 1e-6:
+        return None
+    if k == 3:
+        # the two ends are pinned, so the only freedom is the middle rail, and every slip neither
+        # end rail holds has to be held by it - which is an interval, not a search
+        lo, hi = t[0]+Ls[0]+GAP, t[2]-Ls[1]-GAP
+        for sl in groups:
+            orph = [(a, b) for a, b, _p in sl
+                    if not _held(t[0], Ls[0], a, b) and not _held(t[2], Ls[2], a, b)]
+            if orph:
+                lo = max(lo, max(a for a, _b in orph)+GRIP-Ls[1])
+                hi = min(hi, min(b for _a, b in orph)-GRIP)
+        if lo > hi+1e-9:
+            return None
+        t[1] = (lo+hi)/2.0
+    for sl in groups:
+        for a, b, _p in sl:
+            if not any(_held(t[m], Ls[m], a, b) for m in range(k)):
+                return None
+    return [round(x, 3) for x in t]
+
+
+def solve_group(runs, stock):
+    """one placement for every run of this length on this board -> (codes, [t]) or None
+
+    Solved for the group and not one run at a time, because the ends have to line up.  Two courses
+    of the same length carry different slips - board 7's odd courses close on a 105, its even ones
+    open on a 104 - and solved separately they come out with one course's rails 10 mm along from
+    the next one's.
+
+    Ranked: fewest clips, which with a fixed run length IS "use the long ones"; then fewest types;
+    then the smallest end gap; then the longest metal, which is what picks 2 x R700 over
+    R1000 + R300 when both cover board 2 in two clips.
+    """
+    L = runs[0]['length']
+    groups = [_slips1d(r) for r in runs]
+    best = None
+    for k in range(1, 4):
+        for combo in itertools.combinations_with_replacement(
+                sorted(stock, key=lambda c: -length(c)), k):
+            tot = sum(length(c) for c in combo)
+            if tot+GAP*(k-1) > L+1e-9:
+                continue
+            for codes in sorted(set(itertools.permutations(combo))):
+                for e2 in range(0, int(END_MAX*2)+1):
+                    pos = _place(groups, codes, e2/2.0, L)
+                    if pos is None:
+                        continue
+                    cand = (k, len(set(codes)), e2, -round(tot, 4))
+                    if best is None or cand < best[0]:
+                        best = (cand, (list(codes), pos))
+                    break                     # the smallest e this sequence will take
+    return best[1] if best else None
+
+
 def in_scope(board):
     from runs9 import runs as _runs
     if not big_span(board):
         return []
     return [r for r in _runs(board) if r['n'] >= MIN_SLIPS]
+
+
+def _solve_board(board, stock):
+    """-> (runs, scope, {run length: (codes, [t])})  the placement each length on this board gets"""
+    from runs9 import runs as _runs
+    R = _runs(board)
+    big = big_span(board)
+    scope = [r for r in R if big and r['n'] >= MIN_SLIPS]
+    bylen = {}
+    for r in scope:
+        bylen.setdefault(round(r['length'], 3), []).append(r)
+    return R, scope, {L: solve_group(rs, stock) for L, rs in bylen.items()}
 
 
 def choose_stock(boards):
@@ -176,14 +317,20 @@ def choose_stock(boards):
     Taken over the whole job at once, because which lengths to order is one decision and not one
     per run: a set that saves two pieces on board 2 and costs a whole extra SKU is a bad trade.
     """
-    runsets = [(b, in_scope(b)) for b in boards]
+    nslips = sum(r['n'] for b in boards for r in in_scope(b))
     best = None
     for n in range(1, len(STOCK)+1):
         for sub in itertools.combinations(STOCK, n):
             tot, n50, worst, ok = 0, 0, 0.0, True
-            for _b, rs in runsets:
-                for r in rs:
-                    got = solve_run(r, sub)
+            for b in boards:
+                R, scope, sol = _solve_board(b, sub)
+                for r in scope:
+                    got = sol.get(round(r['length'], 3))
+                    if got is not None:
+                        tot += len(_rails_for(r, got))
+                        worst = max(worst, got[1][0])
+                        continue
+                    got = solve_run(r, sub)      # no placement covers the whole run: tight chain
                     if got is None:
                         ok = False; break
                     tot += len(got[0])+len(got[3])
@@ -191,13 +338,16 @@ def choose_stock(boards):
                     worst = max(worst, got[5])
                 if not ok:
                     break
-            if not ok:
+            if not ok or tot*2 > nslips:
                 continue
-            # Fewest R50 first - that is "use the long ones" - then fewest PIECES, then fewest
-            # types, then the smallest gap.  Pieces above types deliberately: ranked the other way
-            # round the answer collapses to R100 everywhere, one short clip per slip, which is one
-            # SKU and exactly the opposite of using the long ones.
-            cand = (n50, tot, n, round(worst, 4))
+            # USE THE LONG ONES is the gate above, not a tie-break: a set of lengths only counts as
+            # long if it covers the in-scope runs at no more than one clip per two slips.  R100 on
+            # its own is one SKU and would win every ranking that puts types first, but it is 661
+            # clips - one on every slip - and the exact opposite of what was asked for.  Past the
+            # gate the order is the one asked for: fewest TYPES, then fewest pieces, then the
+            # smallest end gap.  Four lengths shave 8 clips off the two-length answer and cost two
+            # more purchase lines, one of them for 4 pieces; two lengths is the better buy.
+            cand = (n, n50, tot, round(worst, 4))
             if best is None or cand < best[0]:
                 best = (cand, sub)
     return best[1] if best else STOCK
@@ -259,18 +409,22 @@ def stock_used(boards):
 
 def plan(board, stock=None):
     """-> dict(rails=[...], r50=[...], runs=[...])  what this board gets"""
-    from runs9 import runs as _runs, load as _load
+    from runs9 import load as _load
     # Resolve the order here rather than defaulting to all of STOCK.  A caller that plans one board
     # at a time still gets the set chosen over the whole job, which is the only set that gets
     # bought; stock_used memoises, so the nine boards are read once.
     stock = stock or stock_used(_load()['boards'])
-    R = _runs(board)
-    # by the predicate, not by identity: runs9.runs() builds fresh objects on every call, so a
-    # set of ids taken from a second call never matches the ones being walked here
-    big = big_span(board)
+    R, scope, sol = _solve_board(board, stock)
     rails, keep = [], []
     for r in R:
-        got = solve_run(r, stock) if (big and r['n'] >= MIN_SLIPS) else None
+        placed = sol.get(round(r['length'], 3)) if any(r is x for x in scope) else None
+        if placed is not None:
+            for code, t, cov in _rails_for(r, placed):
+                rails.append(dict(code=code, tray=tray(r, r['s0']+t, length(code)),
+                                  holes=hole_pts(r, r['s0']+t, code), s0=r['s0']+t, run=r,
+                                  covers=cov))
+            continue
+        got = solve_run(r, stock) if any(r is x for x in scope) else None
         if got is None:
             keep.extend(dict(piece=q, tray=list(q['k']), moved=False) for q in r['pieces'])
             continue
@@ -307,8 +461,8 @@ if __name__ == '__main__':
     print('lengths to order: ' + ', '.join('%s %g mm, %d holes' % (c, length(c), len(holes(c)))
                                            for c in st)
           + '   |   %s %g mm' % (SHORT, length(SHORT)))
-    print('rule: %g between rails, at most %g open at each end of a run; a ~102 cut slip keeps '
-          'its R50 centred' % (GAP, END_MAX))
+    print('rule: at least %g between rails, both ends of a run the same and at most %g, every rail '
+          'over the middle of what it holds and %g of it' % (GAP, END_MAX, GRIP))
     print()
     tot, n50 = {}, 0
     print('board  big span  runs  in scope  rails                              R50')

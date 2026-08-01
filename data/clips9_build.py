@@ -163,13 +163,14 @@ for _r in _RAILS:
         holes=[(h, FLAT/2.0) for h in _hs],
         note_zh='M 型卡扣，直段 %g mm。断面全场一致：平板 %g 宽贴砖背面，两侧立边 %g 高，边缘 %g mm '
                 '唇边内折 %g 度，开口收至 %g。%d 个 %g 直径固定孔，距端部 %s。连续排砖处由若干根'
-                '首尾相接组成，相邻两根间隔 %g mm，每排两端最多空出 %g mm，其余仍用 R50。'
+                '排开，相邻两根至少隔 %g mm，每排两端空出的一样多、不超过 %g mm，其余仍用 R50。'
                 % (_r['length'], FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
                    len(_hs), HOLE, '、'.join('%g' % h for h in _hs), RAILS.GAP, RAILS.END_MAX),
         note_en='M-section snap clamp, %g mm long. Section as everywhere else: %g flat behind the '
                 'slip, %g legs, %g lips folded %g deg in, mouth %g. %d off dia %g fixing holes at '
-                '%s from the end. A continuous run is made up of several of these end to end, %g '
-                'apart, leaving at most %g at each end of the run; the rest keeps its R50.'
+                '%s from the end. A continuous run is made up of several of these, at least %g '
+                'apart, leaving the same gap at each end of the run and at most %g; the rest '
+                'keeps its R50.'
                 % (_r['length'], FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
                    len(_hs), HOLE, ', '.join('%g' % h for h in _hs), RAILS.GAP, RAILS.END_MAX)))
 
