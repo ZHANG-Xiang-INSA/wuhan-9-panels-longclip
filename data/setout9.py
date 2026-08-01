@@ -379,7 +379,10 @@ def board(idx):
         ko = [(hx, hy, HOLE_KEEP) for hx, hy in lc['holes']]
         LONGS.append((tray, ko, _bbox(tray)))
         for i in lc['covers']:
-            covered[i] = (tray, ko, lc['code'])
+            # a LIST: a slip can now lie under more than one rail - board 1's fourth slip carries
+            # the end of an R700, an R100 and an R50 - and keeping only the last one written meant
+            # the brick code dodged that one and printed across the others
+            covered.setdefault(i, []).append(lc['code'])
     out = []
     for pi, pc in enumerate(b['pieces']):
         slip = [tuple(q) for q in pc['p']]
@@ -387,12 +390,21 @@ def board(idx):
             # held by a long clip: the slip still gets its brick code, but the clip box and its
             # code belong to the long clip, which is drawn once for the whole run.  The code has
             # to keep off that tray and its holes, exactly as it keeps off an R50's.
-            ltray, lko, _lcode = covered[pi]
+            # EVERY rail whose tray reaches this slip, not just the one that holds it.  Board 7's
+            # middle slip is held by the R100 across it, but the two R700 either side lap 40 mm
+            # onto it as well - and a code placed clear of the R100 alone printed straight across
+            # one of them, 21 times on board 7 and 17 on board 1.
+            sb = _bbox(slip)
+            near = [(t, k) for t, k, tb in LONGS
+                    if tb[0] <= sb[2] and sb[0] <= tb[2] and tb[1] <= sb[3] and sb[1] <= tb[3]]
+            ltrays = [t for t, _k in near]
+            lko = [x for _t, k in near for x in k]
             tcode = b['types'][pc['t']]['code']
             tl, th = None, TXT_H
             for h in (TXT_H, 8.0, 7.0, 6.0, 5.0):
                 w = strw(tcode, h)
-                sp = [c for _, c in _spots(slip, w, h, lko) if _outside(ltray, c, w, h)]
+                sp = [c for _, c in _spots(slip, w, h, lko)
+                      if all(_outside(t, c, w, h) for t in ltrays)]
                 if sp:
                     tl, th = sp[0], h
                     break
@@ -403,16 +415,25 @@ def board(idx):
                 # WHOLLY inside the tray for preference.  Taking the best clear spot outright put
                 # board 2's ten T02 codes across the end line of the long clip they sit on, the
                 # one place on the piece where a tray outline crosses it.
+                # every height is tried for a spot INSIDE a tray before any height is allowed to
+                # take a spot that merely clears the holes.  Ranked the other way round, a 9 mm
+                # label that fits nowhere clean took the best of a bad lot straight away and never
+                # found the 7 mm one that sits neatly inside the R100 - which is where board 7's
+                # middle slips have to put their code, the two clear strips beside it being 17.5.
                 for h in (TXT_H, 8.0, 7.0, 6.0, 5.0, 4.0):
                     w = strw(tcode, h)
-                    sp = _spots(slip, w, h, lko)
-                    inner = [c for _, c in sp if box_in(ltray, c, w, h)]
+                    inner = [c for _, c in _spots(slip, w, h, lko)
+                             if any(box_in(t, c, w, h) for t in ltrays)
+                             and all(box_in(t, c, w, h) or _outside(t, c, w, h) for t in ltrays)]
                     if inner:
                         tl, th = inner[0], h
                         break
-                    if sp:
-                        tl, th = sp[0][1], h
-                        break
+                if tl is None:
+                    for h in (TXT_H, 8.0, 7.0, 6.0, 5.0, 4.0):
+                        sp = _spots(slip, strw(tcode, h), h, lko)
+                        if sp:
+                            tl, th = sp[0][1], h
+                            break
             if tl is None:
                 tl = pole(slip, keepout=lko)[0]
             out.append(dict(slip=slip, tray=None, holes=[], angle=0.0, stacked=False,

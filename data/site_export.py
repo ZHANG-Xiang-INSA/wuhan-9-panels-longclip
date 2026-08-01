@@ -354,7 +354,11 @@ summary = dict(bricks=bricks, clips=clips_sum,
                rails=[dict(code=c, length=RAILS.length(c),
                            holes=RAILS.holes(c),
                            qty=sum(1 for b in boards for r in b['rails'] if r['code'] == c))
-                      for c in ('R1000', 'R700', 'R300', 'R100')
+                      # R50 is on this list too now.  It is not only the one-per-slip clip any
+                      # more: where a course is 1452.5 and the family reaches 1450, the 50 that
+                      # closes it is a member of the run like any other length, and the qty here
+                      # is how many are used that way - the schedule still counts them all.
+                      for c in ('R1000', 'R700', 'R300', 'R100', 'R50')
                       if any(r['code'] == c for b in boards for r in b['rails'])],
                rail_gap=RAILS.GAP, rail_end_max=RAILS.END_MAX,
                clip_total=sum(e['qty'] for e in clips_sum),

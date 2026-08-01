@@ -63,15 +63,17 @@ ck(sum(e['qty'] for e in S['clips']) == S['clip_total'], 'clip catalogue total')
 for b in D['boards']:
     cov = set()
     for lc in b['rails']:
-        for i in lc['covers']:
-            ck(i not in cov, 'board %d: piece %d held twice' % (b['idx'], i))
-            cov.add(i)
+        cov.update(lc['covers'])
+    # A slip may sit on more than one rail and often does - board 1's fourth slip carries the end
+    # of one R700, an R100 and an R50 - so what has to hold is that every slip is either on a rail
+    # or has a clip of its own, not that it is on exactly one.
     own = {i for i in range(len(b['pieces'])) if i not in cov}
-    ck(own | cov == set(range(len(b['pieces']))) and not (own & cov),
+    ck(own | cov == set(range(len(b['pieces']))),
        'board %d: %d own + %d covered != %d pieces' % (b['idx'], len(own), len(cov),
                                                        len(b['pieces'])))
+    onrails = {lc['code'] for lc in b['rails']}
     for i in cov:
-        ck(b['pieces'][i]['c'] in RAILS, 'board %d: piece %d is covered but reads %s'
+        ck(b['pieces'][i]['c'] in onrails, 'board %d: piece %d is covered but reads %s'
            % (b['idx'], i, b['pieces'][i]['c']))
 
 # ---------------------------------------------------------------- the rails
@@ -86,7 +88,10 @@ for b in D['boards']:
             continue
         k = rc['k']
         e = sorted(math.dist(k[i-1], k[i]) for i in range(4))
-        ck(abs(e[3]-spec['length']) < 0.05 and abs(e[0]-FLAT) < 0.05,
+        # sorted against sorted: an R50 tray is 68 x 50, so its LONGEST edge is the flat and its
+        # shortest is the length - the other way round from every other rail
+        want = sorted((spec['length'], FLAT))
+        ck(abs(e[0]-want[0]) < 0.05 and abs(e[3]-want[1]) < 0.05,
            'board %d %s is %.1f x %.1f' % (b['idx'], rc['code'], e[3], e[0]))
         ck(len(rc['holes']) == len(spec['holes']),
            'board %d %s has %d holes, the drawing says %d'
@@ -282,7 +287,7 @@ print('slips %d  ->  order %d        clips %d  ->  order %d'
 print('rails:  ' + ',  '.join('%s %g mm x %d, %d holes'
                               % (r['code'], r['length'], r['qty'], len(r['holes']))
                               for r in S['rails'])
-      + '   |   %g apart, at most %g open at each end' % (GAP, END_MAX))
+      + '   |   filled to the ceiling, end clips flush, slack split round the middle one')
 print('clips drawn:  ' + ',  '.join('%s %d' % kv for kv in sorted(cnt.items())))
 print()
 print('CHECKS FAILED: %d' % len(bad))

@@ -154,7 +154,10 @@ if os.path.exists(_bj):
 # from the supplier's own drawing.  Absent on a first run from an empty tree, and then the
 # drawings carry the R50 and the pockets alone.
 import rails9 as RAILS
-for _r in _RAILS:
+# R50 is on that list now that it can be a member of a run, but it is declared in full further
+# down - it is the clip the job started with and its note says so.  Skipped here or it appears in
+# the catalogue twice, and the studio photographs get shot twice.
+for _r in [x for x in _RAILS if x['code'] != RAILS.SHORT]:
     _hs = RAILS.holes(_r['code'])
     CLIPS.append(dict(
         code=_r['code'], kind='RAIL', zh='通用导轨卡扣 %g' % _r['length'],
@@ -163,16 +166,16 @@ for _r in _RAILS:
         holes=[(h, FLAT/2.0) for h in _hs],
         note_zh='M 型卡扣，直段 %g mm。断面全场一致：平板 %g 宽贴砖背面，两侧立边 %g 高，边缘 %g mm '
                 '唇边内折 %g 度，开口收至 %g。%d 个 %g 直径固定孔，距端部 %s。连续排砖处由若干根'
-                '排开，相邻两根至少隔 %g mm，每排两端空出的一样多、不超过 %g mm，其余仍用 R50。'
+                '铺满，两端的卡扣顶齐砖头，余量分在中间那根短卡扣两侧，其余仍用 R50。'
                 % (_r['length'], FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
-                   len(_hs), HOLE, '、'.join('%g' % h for h in _hs), RAILS.GAP, RAILS.END_MAX),
+                   len(_hs), HOLE, '、'.join('%g' % h for h in _hs)),
         note_en='M-section snap clamp, %g mm long. Section as everywhere else: %g flat behind the '
                 'slip, %g legs, %g lips folded %g deg in, mouth %g. %d off dia %g fixing holes at '
-                '%s from the end. A continuous run is made up of several of these, at least %g '
-                'apart, leaving the same gap at each end of the run and at most %g; the rest '
-                'keeps its R50.'
+                '%s from the end. A continuous run is filled with several of these, the two end '
+                'clips flush with the ends of the course and the slack split either side of the '
+                'short clip between them; the rest keeps its R50.'
                 % (_r['length'], FLAT, PROF['leg'], PROF['lip'], PROF['lip_angle'], PROF['mouth'],
-                   len(_hs), HOLE, ', '.join('%g' % h for h in _hs), RAILS.GAP, RAILS.END_MAX)))
+                   len(_hs), HOLE, ', '.join('%g' % h for h in _hs))))
 
 CLIPS.append(dict(code='R50', kind='RAIL', zh='通用导轨卡扣 50',
                   en='Universal rail clip 50', length=RAIL[0], qty=0,
