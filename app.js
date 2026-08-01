@@ -13,7 +13,14 @@ const byIdx = Object.fromEntries(boards.map(b => [b.idx, b]));
 
 const INK = '#1d1d1b', MUT = '#7d7a72', LINE = '#d3ccbd';
 // R50 blue, the longer rails green, the bespoke pockets rust: three families, three colours
-const CLIP_COL = c => c === 'R50' ? '#2f6ea8' : /^R\d/.test(c) ? '#1f7a5a' : '#b4491f';
+// One colour per clip type, out of data/clip_colours.json by way of the summary, so the page,
+// the setting-out texture, dxf/08, the model and the studio photographs all agree.  Every rail
+// used to be the same green and every board the same two colours: a course carrying an R700, an
+// R100 and an R50 read as one strip.
+const CC = D.summary.clip_colours || {};
+const CLIP_COL = c => (CC[c] || {}).line || (c === 'R50' ? '#2e7d32' : '#b4491f');
+const CLIP_MET = c => (CC[c] || {}).metal || '#8b939c';
+const CLIP_RGH = c => (CC[c] || {}).rough ?? 0.42;
 
 /* =====================================================================
    language
@@ -549,7 +556,7 @@ function paint() {
     o.material = dimc ? MAT_DIM
       : (mode === 'clip' || mode === 'type')
         ? metalMat(CLIP_COL(c), 0.45)
-        : metalMat(c === 'R50' ? '#8b939c' : '#bd7048', c === 'R50' ? 0.42 : 0.36);
+        : metalMat(CLIP_MET(c), CLIP_RGH(c));
     o.visible = layer.clips;
   }
   if (cur.mortar) {
