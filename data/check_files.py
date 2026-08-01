@@ -12,10 +12,17 @@ and the tree was clean, which is not the same as current.
 So this one starts from what the job is supposed to hand over - nine boards, so nine models, nine
 Blender files, nine textures, four renders each - counts it, opens it, and holds what is inside to
 site/data/boards.json.  Nothing is taken on trust because it looks right.
+
+It goes down to the cell.  Each schedule row: the product split has to sum to the quantity, the
+used-on list has to sum to the quantity, and the order figure has to be +15 % taken per PRODUCT
+and rounded up there.  Each DIMENSION in a drawing has to read the distance between the two points
+it was built from.  Each texture has to be its own board at the fixed millimetres per pixel, and
+the renders one size per view across all nine.
 """
-import io, sys, os, json, csv, zipfile, struct
+import io, sys, os, json, csv, zipfile, struct, math, re, collections
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 import ezdxf
+from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..'))
@@ -163,6 +170,102 @@ ck('data/boards.json' in app, 'the page does not read boards.json')
 for q in ('S7_preview.webp', 'S8_preview.webp', 'S9_preview.webp'):
     ck(q in idx, 'index.html does not show %s' % q)
     has('site/renders/%s' % q, 2000)
+
+# --------------------------------------------------------- the schedules, cell by cell
+# Not just the three totals.  Every row: the product split has to sum to the quantity, the
+# used-on list has to sum to the quantity, and the order figure has to be +15 % taken per PRODUCT
+# and rounded up there - rounding the row total instead is a different number.  The by-board
+# grouping is compared cell for cell against the geometry, which is the only one of the three
+# that can be.  The by-board rows carry no order figure on purpose: a board is a slice of an
+# ordering cell, and 15 % of a slice is not ordered from anybody.
+def _split(cell, q):
+    """'L10 B2 358; L10 Grey 411' -> [(name, qty)]; a bare name takes the row's own quantity,
+    which is how the by-product grouping writes it"""
+    out = []
+    for part in [x.strip() for x in cell.split(';') if x.strip()]:
+        m = re.search(r'^(.*?)\s+(\d+)$', part)
+        out.append((m.group(1), int(m.group(2))) if m else (part, q))
+    return out
+
+
+_prod = {}
+for e in S['bricks']:
+    for u in e['use']:
+        _prod[(u['board'], u['code'])] = e['code']
+_gb, _gc = collections.Counter(), collections.Counter()
+for b in D['boards']:
+    _cov = {i for rc in b['rails'] for i in rc['covers']}
+    for i, p in enumerate(b['pieces']):
+        _gb[_prod[(b['idx'], b['types'][p['t']]['code'])], b['idx']] += 1
+        if i not in _cov:
+            _gc[p['c'], b['idx']] += 1
+    for rc in b['rails']:
+        _gc[rc['code'], b['idx']] += 1
+
+for path, kind, iq, io_, ip, iu, ic, src in (
+        ('site/downloads/brick_schedule.csv', 'brick', 6, 7, 5, 8, 2, _gb),
+        ('site/downloads/clip_schedule.csv', 'clip', 9, 10, 8, 11, 2, _gc)):
+    rows = list(csv.reader(io.open(path, encoding='utf-8-sig')))[1:]
+    for r in rows:
+        q = int(r[iq])
+        pv = _split(r[ip], q)
+        ck(sum(v for _n, v in pv) == q, '%s %s %s: the product split sums to %d, the quantity '
+           'is %d' % (kind, r[0], r[ic], sum(v for _n, v in pv), q))
+        uv = [int(x) for x in re.findall(r'x(\d+)', r[iu])]
+        if uv:
+            ck(sum(uv) == q, '%s %s %s: used-on sums to %d, the quantity is %d'
+               % (kind, r[0], r[ic], sum(uv), q))
+        if r[io_]:
+            want = sum(-(-v*115//100) for _n, v in pv)
+            ck(int(r[io_]) == want, '%s %s %s: orders %s, +15%% per product gives %d'
+               % (kind, r[0], r[ic], r[io_], want))
+    tab = collections.Counter()
+    for r in rows:
+        if r[0].startswith('按板号'):
+            tab[r[ic], int(re.search(r'(\d+)', r[1]).group(1))] += int(r[iq])
+    ck(dict(tab) == dict(src),
+       '%s: the by-board table is not the geometry' % os.path.basename(path))
+
+# --------------------------------------------------------- every dimension measures itself
+# A dimension that says 700 and spans 690 is worse than no dimension.  ezdxf keeps the two points
+# it was built from, so the number on the drawing is held to the distance between them.
+for q in ('dxf/05_nine_boards_CN_EN.dxf', 'dxf/08_setout_CN_EN.dxf'):
+    for e in ezdxf.readfile(q).modelspace().query('DIMENSION'):
+        try:
+            p1, p2 = e.dxf.defpoint2, e.dxf.defpoint3
+            got = e.get_measurement()
+        except Exception:
+            continue
+        if isinstance(got, (int, float)):
+            want = math.dist((p1[0], p1[1]), (p2[0], p2[1]))
+            ck(abs(got-want) < 0.05, '%s: a dimension reads %.2f and spans %.2f'
+               % (os.path.basename(q), got, want))
+
+# --------------------------------------------------------- the pictures, at their real scale
+# The setting-out texture is the board at a fixed millimetres-per-pixel, so its size is a fact
+# about the board and not a setting.  One pixel of slack: 1535 x 2.6 is 3990.9999999999995.
+PXMM = 2.6
+for b in D['boards']:
+    q = 'site/textures/setout_board_%d.png' % b['idx']
+    im = Image.open(q)
+    ck(abs(im.width-b['w']*PXMM) <= 1.01 and abs(im.height-b['h']*PXMM) <= 1.01,
+       '%s is %dx%d, the board is %g x %g at %g px/mm'
+       % (os.path.basename(q), im.width, im.height, b['w'], b['h'], PXMM))
+_sz = collections.Counter()
+for b in D['boards']:
+    for tag in ('front', 'hero', 'detail'):
+        for ext in ('webp', 'png'):
+            _sz[tag, ext, Image.open('site/renders/b%d_%s.%s' % (b['idx'], tag, ext)).size] += 1
+ck(all(v == len(D['boards']) for v in _sz.values()),
+   'the renders are not one size per view: %s' % sorted(_sz.items()))
+for q in ('S7_nine_boards_schedule_CN_EN', 'S8_clips_CN_EN', 'S9_bricks_CN_EN'):
+    a = Image.open('drawings/%s.png' % q)
+    m = re.search(r'width="([\d.]+)pt" height="([\d.]+)pt"',
+                  io.open('drawings/%s.svg' % q, encoding='utf-8').read(3000))
+    ck(m is not None, '%s.svg has no size' % q)
+    if m:
+        ck(abs(a.width/a.height-float(m.group(1))/float(m.group(2))) < 0.02,
+           '%s: the png and the svg are different shapes' % q)
 
 print('%d checks over %d boards, %d slips, %d clips' % (seen, N, SLIPS, CLIPS))
 print('CHECKS FAILED: %d' % len(bad))
