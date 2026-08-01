@@ -564,11 +564,38 @@ def panel(c, ox, oy):
                 continue
             dimh(chain[k]+dx, chain[k+1]+dx, yF+bh+50, '%g' % round(chain[k+1]-chain[k], 1),
                  yfeat=yF+bh, th=11, out='left' if k == 0 else 'right')
-        # the hole height goes on the left, opposite the dia 3.5 leader, so the two never meet
-        dimv(yF, sorted(hs)[0][1]+dy, ox-112, '%g' % round(sorted(hs)[0][1]-min(ys), 1),
-             xfeat=ox, th=11, left=True)
-        leader((sorted(hs)[-1][0]+dx, sorted(hs)[-1][1]+dy),
-               (ox+bw+110, sorted(hs)[-1][1]+dy+30), '%d x ' % len(hs)+DIA+'3.5', 12, ha='LEFT')
+        # A RAIL's holes are all on one centreline, so one height places every one of them and the
+        # chain above places them along.  A POCKET's are not: they sit where the piece leaves room
+        # for them, at different heights - PK-3T03's are at 68 and 25, PK-8T02's at 57 and 30 - and
+        # one height dimension places one hole and leaves the other nowhere.  So when the holes are
+        # not level, each gets BOTH of its coordinates from the same bottom-left datum and a tag,
+        # and the tag is what lets the reader pair a height with an offset.
+        level = max(h[1] for h in hs)-min(h[1] for h in hs) < 0.5
+        if level:
+            # the hole height goes on the left, opposite the dia 3.5 leader, so the two never meet
+            dimv(yF, hx_s[0][1]+dy, ox-112, '%g' % round(hx_s[0][1]-min(ys), 1),
+                 xfeat=ox, th=11, left=True)
+            lx = ox+bw+110
+        else:
+            # one dimension line per hole, each carrying its own extension line back to the hole
+            # it measures - which is what says which height belongs to which hole.  A tag beside
+            # the hole was tried and lands on the outline: there is no room inside a 68 x 76 plate
+            # to put text next to a hole without crossing a line.
+            # SHORTEST ON THE INNER LANE.  Both dimensions start at the bottom of the view, so
+            # each draws an extension line across at its own hole's height - and the outer one's
+            # crosses the inner one's lane.  With the taller dimension inside, its value sits at
+            # its own mid-height and the outer extension line runs straight through it: PK-8T02's
+            # 57 landed on the line carrying the 30.  Shortest first and the two never meet.
+            for j, h in enumerate(sorted(hx_s, key=lambda q: q[1])):
+                dimv(yF, h[1]+dy, ox+bw+52+j*54, '%g' % round(h[1]-min(ys), 1),
+                     xfeat=h[0]+dx, th=11)
+            lx = None                # no leader here: it would cross the height dimensions, and
+                                     # the note under the view already calls up 2 x dia 3.5
+            TX((ox, yF-84), 'hole positions from the bottom-left corner   孔位自左下角起算',
+               12, 'NOTE', al='BL')
+        if lx is not None:
+            leader((hx_s[-1][0]+dx, hx_s[-1][1]+dy),
+                   (lx, hx_s[-1][1]+dy+30), '%d x ' % len(hs)+DIA+'3.5', 12, ha='LEFT')
     TX((ox, yF-66), '%d x ' % len(hs)+DIA+'3.5   red edge = folded, and every fold hooks INWARD'
        '   红线为折边，一律向内折回', 12, 'NOTE', al='BL')
 

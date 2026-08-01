@@ -96,6 +96,39 @@ for r in S['rails']:
     ck(any(x.strip() == ('%g' % r['length']) for x in t6),
        'dxf/06 does not dimension %s at %g' % (r['code'], r['length']))
 
+# EVERY HOLE OF EVERY CLIP HAS TO BE LOCATABLE ON dxf/06.  A rail's holes are on one centreline
+# and one height places them all; a pocket's are not - PK-3T03's sit at 68 and 25 above the
+# bottom, PK-8T02's at 57 and 30 - and the drawing gave the along-chain for both but a height for
+# only one, so the second hole could not be found.  Both coordinates of every hole are checked
+# against the numbers that actually appear inside that clip's own panel.
+_t6xy = [(e.dxf.insert[1], e.dxf.text) for e in ezdxf.readfile('dxf/06_clips_CN_EN.dxf')
+         .modelspace().query('TEXT')]
+CG6 = D['clipgeo']
+for e in S['clips']:
+    g = CG6.get(e['code'])
+    if not g or not g.get('holes'):
+        continue
+    top = [y for y, t in _t6xy if t == e['code']]
+    if not top:
+        continue
+    band = {t for y, t in _t6xy if top[0]-420 < y <= top[0]}
+    base = g['base']
+    x0, y0 = min(q[0] for q in base), min(q[1] for q in base)
+    xmax = max(q[0] for q in base)
+    hs = sorted(g['holes'])
+    stops = [x0]+[h[0] for h in hs]+[xmax]
+    for k in range(len(stops)-1):
+        v = round(stops[k+1]-stops[k], 1)
+        if v < 1.0:
+            continue
+        ck(('%g' % v) in band,
+           'dxf/06 %s: the %g mm step along to a hole is not dimensioned' % (e['code'], v))
+    for h in g['holes']:
+        v = round(h[1]-y0, 1)
+        ck(('%g' % v) in band,
+           'dxf/06 %s: the hole at height %g is not dimensioned - it cannot be located'
+           % (e['code'], v))
+
 # dxf/07 carries the brick schedule; every code and every quantity on it
 t7 = text('dxf/07_bricks_CN_EN.dxf')
 for e in S['bricks']:
