@@ -263,33 +263,97 @@ def _seg_dist(p, a, b):
     return math.hypot(p[0]-(a[0]+t*vx), p[1]-(a[1]+t*vy))
 
 
-def _long_label(tray, holes, edges, code):
-    """where the long clip's own code goes
+def _boxseg(c, hw, hh):
+    """a label's box as four segments, so it can go in the obstacle list with everything else"""
+    p = [(c[0]-hw, c[1]-hh), (c[0]+hw, c[1]-hh), (c[0]+hw, c[1]+hh), (c[0]-hw, c[1]+hh)]
+    return [(p[i-1], p[i]) for i in range(4)]
 
-    The tray is 1375 x 68 with eleven holes down its centreline and the perpends of every slip it
-    covers crossing it, so the middle of it is the one place the label cannot go.  Candidates are
-    the midpoints between consecutive holes, offset either side of the centreline; the one
-    furthest from any slip line wins.
+
+def _hits_box(a, b, x0, y0, x1, y1):
+    """does the segment touch the axis-aligned box at all (Liang-Barsky clip)"""
+    t0, t1 = 0.0, 1.0
+    dx, dy = b[0]-a[0], b[1]-a[1]
+    for p, q in ((-dx, a[0]-x0), (dx, x1-a[0]), (-dy, a[1]-y0), (dy, y1-a[1])):
+        if p == 0:
+            if q < 0:
+                return False
+        else:
+            r = q/p
+            if p < 0:
+                if r > t1:
+                    return False
+                t0 = max(t0, r)
+            else:
+                if r < t0:
+                    return False
+                t1 = min(t1, r)
+    return True
+
+
+def _box_seg_dist(a, b, x0, y0, x1, y1):
+    """distance from the segment to the box, 0 if they touch
+
+    Two convex shapes that miss each other are nearest at a corner of one, so testing the box's
+    four corners against the segment and the segment's two ends against the box is exact.
     """
+    if _hits_box(a, b, x0, y0, x1, y1):
+        return 0.0
+    d = min(_seg_dist(c, a, b) for c in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)))
+    for p in (a, b):
+        d = min(d, math.hypot(max(x0-p[0], 0.0, p[0]-x1), max(y0-p[1], 0.0, p[1]-y1)))
+    return d
+
+
+def _long_label(tray, holes, edges, code):
+    """where a rail's own code goes  ->  (point, text height)
+
+    The tray is up to 1000 x 68 with holes down its centreline and the perpends of every slip it
+    covers crossing it, so the middle of it is rarely free.  Candidates are the gaps between
+    consecutive holes plus the two beyond the end ones, each tried at a spread of offsets across
+    the width; each is scored on the clearance of the label's real box, and the box has to sit
+    inside the tray.
+
+    The first version scored the centre point at a fixed 20 mm offset.  On a rail running up the
+    board the four characters of R100 are 25 mm wide, so a centre 20 from the middle put half the
+    label past the slip edge that runs through the tray: 88 of them on dxf/08.
+    """
+    cx = sum(q[0] for q in tray)/4.0
+    cy = sum(q[1] for q in tray)/4.0
     if len(holes) < 2:
-        return (sum(q[0] for q in tray)/4.0, sum(q[1] for q in tray)/4.0)
-    ux = holes[1][0]-holes[0][0]; uy = holes[1][1]-holes[0][1]
+        return (cx, cy), TXT_H
+    ux, uy = holes[-1][0]-holes[0][0], holes[-1][1]-holes[0][1]
     L = math.hypot(ux, uy) or 1.0
     ux, uy = ux/L, uy/L
     nx, ny = -uy, ux
-    near = [e for e in edges
-            if _seg_dist(holes[len(holes)//2], e[0], e[1]) < 900]
-    best, bd = None, -1e9
-    for i in range(len(holes)-1):
-        mx = (holes[i][0]+holes[i+1][0])/2.0
-        my = (holes[i][1]+holes[i+1][1])/2.0
-        for off in (20.0, -20.0):
-            c = (mx+nx*off, my+ny*off)
-            d = min([_seg_dist(c, a, bb) for a, bb in near] or [999])
-            d = min(d, min(math.dist(c, h) for h in holes))
-            if d > bd:
-                bd, best = d, c
-    return best
+    ox, oy = holes[0]
+    proj = lambda p: ((p[0]-ox)*ux+(p[1]-oy)*uy, (p[0]-ox)*nx+(p[1]-oy)*ny)
+    tu = [proj(q) for q in tray]
+    ulo, uhi = min(q[0] for q in tu), max(q[0] for q in tu)
+    nlo, nhi = min(q[1] for q in tu), max(q[1] for q in tu)
+    stops = [ulo]+[proj(q)[0] for q in holes]+[uhi]
+    us = [(stops[i]+stops[i+1])/2.0 for i in range(len(stops)-1)]
+    ns = [nlo+(nhi-nlo)*k/16.0 for k in range(17)]
+    obs = [e for e in edges if _seg_dist((cx, cy), e[0], e[1]) < L/2.0+120.0]
+    for hx, hy in holes:                # the drill marks are a 13 mm cross, not a point
+        obs.append(((hx-6.5, hy), (hx+6.5, hy)))
+        obs.append(((hx, hy-6.5), (hx, hy+6.5)))
+    best, bd, bh = (cx, cy), -1e9, TXT_H
+    for h in (TXT_H, 8.0, 7.0, 6.0):
+        hw, hh = strw(code, h)/2.0+1.5, h/2.0+1.5
+        for su in us:
+            for sn in ns:
+                c = (ox+ux*su+nx*sn, oy+uy*su+ny*sn)
+                box = (c[0]-hw, c[1]-hh, c[0]+hw, c[1]+hh)
+                cs = [proj(p) for p in ((box[0], box[1]), (box[2], box[1]),
+                                        (box[2], box[3]), (box[0], box[3]))]
+                if any(not (ulo <= p[0] <= uhi and nlo <= p[1] <= nhi) for p in cs):
+                    continue
+                d = min([_box_seg_dist(a, b, *box) for a, b in obs] or [999.0])
+                if d > bd:
+                    bd, best, bh = d, c, h
+        if bd > 0.0:
+            break
+    return best, bh
 
 
 def board(idx):
@@ -381,12 +445,21 @@ def board(idx):
                         tcode=tcode, tlab=tl, ccode=ccode, clab=cl, th=th))
     rails = []
     edges = [(q, r['slip'][j-1]) for r in out for j, q in enumerate(r['slip'])]
+    edges += [(q, r['tray'][j-1]) for r in out if r['tray'] for j, q in enumerate(r['tray'])]
+    # The labels already on the board are obstacles too, or a rail's code lands on the brick code
+    # of the slip underneath it.  Widened by a third of the height each side, which is the gutter
+    # check_dxf puts between two labels before it calls them clear.
+    for r in out:
+        for lab, cod in ((r['tlab'], r['tcode']), (r['clab'], r['ccode'])):
+            if lab and cod:
+                edges += _boxseg(lab, strw(cod, r['th'])/2.0+r['th']/3.0, r['th']/2.0)
     for lc in b.get('rails', []):
         lcode = short(lc['code'])
         tr = [tuple(q) for q in lc['k']]
         hs = [tuple(q) for q in lc['holes']]
-        rails.append(dict(tray=tr, holes=hs, ccode=lcode, th=TXT_H,
-                          clab=_long_label(tr, hs, edges, lcode)))
+        cl, ch = _long_label(tr, hs, edges, lcode)
+        rails.append(dict(tray=tr, holes=hs, ccode=lcode, th=ch, clab=cl))
+        edges += _boxseg(cl, strw(lcode, ch)/2.0+ch/3.0, ch/2.0)
     return dict(w=b['w'], h=b['h'], joint=b['joint'], idx=idx, rails=rails,
                 zh=b['zh'], en=b['en'], pieces=out,
                 types=[(t['code'], t['label'], t['qty']) for t in b['types']],

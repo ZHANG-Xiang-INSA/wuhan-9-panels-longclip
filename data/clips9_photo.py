@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Studio renders of the four clips, for showing a manufacturer what the part looks like.
+"""Studio renders of every clip in the job, for showing a manufacturer what the part looks like.
 
     blender -b -P data/clips9_photo.py      ->  _clip_renders/frames/<code>_<view>.png
     python  data/clips9_photo_sheet.py      ->  _clip_renders/<code>.png
@@ -13,7 +13,7 @@ highlight at all - it came out as grey paper.  Metal is read from the SHAPE OF T
 this builds its own studio: a bright top to the sky falling off towards the floor, and three broad
 softboxes placed to draw a long highlight down the flat and across each fold.
 
-The long clip is rendered at its FULL 1366, uncut, and again as a close-up of one end.
+Each rail is rendered at its FULL length, uncut, and again as a close-up of one end.
 """
 import bpy, bmesh, json, math, os, sys
 from mathutils import Vector, Matrix
@@ -35,9 +35,9 @@ SHOTS = (('hero',   Vector((-0.72, -0.80, 0.52)), None, (2600, 1500)),
          ('detail', Vector((-0.62, -0.66, 0.62)), 190.0, (1700, 1500)),
          ('end',    Vector((-0.30, -1.00, 0.16)), 120.0, (1700, 1500)))
 
-# A 1366 part seen down a 45 deg azimuth crosses the frame corner to corner and ends up a tenth of
-# the height of the picture.  Swung round to look nearly square-on it lies almost flat across the
-# frame instead, and the whole length can be shown at a size worth looking at.
+# A metre-long part seen down a 45 deg azimuth crosses the frame corner to corner and ends up a
+# tenth of the height of the picture.  Swung round to look nearly square-on it lies almost flat
+# across the frame instead, and the whole length can be shown at a size worth looking at.
 HERO_LONG = Vector((-0.14, -0.95, 0.28))
 LONG_ASPECT = 6.0
 # A pocket is a flat plate with three tabs standing off it.  Seen from the rail's own low
