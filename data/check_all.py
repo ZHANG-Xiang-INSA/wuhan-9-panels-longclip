@@ -370,6 +370,39 @@ if os.path.exists('dxf/08_setout_spare15_CN_EN.dxf'):
             per_board_geom('dxf/08_setout_spare15_CN_EN.dxf'))
     ck(a == b, 'dxf/08 ordering copy has moved the setting-out')
 
+# ------------------------------------------------- one brick code, one shape (within the merge)
+# A code on the schedule is a thing somebody cuts.  If two slips under one code are not the same
+# slip, the fabricator cuts 34 identical pieces and some of the slots are the wrong size, and
+# nothing here was looking: board 3's T03 carries 24 pieces on a 10.66 short edge and 10 on an
+# 11.46, and the schedule quotes one shape for all 34.  The job allows a 2 mm merge - the smaller
+# is cut and the joint takes up the difference - so 0.81 passes, but it has to be SEEN to pass,
+# and the quantity must be ordered against the smaller or the big slots come up short.
+_b2c = {}
+for e in S['bricks']:
+    for u in e['use']:
+        _b2c[(u['board'], u['code'])] = e['code']
+_shape = {}
+for b in D['boards']:
+    for p in b['pieces']:
+        q = p['p']
+        es = sorted(math.dist(q[j-1], q[j]) for j in range(len(q)))
+        _shape.setdefault(_b2c[(b['idx'], b['types'][p['t']]['code'])], []).append((es, q))
+MERGE_MAX = 2.0
+for c, L in sorted(_shape.items()):
+    n = min(len(x) for x, _q in L)
+    sp = max(max(x[i] for x, _q in L)-min(x[i] for x, _q in L) for i in range(n))
+    ck(sp <= MERGE_MAX+1e-9,
+       'brick %s is drawn %d ways, the widest %.2f mm apart, and the merge rule allows %g'
+       % (c, len({tuple(round(y, 1) for y in x) for x, _q in L}), sp, MERGE_MAX))
+    if sp <= 0.05:
+        continue
+    ar = [abs(sum(q[j][0]*q[j-1][1]-q[j-1][0]*q[j][1] for j in range(len(q))))/2.0 for _x, q in L]
+    want = min(ar)
+    got = [e['area'] for e in S['bricks'] if e['code'] == c][0]
+    ck(abs(got-want) <= 1.0,
+       'brick %s is drawn %.0f to %.0f mm2 and the schedule orders %.0f - it has to be the '
+       'smallest, or the larger slots are cut short' % (c, min(ar), max(ar), got))
+
 # ---------------------------------------------------------------- one colour per clip type
 # A clip of a given length has to look the same wherever it is drawn, and different from every
 # other length.  Every rail used to be the one blue on the drawings and the one steel in the
