@@ -11,12 +11,14 @@ at 1:1 and marks the board; after that a fitter reads the board itself instead o
 Layers are per board and per thing - P1_SLIP, P1_CLIP, P1_HOLE, P1_TXT_B, P1_TXT_C - so one board
 can be isolated and plotted on its own, and the holes can be sent to a driller on their own.
 """
-import ezdxf, math, os
+import ezdxf, json, math, os
 from ezdxf.enums import TextEntityAlignment as TA
 from setout9 import board, TXT_H, SHORT, load
 
 import dxftext as DT
 HERE = os.path.dirname(os.path.abspath(__file__))
+CLIPC = json.load(open(os.path.join(HERE, 'clip_colours.json'), encoding='utf-8'))
+LONGCODE = {v: k for k, v in __import__('setout9').SHORT.items()}
 HOLE_D = 3.5
 # the long clip is described in the notes, and its length is read rather than repeated: it is a
 # searched result and the drawing must not be able to disagree with the schedule about it
@@ -45,6 +47,15 @@ PRODOF = {b['idx']: b['product'] for b in load()['boards']}
 COLS, GAPX, GAPY = 3, 1000.0, 760.0
 
 doc = ezdxf.new('R2010', setup=True); doc.header['$INSUNITS'] = 4
+
+# A drawing has to come out the same twice.  ezdxf stamps the wall-clock time into $TDCREATE and
+# $TDUPDATE, so two runs over the same data produced two different files and "site/downloads is
+# byte for byte the master" became a check on whether pack_downloads happened to run last rather
+# than on whether the two drawings are the same drawing.  Pinned to the day this branch was cut.
+STAMP = 2461254.0
+doc.header['$TDCREATE'] = STAMP
+doc.header['$TDUPDATE'] = STAMP
+doc.header['$TDINDWG'] = 0.0
 msp = doc.modelspace()
 doc.styles.add('CN', font='msyh.ttc')
 for n, c in {'BOARD': 7, 'DIM': 8, 'TITLE': 7, 'NOTE': 7, 'BORDER': 7, 'ORIGIN': 1}.items():
@@ -92,9 +103,11 @@ def wrap(s, h, width, indent=''):
 
 def panel(B, ox, oy):
     i = B['idx']
-    # slips black, clips blue, holes red - the same three colours the baked texture and the website
-    # legend use, so a fitter reading the plot and a fitter reading the model see the same thing.
-    # Clips were cyan (4), which plots the same weight as the black slip line on a mono printer.
+    # Slips black, holes red, and A LAYER PER CLIP TYPE in that type's own colour - the same
+    # colours the baked texture, the model and the page use, so a fitter reading the plot and a
+    # fitter reading the model see the same thing.  One CLIP layer in one blue meant a course
+    # carrying an R700, an R100 and an R50 plotted as three identical boxes and only the code
+    # beside each said which was which; now the R700 is blue, the R100 amber, the R50 green.
     for nm, col in (('SLIP', 7), ('CLIP', 5), ('HOLE', 1), ('TXT_B', 7), ('TXT_C', 5)):
         lay = 'P%d_%s' % (i, nm)
         if lay not in doc.layers:
@@ -102,18 +115,31 @@ def panel(B, ox, oy):
     S, C, H = 'P%d_SLIP' % i, 'P%d_CLIP' % i, 'P%d_HOLE' % i
     TB, TC = 'P%d_TXT_B' % i, 'P%d_TXT_C' % i
 
+    def CL(code):
+        """the layer a clip of this type is drawn on, made on demand
+
+        On the FULL code.  setout9 shortens PK-3T03 to P3T03 so it fits inside a 68 tray, and
+        keying the layer off that put both pockets on a layer the palette knows nothing about,
+        drawn in the fallback blue.  The label stays short; the layer is the real name.
+        """
+        code = LONGCODE.get(code, code)
+        lay = 'P%d_CLIP_%s' % (i, code.replace('-', '_'))
+        if lay not in doc.layers:
+            doc.layers.add(lay, color=CLIPC.get(code, {}).get('aci', 5))
+        return lay
+
     PL([(ox, oy), (ox+B['w'], oy), (ox+B['w'], oy+B['h']), (ox, oy+B['h'])], 'BOARD', lw=50)
     for lc in B['rails']:
-        PL([(ox+q[0], oy+q[1]) for q in lc['tray']], C)
+        PL([(ox+q[0], oy+q[1]) for q in lc['tray']], CL(lc['ccode']))
         for hx, hy in lc['holes']:
             msp.add_circle((ox+hx, oy+hy), HOLE_D/2, dxfattribs={'layer': H})
             for dx, dy in ((6.5, 0), (0, 6.5)):
                 msp.add_line((ox+hx-dx, oy+hy-dy), (ox+hx+dx, oy+hy+dy), dxfattribs={'layer': H})
-        TX((ox+lc['clab'][0], oy+lc['clab'][1]), lc['ccode'], lc['th'], TC, 'MC')
+        TX((ox+lc['clab'][0], oy+lc['clab'][1]), lc['ccode'], lc['th'], CL(lc['ccode']), 'MC')
     for p in B['pieces']:
         PL([(ox+q[0], oy+q[1]) for q in p['slip']], S)
         if p['tray']:
-            PL([(ox+q[0], oy+q[1]) for q in p['tray']], C)
+            PL([(ox+q[0], oy+q[1]) for q in p['tray']], CL(p['ccode'] or 'R50'))
         for hx, hy in p['holes']:
             msp.add_circle((ox+hx, oy+hy), HOLE_D/2, dxfattribs={'layer': H})
             for dx, dy in ((6.5, 0), (0, 6.5)):
@@ -121,7 +147,7 @@ def panel(B, ox, oy):
                              dxfattribs={'layer': H})
         TX((ox+p['tlab'][0], oy+p['tlab'][1]), p['tcode'], p['th'], TB, 'MC')
         if p['ccode']:
-            TX((ox+p['clab'][0], oy+p['clab'][1]), p['ccode'], p['th'], TC, 'MC')
+            TX((ox+p['clab'][0], oy+p['clab'][1]), p['ccode'], p['th'], CL(p['ccode']), 'MC')
 
     # the datum corner the whole layout is measured from
     msp.add_line((ox-70, oy), (ox+90, oy), dxfattribs={'layer': 'ORIGIN'})
@@ -275,7 +301,7 @@ ext = bb.extents(msp); mn, mx = ext.extmin, ext.extmax; pad = 120
 PL([(mn[0]-pad, mn[1]-pad), (mx[0]+pad, mn[1]-pad), (mx[0]+pad, mx[1]+pad),
     (mn[0]-pad, mx[1]+pad)], 'BORDER')
 q = os.path.join(HERE, '..', 'dxf', FNAME)
-doc.saveas(q)
+DT.save(doc, q)
 print('SAVED', os.path.normpath(q), '| entities', len(list(msp)),
       '| %d slips, %d clips, %d holes'
       % (sum(len(b['pieces']) for b in BD),

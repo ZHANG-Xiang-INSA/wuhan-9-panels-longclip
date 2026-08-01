@@ -9,6 +9,7 @@ Joints are exactly as the proposal's Mortar column states.
 """
 import math, json, os
 import ezdxf
+import dxftext as _DT
 from panels9 import (W, TARGET, stretcher, soldiers, endcourse, stack, basketweave,
                      herring, border, rect, parea, rot_clip, basket_cells)
 from panels9_types import classify, edge_sig
@@ -247,6 +248,15 @@ print('total %d pieces, %d cuts' % (TOT, sum(P['cuts'] for P in PANELS)))
 json.dump(PANELS, open('panels9.json', 'w'), indent=1)
 
 doc = ezdxf.new('R2010', setup=True); msp = doc.modelspace()
+
+# A drawing has to come out the same twice.  ezdxf stamps the wall-clock time into $TDCREATE and
+# $TDUPDATE, so two runs over the same data produced two different files and "site/downloads is
+# byte for byte the master" became a check on whether pack_downloads happened to run last rather
+# than on whether the two drawings are the same drawing.  Pinned to the day this branch was cut.
+STAMP = 2461254.0
+doc.header['$TDCREATE'] = STAMP
+doc.header['$TDUPDATE'] = STAMP
+doc.header['$TDINDWG'] = 0.0
 for lay, col in (('PANEL', 7), ('TXT', 7), ('DIM', 8)):
     doc.layers.add(lay, color=col)
 doc.styles.add('CN', font='msyh.ttc')             # a face that carries both scripts
@@ -339,5 +349,5 @@ for i, P in enumerate(PANELS):
         put(str(t['qty']), sx+COL_QTY, y, H_ROW)
         put(LB.describe(t), sx+COL_DESC, y, H_ROW)
 
-p = os.path.join(OUT, '05_nine_boards_CN_EN.dxf'); doc.saveas(p)
+p = os.path.join(OUT, '05_nine_boards_CN_EN.dxf'); _DT.save(doc, p)
 print('DXF ->', p)

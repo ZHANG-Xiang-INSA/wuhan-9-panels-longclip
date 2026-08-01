@@ -112,15 +112,22 @@ def grade():
     v.gamma = 1.0
 
 
-def steel():
-    m = bpy.data.materials.new('steel'); m.use_nodes = True
+CC = json.load(open(os.path.join(HERE, 'clip_colours.json'), encoding='utf-8'))
+
+
+def steel(code=None):
+    """the finish this clip type wears everywhere: copper for the 700, brass for the 100, blued
+    steel for the 1000, plain steel for the 50.  Same file the texture, the drawing, the model and
+    the page read, so a photograph of a clip is the same colour as that clip on the board."""
+    v = CC.get(code) or CC['R50']
+    m = bpy.data.materials.new('steel_%s' % (code or 'R50')); m.use_nodes = True
     b = m.node_tree.nodes['Principled BSDF']
-    b.inputs['Base Color'].default_value = (0.62, 0.645, 0.68, 1.0)
+    b.inputs['Base Color'].default_value = tuple(v['metal'])+(1.0,)
     b.inputs['Metallic'].default_value = 1.0
-    b.inputs['Roughness'].default_value = 0.20
-    for k, v in (('Anisotropic', 0.45), ('Anisotropic Rotation', 0.0), ('IOR', 2.6)):
+    b.inputs['Roughness'].default_value = max(0.16, v['rough']-0.06)
+    for k, x in (('Anisotropic', 0.45), ('Anisotropic Rotation', 0.0), ('IOR', 2.6)):
         if k in b.inputs:
-            b.inputs[k].default_value = v
+            b.inputs[k].default_value = x
     return m
 
 
@@ -138,7 +145,7 @@ def clip_object(c):
     me = bpy.data.meshes.new('clip'); bm.to_mesh(me); bm.free()
     ob = bpy.data.objects.new(c['code'], me)
     bpy.context.scene.collection.objects.link(ob)
-    ob.data.materials.append(steel())
+    ob.data.materials.append(steel(c['code']))
     for p in ob.data.polygons:
         p.use_smooth = False
 

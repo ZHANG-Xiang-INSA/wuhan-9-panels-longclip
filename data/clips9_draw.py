@@ -12,6 +12,13 @@ import sheetwrap as SW
 
 matplotlib.rcParams['font.family'] = ['Microsoft YaHei']
 matplotlib.rcParams['axes.unicode_minus'] = False
+# A drawing has to come out the same twice.  matplotlib stamps the wall-clock time into every
+# SVG it writes and salts the clip-path ids per run, so two runs of the same script produced two
+# different files - which made "site/downloads is byte for byte the master" a check that could
+# only pass if pack_downloads happened to run last, and quietly went false the next time anything
+# regenerated.  A fixed salt and no date makes the output a function of the data alone.
+matplotlib.rcParams['svg.hashsalt'] = 'wuhan-9-panels'
+SVG_META = {'Date': None}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', 'dxf')
@@ -363,7 +370,8 @@ fig.suptitle('武汉摄影展板　卡扣详图\nWuhan photography boards - clip
              fontsize=15, color=INK, y=0.988, linespacing=1.5)
 q = os.path.join(HERE, '..', 'drawings', 'S8_clips_CN_EN.png')
 fig.savefig(q, dpi=220, facecolor='white', bbox_inches='tight')
-fig.savefig(q.replace('.png', '.svg'), format='svg', facecolor='white', bbox_inches='tight')
+fig.savefig(q.replace('.png', '.svg'), format='svg', facecolor='white',
+            bbox_inches='tight', metadata=SVG_META)
 print('->', os.path.normpath(q.replace('.png', '.svg')))
 print('->', os.path.normpath(q))
 

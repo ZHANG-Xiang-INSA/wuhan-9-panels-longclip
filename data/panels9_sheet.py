@@ -17,6 +17,13 @@ import labels9 as LB
 
 matplotlib.rcParams['font.family'] = ['Microsoft YaHei']
 matplotlib.rcParams['axes.unicode_minus'] = False
+# A drawing has to come out the same twice.  matplotlib stamps the wall-clock time into every
+# SVG it writes and salts the clip-path ids per run, so two runs of the same script produced two
+# different files - which made "site/downloads is byte for byte the master" a check that could
+# only pass if pack_downloads happened to run last, and quietly went false the next time anything
+# regenerated.  A fixed salt and no date makes the output a function of the data alone.
+matplotlib.rcParams['svg.hashsalt'] = 'wuhan-9-panels'
+SVG_META = {'Date': None}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PDFD = os.path.join(HERE, '..', 'proposal', 'extracted')
@@ -106,7 +113,7 @@ fig.savefig(q, dpi=220, facecolor='white')
 # the 2048 px sources came out as 373 px and went soft the moment anyone zoomed in.  180 puts them
 # near 670.
 qs = q.replace('.png', '.svg')
-fig.savefig(qs, format='svg', facecolor='white', dpi=180)
+fig.savefig(qs, format='svg', facecolor='white', dpi=180, metadata=SVG_META)
 
 # That alone took the sheet from 4.0 to 10.5 MB, because matplotlib embeds every raster as PNG and
 # PNG is the wrong format for a photograph.  Re-encoding the nine of them as JPEG costs nothing a

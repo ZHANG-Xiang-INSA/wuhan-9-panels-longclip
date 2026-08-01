@@ -1,0 +1,31 @@
+{
+  "_note": "One colour per clip type, used everywhere a clip is drawn or rendered, so a clip of a given length looks the same on the setting-out texture, in dxf/08, in the model, on the page and in the studio photographs. Same code, same colour, on every board. `line` is for drawings; `metal` is the base colour of a physical finish and `rough` how polished it is. `aci` is the AutoCAD colour index for the DXF layer.",
+  "R1000": {
+    "line": "#6a1b9a", "aci": 200, "metal": [0.29, 0.34, 0.42], "rough": 0.30,
+    "finish_zh": "发蓝钢", "finish_en": "blued steel"
+  },
+  "R700": {
+    "line": "#0d6efd", "aci": 5, "metal": [0.72, 0.45, 0.20], "rough": 0.26,
+    "finish_zh": "紫铜", "finish_en": "copper"
+  },
+  "R300": {
+    "line": "#00897b", "aci": 4, "metal": [0.55, 0.47, 0.33], "rough": 0.34,
+    "finish_zh": "青铜", "finish_en": "bronze"
+  },
+  "R100": {
+    "line": "#e07b00", "aci": 30, "metal": [0.83, 0.69, 0.22], "rough": 0.28,
+    "finish_zh": "黄铜", "finish_en": "brass"
+  },
+  "R50": {
+    "line": "#2e7d32", "aci": 3, "metal": [0.62, 0.65, 0.68], "rough": 0.24,
+    "finish_zh": "不锈钢", "finish_en": "steel"
+  },
+  "PK-3T03": {
+    "line": "#8d5524", "aci": 34, "metal": [0.74, 0.42, 0.22], "rough": 0.36,
+    "finish_zh": "红铜", "finish_en": "copper, matt"
+  },
+  "PK-8T02": {
+    "line": "#b03a2e", "aci": 14, "metal": [0.70, 0.30, 0.26], "rough": 0.36,
+    "finish_zh": "红铜", "finish_en": "copper, matt"
+  }
+}

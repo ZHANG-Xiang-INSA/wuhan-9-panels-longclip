@@ -20,7 +20,10 @@ What is checked:
   ORDER COPY  the +15 % DXFs carry the ordering figures, and 08's geometry is board-for-board
               identical to the net copy - a setting-out drawing is where things go, and the
               ordering copy must not move anything
-  SERVED      site/downloads byte for byte the masters, since the page serves from there
+  COLOUR      one colour per clip type and no two alike, honoured by dxf/08's layers and by the
+              material on every clip mesh in every model
+  SERVED      site/downloads is the same DRAWING as the master (a DXF is not reproducible byte
+              for byte); the SVGs, which are, are compared byte for byte
   CSV         the three groupings in each schedule sum to the same total, and the spec columns
               carry the family's real lengths and hole counts
   MODEL       every GLB holds as many clips as the schedule says, per board and per code
@@ -350,13 +353,100 @@ if os.path.exists('dxf/08_setout_spare15_CN_EN.dxf'):
             per_board_geom('dxf/08_setout_spare15_CN_EN.dxf'))
     ck(a == b, 'dxf/08 ordering copy has moved the setting-out')
 
+# ---------------------------------------------------------------- one colour per clip type
+# A clip of a given length has to look the same wherever it is drawn, and different from every
+# other length.  Every rail used to be the one blue on the drawings and the one steel in the
+# model, so a course carrying an R700, an R100 and an R50 showed three identical boxes.  The
+# palette lives in data/clip_colours.json; what is checked is that everything reads it.
+CCOL = S.get('clip_colours') or {}
+_used = {e['code'] for e in S['clips']}
+for c in sorted(_used):
+    ck(c in CCOL, 'clip %s has no colour in the palette' % c)
+_lines = [CCOL[c]['line'] for c in sorted(_used) if c in CCOL]
+_metal = [CCOL[c]['metal'] for c in sorted(_used) if c in CCOL]
+ck(len(set(_lines)) == len(_lines), 'two clip types share a line colour: %s' % _lines)
+ck(len(set(_metal)) == len(_metal), 'two clip types share a finish: %s' % _metal)
+
+# dxf/08: a layer per clip type per board, in that type's own index colour
+_d8 = ezdxf.readfile('dxf/08_setout_CN_EN.dxf')
+_lay = {la.dxf.name: la.dxf.color for la in _d8.layers}
+_pal = json.load(open(os.path.join(HERE, 'clip_colours.json'), encoding='utf-8'))
+for b in D['boards']:
+    on = {rc['code'] for rc in b['rails']}
+    cov = {i for rc in b['rails'] for i in rc['covers']}
+    on |= {p['c'] for i, p in enumerate(b['pieces']) if i not in cov}
+    for c in sorted(on):
+        nm = 'P%d_CLIP_%s' % (b['idx'], c.replace('-', '_'))
+        ck(nm in _lay, 'dxf/08 has no layer %s' % nm)
+        if nm in _lay:
+            ck(_lay[nm] == _pal[c]['aci'],
+               'dxf/08 layer %s is colour %d, the palette says %d'
+               % (nm, _lay[nm], _pal[c]['aci']))
+
+# the models: one material per clip mesh, its base colour the palette's finish
+for b in D['boards']:
+    q = os.path.join('site', 'models', 'board_%d.glb' % b['idx'])
+    if not os.path.exists(q):
+        continue
+    G, _BIN = _glb(q)
+    for m in G['meshes']:
+        c = m['name']
+        if c not in CCOL:
+            continue
+        for pr in m['primitives']:
+            mat = G['materials'][pr['material']]
+            f = mat.get('pbrMetallicRoughness', {}).get('baseColorFactor', [0, 0, 0, 1])
+            got = tuple(max(0, min(255, int(round(x*255)))) for x in f[:3])
+            wnt = tuple(int(CCOL[c]['metal'][1+2*j:3+2*j], 16) for j in range(3))
+            # within a count, not equal to it: 0.30 x 255 is 76.5 and Blender and Python do not
+            # round a half the same way
+            ck(all(abs(g-w) <= 1 for g, w in zip(got, wnt)),
+               'board %d: %s is #%02x%02x%02x in the model, the palette says %s'
+               % ((b['idx'], c)+got+(CCOL[c]['metal'],)))
+
 # ---------------------------------------------------------------- served copies and CSVs
+# THE SAME DRAWING, not the same bytes.  A DXF is not reproducible byte for byte - ezdxf walks its
+# object table in whatever order the handles hash to - so a byte compare here answered "did
+# pack_downloads run last", which is not the question.  What is asked instead is whether the two
+# files are the same drawing: every entity, its layer, where it is and what it says.  The SVGs are
+# reproducible now (fixed hash salt, no date stamp), so those are still compared byte for byte and
+# a single changed pixel fails.
+def _drawing(p):
+    d = ezdxf.readfile(p)
+    out = []
+    for e in d.modelspace():
+        t = e.dxftype()
+        g = ''
+        if t == 'TEXT':
+            g = '%s|%.4f,%.4f|%.4f' % (e.dxf.text, e.dxf.insert[0], e.dxf.insert[1], e.dxf.height)
+        elif t == 'MTEXT':
+            g = '%s|%.4f,%.4f' % (e.text, e.dxf.insert[0], e.dxf.insert[1])
+        elif t == 'LINE':
+            g = '%.4f,%.4f,%.4f,%.4f' % (e.dxf.start[0], e.dxf.start[1],
+                                         e.dxf.end[0], e.dxf.end[1])
+        elif t == 'LWPOLYLINE':
+            g = ';'.join('%.4f,%.4f' % (q[0], q[1]) for q in e.get_points('xy'))
+        elif t in ('CIRCLE', 'ARC'):
+            g = '%.4f,%.4f,%.4f' % (e.dxf.center[0], e.dxf.center[1], e.dxf.radius)
+        elif t == 'HATCH':
+            g = '%d paths' % len(e.paths)
+        out.append('%s|%s|%s' % (t, e.dxf.layer, g))
+    return hashlib.sha256('\n'.join(sorted(out)).encode('utf-8')).hexdigest(), len(out)
+
+
 h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
 for a in sorted(os.listdir('dxf'))+['S7_nine_boards_schedule_CN_EN.svg', 'S8_clips_CN_EN.svg',
                                     'S9_bricks_CN_EN.svg']:
     src = os.path.join('dxf' if a.endswith('.dxf') else 'drawings', a)
     dst = os.path.join('site', 'downloads', a)
-    if os.path.exists(src) and os.path.exists(dst):
+    if not (os.path.exists(src) and os.path.exists(dst)):
+        continue
+    if a.endswith('.dxf'):
+        ha, na = _drawing(src)
+        hb, nb = _drawing(dst)
+        ck(ha == hb, 'site/downloads/%s is a different drawing from the master (%d vs %d entities)'
+           % (a, na, nb))
+    else:
         ck(h(src) == h(dst), 'site/downloads/%s is not the master' % a)
 for path, col, want in (('site/downloads/brick_schedule.csv', 6, S['brick_total']),
                         ('site/downloads/clip_schedule.csv', 9, S['clip_total'])):

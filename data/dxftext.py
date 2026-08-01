@@ -10,6 +10,8 @@ the next column, and check_dxf.py, using the same guess, said they did not.
 ezdxf carries the font, so the width can be measured rather than estimated.  Widths are cached
 because dxf/08 alone measures a few thousand strings.
 """
+import io
+
 from ezdxf.fonts import fonts
 
 FONT = 'msyh.ttc'                  # the style every one of these drawings is written in
@@ -66,3 +68,30 @@ def wrap(s, h, limit, indent='', font=FONT):
     if line.strip() or not out:
         out.append(line.rstrip())
     return out
+
+
+# ---------------------------------------------------------------------------------------------
+# Saving a drawing so that it comes out the same twice.
+#
+# ezdxf stamps the wall-clock time into $TDCREATE and $TDUPDATE and mints a fresh $VERSIONGUID and
+# $FINGERPRINTGUID on every write, so two runs over identical data produced two different files.
+# That turned "site/downloads is byte for byte the master" into a check on whether pack_downloads
+# happened to run last rather than on whether the two are the same drawing - and it was quietly
+# false at the time this was written.  $TDUPDATE and the GUIDs are set during the write itself,
+# so they are normalised in the file afterwards rather than on the document.
+DXF_STAMP = '2461254.0'          # the day this branch was cut, in the Julian form DXF uses
+DXF_GUID = '{00000000-0000-0000-0000-000000000000}'
+
+
+def save(doc, path):
+    doc.saveas(path)
+    txt = io.open(path, encoding='utf-8', errors='surrogateescape').read().split('\n')
+    for i, ln in enumerate(txt):
+        v = ln.strip()
+        if v in ('$TDCREATE', '$TDUPDATE', '$TDINDWG', '$TDUSRTIMER') and i+2 < len(txt):
+            txt[i+2] = DXF_STAMP if v in ('$TDCREATE', '$TDUPDATE') else '0.0'
+        elif v in ('$VERSIONGUID', '$FINGERPRINTGUID') and i+2 < len(txt):
+            txt[i+2] = DXF_GUID
+    io.open(path, 'w', encoding='utf-8', errors='surrogateescape',
+            newline='').write('\n'.join(txt))
+    return path

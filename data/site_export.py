@@ -207,6 +207,7 @@ prof = dict(flat=FLAT, leg=PROF['leg'], lip=PROF['lip'], angle=PROF['lip_angle']
 # measured from there.
 import rails9 as RAILS
 
+CLIPCOL = json.load(open(os.path.join(HERE, 'clip_colours.json'), encoding='utf-8'))
 RAIL_ZH = {'R1000': '通用导轨卡扣 1000', 'R700': '通用导轨卡扣 700', 'R300': '通用导轨卡扣 300',
            'R100': '通用导轨卡扣 100', 'R50': '通用导轨卡扣 50'}
 RAIL_EN = {c: 'Universal rail clip %g' % RAILS.length(c) for c in RAILS.FAMILY}
@@ -368,6 +369,14 @@ summary = dict(bricks=bricks, clips=clips_sum,
                       for c in ('R1000', 'R700', 'R300', 'R100', 'R50')
                       if any(r['code'] == c for b in boards for r in b['rails'])],
                rail_gap=RAILS.GAP, rail_end_max=RAILS.END_MAX,
+               # One colour per clip type, straight out of data/clip_colours.json, so the page
+               # cannot drift from the setting-out texture, dxf/08, the model or the studio
+               # photographs.  metal is the finish in the model; line is for flat drawings.
+               clip_colours={c: dict(line=v['line'],
+                                     metal='#%02x%02x%02x' % tuple(
+                                         max(0, min(255, int(round(x*255)))) for x in v['metal']),
+                                     rough=v['rough'], zh=v['finish_zh'], en=v['finish_en'])
+                             for c, v in CLIPCOL.items() if not c.startswith('_')},
                clip_total=sum(e['qty'] for e in clips_sum),
                boards=len(boards))
 

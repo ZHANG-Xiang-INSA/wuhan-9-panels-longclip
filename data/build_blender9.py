@@ -927,8 +927,15 @@ def build(b):
     m_back = setout_mat(b['idx'], hexv(col['mortar']))
     m_joint = clay('joint%d' % b['idx'], hexv(col['mortar']), rough=0.96, relief=0.0004,
                    grain=760.0, tint=False)
-    m_rail = metal('rail', (0.52, 0.56, 0.60, 1.0))
-    m_pock = metal('pocket', (0.74, 0.42, 0.22, 1.0), rough=0.36)
+    # ONE FINISH PER CLIP TYPE, from data/clip_colours.json, and the same one on every board.
+    # Every rail was the same steel, so a course carrying an R700, an R100 and an R50 read as one
+    # continuous grey strip and nothing in the model said where one clip stopped.  Copper for the
+    # 700, brass for the 100, blued steel for the 1000, plain steel for the 50 - and the pockets
+    # keep their matt copper.  The colours are the ones the setting-out texture and the page use.
+    CC = json.load(open(os.path.join(HERE, 'clip_colours.json'), encoding='utf-8'))
+    m_clip = {c: metal('clip_'+c, tuple(v['metal'])+(1.0,), rough=v['rough'])
+              for c, v in CC.items() if not c.startswith('_')}
+    m_rail = m_clip['R50']
 
     cen = lambda p: [[q[0]-cx, q[1]-cy] for q in p]
 
@@ -979,7 +986,7 @@ def build(b):
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
         me = bpy.data.meshes.new(code); bm.to_mesh(me); bm.free()
         ob = bpy.data.objects.new('CLIP_'+code, me)
-        ob.data.materials.append(m_pock if g.get('kind') == 'POCKET' else m_rail)
+        ob.data.materials.append(m_clip.get(code, m_rail))
         bpy.context.collection.objects.link(ob)
 
     add_lights()

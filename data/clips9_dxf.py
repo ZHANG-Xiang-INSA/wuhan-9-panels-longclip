@@ -36,6 +36,15 @@ D = json.load(open(os.path.join(HERE, 'clips9.json')))
 CLIPS = D['clips']
 
 doc = ezdxf.new('R2010', setup=True); doc.header['$INSUNITS'] = 4
+
+# A drawing has to come out the same twice.  ezdxf stamps the wall-clock time into $TDCREATE and
+# $TDUPDATE, so two runs over the same data produced two different files and "site/downloads is
+# byte for byte the master" became a check on whether pack_downloads happened to run last rather
+# than on whether the two drawings are the same drawing.  Pinned to the day this branch was cut.
+STAMP = 2461254.0
+doc.header['$TDCREATE'] = STAMP
+doc.header['$TDUPDATE'] = STAMP
+doc.header['$TDINDWG'] = 0.0
 msp = doc.modelspace()
 doc.styles.add('CN', font='msyh.ttc')
 for n, c in {'OUTLINE': 7, 'HOLE': 1, 'DIM': 8, 'TXT': 7, 'TITLE': 7, 'CL': 4,
@@ -607,6 +616,6 @@ ext = bb.extents(msp); mn, mx = ext.extmin, ext.extmax; pad = 60
 PL([(mn[0]-pad, mn[1]-pad), (mx[0]+pad, mn[1]-pad), (mx[0]+pad, mx[1]+pad),
     (mn[0]-pad, mx[1]+pad)], 'BORDER', close=True)
 q = os.path.join(HERE, '..', 'dxf', '06_clips_CN_EN.dxf')
-doc.saveas(q)
+DT.save(doc, q)
 print('SAVED', os.path.normpath(q), '| entities', len(list(msp)),
       '| x[%.0f..%.0f] y[%.0f..%.0f]' % (mn[0], mx[0], mn[1], mx[1]))
