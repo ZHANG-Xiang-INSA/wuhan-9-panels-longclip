@@ -73,12 +73,16 @@ body{
 #plan{padding:76px 34px 20px; max-width:1320px; margin:0 auto}
 .head h2{font:300 clamp(24px,3vw,38px)/1.1 'Segoe UI'; letter-spacing:-.015em}
 .head p{margin-top:8px; font-size:14px; opacity:.55; max-width:56ch}
-.split{display:grid; grid-template-columns:1.12fr .88fr; gap:30px; margin-top:28px;
+/* The two schedules run across the top, so each one is wide enough to read at a glance and the
+   drawing under them gets the whole column - at the same size as the wipe below it, because the
+   two are the same board and looked at one after the other. */
+.tables{display:grid; grid-template-columns:1fr 1fr; gap:30px; margin:28px 0 34px;
   align-items:start}
-@media (max-width:900px){.split{grid-template-columns:1fr}}
+@media (max-width:900px){.tables{grid-template-columns:1fr}}
 
-.panwrap{position:relative; border:1px solid var(--rule); background:#fff; border-radius:2px}
-#pan{display:block; width:100%; height:auto}
+.panwrap{position:relative; border:1px solid var(--rule); background:#fff; border-radius:2px;
+  max-height:78vh; margin:0 auto; overflow:hidden}
+#pan{position:absolute; inset:0; display:block; width:100%; height:100%}
 /* One thing at a time.  Everything on this drawing is a thin line of about the same weight, so
    picking one out has to take the rest most of the way down rather than nudge it. */
 #pan .slip{fill:#f4f1ec; stroke:#8e877a; stroke-width:1; vector-effect:non-scaling-stroke;
@@ -97,9 +101,8 @@ body{
 .pick{position:absolute; left:14px; top:12px; font:600 11px/1.5 ui-monospace,monospace;
   letter-spacing:.06em; color:var(--hot); pointer-events:none; min-height:2.4em}
 
-aside h3{font:600 11px/1 ui-monospace,monospace; letter-spacing:.18em; opacity:.5;
+.tables h3{font:600 11px/1 ui-monospace,monospace; letter-spacing:.18em; opacity:.5;
   margin-bottom:10px}
-aside h3.mt{margin-top:26px}
 table{width:100%; border-collapse:collapse; font-size:12.5px}
 th,td{text-align:left; padding:7px 6px; border-bottom:1px solid var(--rule)}
 th{font:600 9.5px/1 ui-monospace,monospace; letter-spacing:.12em; opacity:.45}
