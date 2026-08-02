@@ -44,7 +44,8 @@ const T = {
     // 粗面 / 细面, the same two words the drawings use.  The site said 毛面 / 光面, so one finish
     // had two names depending on which document the reader had in front of them.
     wall: '墙面', floor: '地面', raw: '粗面', sleek: '细面',
-    st_size: '板面 mm', st_slips: '砖片', st_types: '砖型', st_clips: '卡扣', st_ctypes: '卡扣型',
+    st_size: '板面 mm', st_joint: '灰缝 mm', st_slips: '砖片', st_types: '砖型',
+    st_clips: '卡扣', st_ctypes: '卡扣型',
     s_bricks: '砖型表', s_bricks_p: '每一型画在同一比例的整砖虚影上。点一行可在上方模型中单独亮出该型。',
     th_code: '代号', th_kind: '类别', th_size: '外廓 mm', th_area: '面积 mm²',
     th_qty: '数量', th_desc: '说明',
@@ -89,6 +90,7 @@ const T = {
     s_files: '文件', s_files_p: '每块板的模型与渲染单独列出，图纸与数据九块板共用。',
     th_file: '文件', th_what: '内容', th_size2: '大小', dl: '下载',
     foot1: '武汉摄影展板　砖片 215 × 65 × 20',
+    author_n: '张翔 Xiang ZHANG', author_r: '产品开发工程师 Product Development Engineer',
     f_glb: n => `第 ${n} 块板的三维模型`,
     f_blend: n => `第 ${n} 块板的 Blender 文件，砂浆可用小眼睛开关`,
     f_front: n => `第 ${n} 块板 正视渲染`, f_hero: n => `第 ${n} 块板 立体渲染`,
@@ -125,7 +127,8 @@ const T = {
     m_real: 'Real', m_type: 'Brick type', m_clip: 'Clip type',
     l_slips: 'Slips', l_clips: 'Clips', l_mortar: 'Mortar', l_board: 'Backing',
     wall: 'Wall', floor: 'Floor', raw: 'Raw', sleek: 'Sleek',
-    st_size: 'board mm', st_slips: 'slips', st_types: 'types', st_clips: 'clips',
+    st_size: 'board mm', st_joint: 'joint mm', st_slips: 'slips', st_types: 'types',
+    st_clips: 'clips',
     st_ctypes: 'clip types',
     s_bricks: 'Brick schedule',
     s_bricks_p: 'Each type is drawn against a ghost of the uncut slip at one scale. Click a row to isolate it in the model.',
@@ -175,6 +178,7 @@ const T = {
     s_files: 'Files', s_files_p: 'Each board has its own model and renders; the drawings and the data cover all nine.',
     th_file: 'File', th_what: 'What it is', th_size2: 'Size', dl: 'Download',
     foot1: 'Wuhan photography boards   slip 215 × 65 × 20',
+    author_n: 'Xiang ZHANG', author_r: 'Product Development Engineer',
     f_glb: n => `Board ${n}, the model in this viewer`,
     f_blend: n => `Board ${n}, Blender file, mortar on its own collection`,
     f_front: n => `Board ${n} front elevation`, f_hero: n => `Board ${n} hero render`,
@@ -632,6 +636,10 @@ function lede() {
   const nClip = b.clips.reduce((s2, c) => s2 + c.qty, 0);
   $('#bstats').innerHTML = [
     [`${b.w} × ${b.h}`, t('st_size')],
+    // the joint belongs beside the board size: it is the one dimension that decides the size,
+    // and it is what decides whether a course can take a rail at all - board 9 is on 3 and keeps
+    // its staggered R50s because 65 + 3 is exactly the 68 flat
+    [`${b.joint}`, t('st_joint')],
     [b.pieces.length, t('st_slips')],
     [b.types.length, t('st_types')],
     [`${nClip}`, t('st_clips')],
