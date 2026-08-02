@@ -116,18 +116,23 @@ for e in S['clips']:
     x0, y0 = min(q[0] for q in base), min(q[1] for q in base)
     xmax = max(q[0] for q in base)
     hs = sorted(g['holes'])
-    stops = [x0]+[h[0] for h in hs]+[xmax]
-    for k in range(len(stops)-1):
-        v = round(stops[k+1]-stops[k], 1)
-        if v < 1.0:
-            continue
-        ck(('%g' % v) in band,
-           'dxf/06 %s: the %g mm step along to a hole is not dimensioned' % (e['code'], v))
-    for h in g['holes']:
-        v = round(h[1]-y0, 1)
-        ck(('%g' % v) in band,
-           'dxf/06 %s: the hole at height %g is not dimensioned - it cannot be located'
-           % (e['code'], v))
+
+    def placed(vals, chain):
+        """either way of writing it counts: the distance from the datum, or the steps that add
+        up to it.  A rail is dimensioned as a chain across and heights from the bottom; a pocket
+        the other way round, offsets from the left and heights as a chain.  Both locate the hole,
+        and a check that only knows one of them is a check on the draughtsman's habit."""
+        return all(('%g' % round(v, 1)) in band for v in vals) or                all(('%g' % round(v, 1)) in band for v in chain)
+
+    across = [h[0]-x0 for h in hs]
+    step_x = [hs[0][0]-x0]+[hs[k][0]-hs[k-1][0] for k in range(1, len(hs))]+[xmax-hs[-1][0]]
+    ck(placed(across, [v for v in step_x if v >= 1.0]),
+       'dxf/06 %s: a hole is not placed across the blank' % e['code'])
+    up = sorted(hs, key=lambda h: h[1])
+    heights = [h[1]-y0 for h in up]
+    step_y = [up[0][1]-y0]+[up[k][1]-up[k-1][1] for k in range(1, len(up))]
+    ck(placed(heights, step_y),
+       'dxf/06 %s: a hole is not placed up the blank - it cannot be located' % e['code'])
 
 # dxf/07 carries the brick schedule; every code and every quantity on it
 t7 = text('dxf/07_bricks_CN_EN.dxf')

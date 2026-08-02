@@ -109,20 +109,25 @@ def wrap(s, h, width, indent=''):
     return out
 
 
-def dimh(x0, x1, yd, txt=None, yfeat=None, th=11, out='right'):
+def narrow(s, x0, x1, th=11):
+    """is the number too wide for the gap it labels, so that it has to go outside?"""
+    return strw(s, th) > abs(x1-x0)*0.9
+
+
+def dimh(x0, x1, yd, txt=None, yfeat=None, th=11, out='right', lift=0.0, force=False):
     if yfeat is not None:
         Ln_((x0, yfeat), (x0, yd), 'DIM'); Ln_((x1, yfeat), (x1, yd), 'DIM')
     Ln_((x0, yd), (x1, yd), 'DIM'); arr((x0, yd), 0); arr((x1, yd), math.pi)
     s = txt if txt is not None else '%g' % round(x1-x0, 2)
     # if the number is wider than the gap it labels, it goes outside, the way it would be placed
     # by hand.  Left inside, it runs across its own extension line.
-    if strw(s, th) > abs(x1-x0)*0.9:
+    if force or narrow(s, x0, x1, th):
         if out == 'left':
-            TX((x0-th*0.6, yd+th*0.55), s, th, 'DIM', al='BR')
+            TX((x0-th*0.6, yd+th*0.55+lift), s, th, 'DIM', al='BR')
         else:
-            TX((x1+th*0.6, yd+th*0.55), s, th, 'DIM', al='BL')
+            TX((x1+th*0.6, yd+th*0.55+lift), s, th, 'DIM', al='BL')
     else:
-        TX(((x0+x1)/2, yd+th*0.55), s, th, 'DIM', al='BC')
+        TX(((x0+x1)/2, yd+th*0.55+lift), s, th, 'DIM', al='BC')
 
 
 def dimv(y0, y1, xd, txt=None, xfeat=None, th=11, left=False):
@@ -187,29 +192,64 @@ def xsec(cx, cy, sc=1.0, col=None):
 
 
 # ---------------------------------------------------------------- hole placement
+SPREAD = 3.0        # a hole wants an edge distance of about a third of the distance to its pair
+
+
+def _edge_dist(poly, p):
+    """how far p is from the nearest edge of the tray"""
+    d = 1e9
+    for i in range(len(poly)):
+        a, b = poly[i-1], poly[i]
+        vx, vy = b[0]-a[0], b[1]-a[1]
+        L2 = vx*vx+vy*vy or 1.0
+        t = max(0.0, min(1.0, ((p[0]-a[0])*vx+(p[1]-a[1])*vy)/L2))
+        d = min(d, math.hypot(p[0]-(a[0]+t*vx), p[1]-(a[1]+t*vy)))
+    return d
+
+
 def poly_holes(base, lipped):
-    """two hole centres inside the tray, clear of every edge and of the inward hooks"""
+    """two hole centres inside the tray, balanced between the edges and each other
+
+    The first rule here was "as far apart as they will go, given 8 mm of edge and 12 mm of fold".
+    Distance was the only thing being maximised and the clearances were floors, so both holes went
+    to the corners of what was left and sat AT the floor: PK-3T03's ended up 8.5 mm off its sloped
+    edge with 60.8 between them - almost the full diagonal - which is a screw through the thin
+    part of the plate at each end.  Pull the screws in and the plate is stiff where they bear;
+    pull them together and the pair has no lever arm and the clip pivots on it.
+
+    So neither is a floor now.  Both are maximised at once, on the same scale: the score is the
+    smaller of the two edge distances and the spacing over three, so at the optimum the edge
+    distance IS a third of the spacing and there is no weak one to improve.  8 and 12 stay as
+    hard floors underneath, through _clear, and the pair whose midpoint sits nearest the middle
+    of the plate wins a tie, because a pair off to one side lets the clip turn about it.
+
+        PK-3T03   edge 8.5 -> 13.8,  spacing 60.8 -> 41.0
+        PK-8T02   edge 12.1 -> 12.4, spacing 38.2 -> 37.5   (it was nearly balanced already)
+    """
     xs = [q[0] for q in base]; ys = [q[1] for q in base]
+    cx = sum(xs)/len(xs); cy = sum(ys)/len(ys)
     cand = []
     x = min(xs)
     while x <= max(xs):
         y = min(ys)
         while y <= max(ys):
             if _in(base, (x, y)) and _clear(base, lipped, (x, y)):
-                cand.append((x, y))
-            y += 1.0
-        x += 1.0
+                cand.append((x, y, _edge_dist(base, (x, y))))
+            y += 0.5
+        x += 0.5
     if not cand:
         return []
-    best, bd = None, -1.0
+    best, bs, bo = None, -1.0, 1e9
     for i, a in enumerate(cand):
         for b in cand[i+1:]:
             d = math.hypot(a[0]-b[0], a[1]-b[1])
-            if d > bd:
-                bd, best = d, (a, b)
-    if bd < 2*HD:
-        return [cand[len(cand)//2]]
-    return list(best)
+            v = min(a[2], b[2], d/SPREAD)
+            off = math.hypot((a[0]+b[0])/2-cx, (a[1]+b[1])/2-cy)
+            if v > bs+1e-9 or (v > bs-1e-9 and off < bo):
+                bs, bo, best = v, off, (a, b)
+    if best is None or math.hypot(best[0][0]-best[1][0], best[0][1]-best[1][1]) < 2*HD:
+        return [max(cand, key=lambda q: q[2])[:2]]
+    return [(round(q[0]*2)/2.0, round(q[1]*2)/2.0) for q in best]
 
 
 def _in(poly, pt):
@@ -558,44 +598,57 @@ def panel(c, ox, oy):
     dimv(yF, yF+bh, ox-172, '%g' % round(bh, 1), xfeat=ox, th=12, left=True)
     if hs:
         hx_s = sorted(hs)
-        chain = [min(xs)]+[h[0] for h in hx_s]+[max(xs)]
-        for k in range(len(chain)-1):
-            if chain[k+1]-chain[k] < 1.0:           # a hole sitting on the outline edge
-                continue
-            dimh(chain[k]+dx, chain[k+1]+dx, yF+bh+50, '%g' % round(chain[k+1]-chain[k], 1),
-                 yfeat=yF+bh, th=11, out='left' if k == 0 else 'right')
-        # A RAIL's holes are all on one centreline, so one height places every one of them and the
-        # chain above places them along.  A POCKET's are not: they sit where the piece leaves room
-        # for them, at different heights - PK-3T03's are at 68 and 25, PK-8T02's at 57 and 30 - and
-        # one height dimension places one hole and leaves the other nowhere.  So when the holes are
-        # not level, each gets BOTH of its coordinates from the same bottom-left datum and a tag,
-        # and the tag is what lets the reader pair a height with an offset.
         level = max(h[1] for h in hs)-min(h[1] for h in hs) < 0.5
         if level:
+            # A RAIL's holes are all on one centreline, so the chain across places every one of
+            # them and one height does the rest.
+            chain = [min(xs)]+[h[0] for h in hx_s]+[max(xs)]
+            for k in range(len(chain)-1):
+                if chain[k+1]-chain[k] < 1.0:       # a hole sitting on the outline edge
+                    continue
+                dimh(chain[k]+dx, chain[k+1]+dx, yF+bh+50, '%g' % round(chain[k+1]-chain[k], 1),
+                     yfeat=yF+bh, th=11, out='left' if k == 0 else 'right')
             # the hole height goes on the left, opposite the dia 3.5 leader, so the two never meet
             dimv(yF, hx_s[0][1]+dy, ox-112, '%g' % round(hx_s[0][1]-min(ys), 1),
                  xfeat=ox, th=11, left=True)
-            lx = ox+bw+110
+            leader((hx_s[-1][0]+dx, hx_s[-1][1]+dy),
+                   (ox+bw+110, hx_s[-1][1]+dy+30), '%d x ' % len(hs)+DIA+'3.5', 12, ha='LEFT')
         else:
-            # one dimension line per hole, each carrying its own extension line back to the hole
-            # it measures - which is what says which height belongs to which hole.  A tag beside
-            # the hole was tried and lands on the outline: there is no room inside a 68 x 76 plate
-            # to put text next to a hole without crossing a line.
-            # SHORTEST ON THE INNER LANE.  Both dimensions start at the bottom of the view, so
-            # each draws an extension line across at its own hole's height - and the outer one's
-            # crosses the inner one's lane.  With the taller dimension inside, its value sits at
-            # its own mid-height and the outer extension line runs straight through it: PK-8T02's
-            # 57 landed on the line carrying the 30.  Shortest first and the two never meet.
-            for j, h in enumerate(sorted(hx_s, key=lambda q: q[1])):
-                dimv(yF, h[1]+dy, ox+bw+52+j*54, '%g' % round(h[1]-min(ys), 1),
-                     xfeat=h[0]+dx, th=11)
-            lx = None                # no leader here: it would cross the height dimensions, and
-                                     # the note under the view already calls up 2 x dia 3.5
+            # A POCKET's are not on a centreline - PK-3T03's sit at 68 and 25 above the bottom of
+            # the blank, PK-8T02's at 57 and 30 - so one height places one hole and leaves the
+            # other nowhere.  EACH HOLE GETS BOTH OF ITS COORDINATES, both from the same
+            # bottom-left corner, on a line of its own.
+            #
+            # From the corner and not as a chain.  A chain across a 68 wide plate is three gaps,
+            # two of them too narrow for their own number, and a number too narrow for its gap has
+            # to be written outside - two of those in a row write on top of each other.  Measured
+            # from the corner there are two dimensions instead of three and both are long enough
+            # to carry their number inside.  It also matches the heights, which are from that same
+            # corner, so the drawing is read one way throughout.
+            # the value goes OUTSIDE each one, past the right of the blank.  Both are measured
+            # from the same left edge, so the outer one's extension lines run right up past the
+            # inner one's line - and straight through its value if that value sits over the plate.
+            # LONGEST ON THE INNER LINE.  The short one's extension line is short, so it stops
+            # below the long one's value; the other way round, the long one's runs up through it.
+            for j2, h in enumerate(sorted(hx_s, reverse=True)):
+                dimh(ox, h[0]+dx, yF+bh+50+j2*32, '%g' % round(h[0]-min(xs), 1),
+                     yfeat=yF+bh, th=11, force=True)
+            # The heights go up as a CHAIN - bottom to the lower hole, lower hole to the upper -
+            # not both from the bottom.  Measured both from the bottom they share the baseline at
+            # the foot of the view, and the outer one's extension line then runs along it and
+            # under the inner one's value, half a millimetre from touching it.  A chain has one
+            # line at the bottom and the rest between the holes, and the two never come near.
+            up = sorted(hx_s, key=lambda q: q[1])
+            base_y = yF
+            for j2, h in enumerate(up):
+                # values alternate sides of the one dimension line: two links of a chain are only
+                # as far apart as the link is long, and 30.4 and 26.5 are each 28 of writing
+                dimv(base_y, h[1]+dy, ox+bw+60, '%g' % round(
+                    h[1]-(min(ys) if j2 == 0 else up[j2-1][1]), 1), xfeat=h[0]+dx, th=11,
+                    left=bool(j2 % 2))
+                base_y = h[1]+dy
             TX((ox, yF-84), 'hole positions from the bottom-left corner   孔位自左下角起算',
                12, 'NOTE', al='BL')
-        if lx is not None:
-            leader((hx_s[-1][0]+dx, hx_s[-1][1]+dy),
-                   (lx, hx_s[-1][1]+dy+30), '%d x ' % len(hs)+DIA+'3.5', 12, ha='LEFT')
     TX((ox, yF-66), '%d x ' % len(hs)+DIA+'3.5   red edge = folded, and every fold hooks INWARD'
        '   红线为折边，一律向内折回', 12, 'NOTE', al='BL')
 
