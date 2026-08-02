@@ -515,3 +515,10 @@ body.no-gl .exrow{display:none}
   .bar nav a{white-space:nowrap;flex:0 0 auto}
   .langsw{flex:0 0 auto}
 }
+
+/* the author, at the foot of the page: a name, a role and an address a reader can write to */
+footer .by{display:block;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--rule,#e2ddd6)}
+footer .by b{display:block;font-weight:600;letter-spacing:.01em}
+footer .by i{display:block;font-style:normal;opacity:.72;margin:.15rem 0 .3rem}
+footer .by a{color:inherit;opacity:.72;text-decoration:none;border-bottom:1px solid currentColor}
+footer .by a:hover{opacity:1}
