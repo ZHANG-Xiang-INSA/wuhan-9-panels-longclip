@@ -20,6 +20,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from '../vendor/GLTFLoader.js';
 import { RoomEnvironment } from '../vendor/RoomEnvironment.js';
+import { OrbitControls } from '../vendor/OrbitControls.js';
 import { EffectComposer } from './vendor/EffectComposer.js';
 import { RenderPass } from './vendor/RenderPass.js';
 import { UnrealBloomPass } from './vendor/UnrealBloomPass.js';
@@ -37,12 +38,10 @@ const T = {
   zh: {
     back: '目录', code: '武汉摄影展板　装配',
     s_plan: '图纸会跟着指针走',
-    s_plan_p: '把指针放到任意一片砖上：它在图上抬起，右边它被订在哪一行同时亮起。反过来把指针放到某一行，那一行覆盖的每一片砖都会亮。1414 片砖和 86 行明细之间的对应，本来只是两张表里的两个数字。',
+    s_csched: '卡扣明细 CLIP SCHEDULE',
     s_sched: '砖片明细 BRICK SCHEDULE',
     s_swap: '成品面 ⇄ 背板放线',
-    s_swap_p: '左右拖动。右边是贴在背板上的放线图：砖片轮廓、卡扣托盘、每个钻孔。',
     s_pick: '换一块板',
-    hint: '悬停砖片 · 点卡扣图例只留一种 · 拖动下面的滑块比对正背面',
     scrub: n => `滚动 = 爆炸行程　·　砖片抬起 ${n}%`,
     f_w: '板宽 mm', f_h: '板高 mm', f_j: '灰缝 mm', f_s: '砖片', f_c: '卡扣', f_d: '钻孔',
     foot: '几何、图纸、模型与本页由 data/ 下的脚本从同一份数据生成。',
@@ -52,12 +51,10 @@ const T = {
   en: {
     back: 'Catalogue', code: 'WUHAN BOARDS — ASSEMBLY',
     s_plan: 'The drawing follows the pointer',
-    s_plan_p: 'Put the pointer on any slip and it lifts on the plan while the schedule row it is ordered on lights up beside it. Put the pointer on a row instead and every slip it covers lights up. That correspondence between 1414 slips and 86 schedule rows is what this job has spent its life checking, and until now it was two numbers in two tables.',
+    s_csched: 'CLIP SCHEDULE',
     s_sched: 'BRICK SCHEDULE',
     s_swap: 'FINISHED FACE ⇄ SETTING OUT',
-    s_swap_p: 'Drag across. The right is what is scribed on the backing board: slip outlines, clip trays, every drill mark.',
     s_pick: 'ANOTHER BOARD',
-    hint: 'hover a slip · click a clip in the legend to keep only that one · drag the slider below',
     scrub: n => `SCROLL = EXPLODE　·　slips lifted ${n}%`,
     f_w: 'board w', f_h: 'board h', f_j: 'joint', f_s: 'slips', f_c: 'clips', f_d: 'drill marks',
     foot: 'The geometry, the drawings, the models and this page are generated from one set of data by the scripts under data/.',
@@ -97,37 +94,61 @@ function coverage(b) {
 const BCODE = new Map();
 D.summary.bricks.forEach(e => e.use.forEach(u => BCODE.set(u.board + '/' + u.code, e.code)));
 const BRICK = new Map(D.summary.bricks.map(e => [e.code, e]));
+const CLIP = new Map(D.summary.clips.map(e => [e.code, e]));
+const PRODOF = {};
+D.boards.forEach(b => { PRODOF[b.idx] = b.product; });
+const up15 = n => Math.ceil(n * 1.15);
+
+/* +15 % is taken per (code x product) and rounded up THERE, because a product is what a purchase
+   line is; rounding the code's total instead is a different number.  The bricks carry theirs in
+   the data already; a clip's is derived the same way from where it is used. */
+function clipSpare(e) {
+  const per = {};
+  (e.use || []).forEach(u => { const k = PRODOF[u.board] || ''; per[k] = (per[k] || 0) + u.qty; });
+  return Object.values(per).reduce((s2, v) => s2 + up15(v), 0);
+}
 
 /* ================================================================ THE STAGE */
 const cv = $('#gl');
 const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+// 0.62, not 1.05.  Three lights, a room environment and a bloom on top of a backing board that is
+// nearly white came out as a white sheet with the board somewhere inside it.
+renderer.toneMappingExposure = 0.62;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0e0f11);
 const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 60);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.05).texture;
 
-const key = new THREE.DirectionalLight(0xfff0dd, 2.6);
+const key = new THREE.DirectionalLight(0xfff0dd, 1.5);
 key.position.set(-1.4, 2.2, 1.7);
 scene.add(key);
-const rim = new THREE.DirectionalLight(0xbcd4ff, 1.5);
+const rim = new THREE.DirectionalLight(0xbcd4ff, 0.8);
 rim.position.set(1.9, 0.9, -1.6);
 scene.add(rim);
-scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+scene.add(new THREE.AmbientLight(0xffffff, 0.12));
 
 // Bloom, and gently.  The clips are the only bright metal in the frame, so a low threshold picks
 // them out on their own without the backing board fogging up behind them.
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.55, 0.86);
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.28, 0.45, 0.95);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
 let root = null, slipGroup = null, clipMeshes = [], mortar = null, backing = null;
 const loader = new GLTFLoader();
+
+const controls = new OrbitControls(camera, cv);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.rotateSpeed = 0.55;
+controls.minDistance = 0.6;
+controls.maxDistance = 6;
+controls.maxPolarAngle = Math.PI * 0.49;      // never under the board
+controls.target.set(0, 0, 0);
 
 function fit() {
   const w = cv.clientWidth, h = cv.clientHeight;
@@ -173,7 +194,23 @@ async function loadBoard(i) {
   root.position.sub(mid);
   const r = Math.max(size.x, size.z) * 0.5;
   camera.position.set(r * 0.55, r * 1.75, r * 2.05);
-  camera.lookAt(0, 0, 0);
+  controls.target.set(0, 0, 0);
+  controls.minDistance = r * 1.1;
+  controls.maxDistance = r * 6;
+  controls.update();
+  // the backing carries the setting-out texture, which is nearly white and swamps everything in
+  // front of it once there is a bloom; on this page it is taken down to a stage grey
+  if (backing) {
+    root.traverse(o => {
+      if (o.isMesh && (o.name || '').startsWith('backing') && o.material) {
+        o.material = o.material.clone();
+        o.material.color = new THREE.Color(0x3a3d42);
+        if (o.material.map) o.material.map = null;
+        o.material.roughness = 0.92;
+        o.material.metalness = 0;
+      }
+    });
+  }
   fit();
   explode(0);
 }
@@ -201,19 +238,26 @@ function explode(k) {
 
 let isolate = null;
 function applyIsolate() {
-  clipMeshes.forEach(m => {
-    const on = !isolate || m.userData.code === isolate;
-    m.visible = on;
-  });
+  clipMeshes.forEach(m => { m.visible = !isolate || m.userData.code === isolate; });
   document.querySelectorAll('#legend li').forEach(li => {
     li.classList.toggle('on', isolate === li.dataset.code);
   });
   document.querySelectorAll('#pan .clip').forEach(el => {
+    const on = !isolate || el.dataset.code === isolate;
+    el.classList.toggle('dim', !on);
+    el.classList.toggle('hi', !!isolate && on);
+  });
+  document.querySelectorAll('#pan .hole').forEach(el => {
     el.classList.toggle('dim', !!isolate && el.dataset.code !== isolate);
   });
+  document.querySelectorAll('#csched tr[data-clip]').forEach(tr => {
+    tr.classList.toggle('on', isolate === tr.dataset.clip);
+  });
+  document.querySelector('#plan').classList.toggle('iso', !!isolate);
 }
 
 function tick() {
+  controls.update();
   composer.render();
   requestAnimationFrame(tick);
 }
@@ -278,7 +322,7 @@ function drawBoard() {
   $('#legend').innerHTML = [...used.entries()]
     .sort((a, c) => ord.indexOf(a[0]) - ord.indexOf(c[0]))
     .map(([c, n]) => `<li data-code="${c}"><i style="background:${CC[c]?.line || '#888'};
-      box-shadow:0 0 9px ${CC[c]?.line || '#888'}"></i>${c}<em>　${lang === 'zh' ? CC[c]?.zh : CC[c]?.en || ''} · ${n}</em></li>`)
+      box-shadow:0 0 9px ${CC[c]?.line || '#888'}"></i>${c}<em>×${n}</em></li>`)
     .join('');
   $('#legend').querySelectorAll('li').forEach(li => {
     li.onclick = () => { isolate = isolate === li.dataset.code ? null : li.dataset.code; applyIsolate(); };
@@ -288,6 +332,7 @@ function drawBoard() {
   drawSched(b);
   $('#swapA').src = `../renders/b${b.idx}_front.webp`;
   $('#swapB').src = `../textures/setout_board_${b.idx}.png`;
+  $('#swap').style.aspectRatio = `${b.w} / ${b.h}`;
   $('#chips').innerHTML = D.boards.map((x, i) =>
     `<button class="chip${i === bi ? ' on' : ''}" data-i="${i}">${String(x.idx).padStart(2, '0')}</button>`).join('');
   $('#chips').querySelectorAll('.chip').forEach(c => {
@@ -375,39 +420,70 @@ function setHot(code) {
 
 function drawSched(b) {
   const cov = coverage(b);
-  const per = new Map();
+
+  const perB = new Map();
   b.pieces.forEach(p => {
     const c = BCODE.get(b.idx + '/' + b.types[p.t].code);
-    per.set(c, (per.get(c) || 0) + 1);
+    perB.set(c, (perB.get(c) || 0) + 1);
   });
-  const rows = [...per.entries()].sort((a, c) => c[1] - a[1]).map(([c, n]) => {
-    const e = BRICK.get(c);
-    return `<tr data-code="${c}"><td>${c}</td>
-      <td>${e.dims ? e.dims[0] + ' × ' + e.dims[1] : ''}</td>
-      <td class="n">${n}</td><td class="n">${e.qty}</td></tr>`;
-  }).join('');
-  $('#sched').innerHTML =
-    `<tr><th>CODE</th><th>mm</th><th class="n">${lang === 'zh' ? '本板' : 'here'}</th>
-     <th class="n">${lang === 'zh' ? '全场' : 'all nine'}</th></tr>` + rows;
+  $('#sched').innerHTML = head(lang === 'zh' ? 'mm' : 'mm')
+    + [...perB.entries()].sort((x, y) => y[1] - x[1]).map(([c, n]) => {
+      const e = BRICK.get(c);
+      return `<tr data-code="${c}"><td>${c}</td>
+        <td>${e.dims ? e.dims[0] + ' × ' + e.dims[1] : ''}</td>
+        <td class="n">${n}</td><td class="n">${e.qty}</td><td class="n or">${e.spare}</td></tr>`;
+    }).join('');
   $('#sched').querySelectorAll('tr[data-code]').forEach(tr => {
     tr.onpointerenter = () => setHot(tr.dataset.code);
     tr.onpointerleave = () => setHot(null);
   });
+
+  const perC = new Map();
+  b.rails.forEach(r => perC.set(r.code, (perC.get(r.code) || 0) + 1));
+  b.pieces.forEach((p, i) => { if (!cov.has(i)) perC.set(p.c, (perC.get(p.c) || 0) + 1); });
+  const ord = ['R1000', 'R700', 'R300', 'R100', 'R50', 'PK-3T03', 'PK-8T02'];
+  $('#csched').innerHTML = head(lang === 'zh' ? '长度' : 'length')
+    + [...perC.entries()].sort((x, y) => ord.indexOf(x[0]) - ord.indexOf(y[0])).map(([c, n]) => {
+      const e = CLIP.get(c) || { qty: 0 };
+      return `<tr data-clip="${c}">
+        <td><i class="sw" style="background:${CC[c]?.line || '#888'}"></i>${c}</td>
+        <td>${e.length ? e.length + ' mm' : (lang === 'zh' ? '随砖形' : 'follows piece')}</td>
+        <td class="n">${n}</td><td class="n">${e.qty}</td>
+        <td class="n or">${clipSpare(e)}</td></tr>`;
+    }).join('');
+  $('#csched').querySelectorAll('tr[data-clip]').forEach(tr => {
+    tr.onpointerenter = () => { isolate = tr.dataset.clip; applyIsolate(); };
+    tr.onpointerleave = () => { isolate = null; applyIsolate(); };
+    tr.onclick = () => { isolate = isolate === tr.dataset.clip ? null : tr.dataset.clip; applyIsolate(); };
+  });
+}
+
+function head(mid) {
+  const zh = lang === 'zh';
+  return `<tr><th>${zh ? '件号' : 'CODE'}</th><th>${mid}</th>
+    <th class="n">${zh ? '本板' : 'here'}</th><th class="n">${zh ? '全场' : 'all nine'}</th>
+    <th class="n or">${zh ? '备料 +15%' : '+15% order'}</th></tr>`;
 }
 
 /* ---------------------------------------------------------------- the wipe */
 (function swap() {
-  const el = $('#swap'), b = $('.swapb'), h = $('#handle');
+  const el = $('#swap'), b = $('#swapB'), h = $('#handle');
+  // CLIP-PATH, not a box of its own width.  The setting-out was in a narrower box with an image
+  // sized to itself, so the two halves were at different scales and the seam sat wherever that
+  // box happened to end - half the board was brick and half was backing, and the handle never
+  // reached either edge.  Both images now fill the same box and the top one is cut, so the seam
+  // is a straight line through one picture and it goes edge to edge.
   const set = x => {
     const r = el.getBoundingClientRect();
-    const p = Math.max(2, Math.min(98, ((x - r.left) / r.width) * 100));
-    b.style.width = p + '%';
+    const p = Math.max(0, Math.min(100, ((x - r.left) / r.width) * 100));
+    b.style.clipPath = `inset(0 0 0 ${p}%)`;
     h.style.left = p + '%';
   };
   let down = false;
   el.addEventListener('pointerdown', e => { down = true; el.setPointerCapture(e.pointerId); set(e.clientX); });
   el.addEventListener('pointermove', e => { if (down) set(e.clientX); });
   el.addEventListener('pointerup', () => { down = false; });
+  set(el.getBoundingClientRect().left + el.getBoundingClientRect().width * 0.5);
 })();
 
 /* ---------------------------------------------------------------- motion */
