@@ -90,7 +90,7 @@ const T = {
     s_files: '文件', s_files_p: '每块板的模型与渲染单独列出，图纸与数据九块板共用。',
     th_file: '文件', th_what: '内容', th_size2: '大小', dl: '下载',
     foot1: '武汉摄影展板　砖片 215 × 65 × 20',
-    author_n: '张翔 Xiang ZHANG', author_r: '产品开发工程师 Product Development Engineer',
+    author_n: '张祥 Xiang ZHANG', author_r: '产品开发工程师 Product Development Engineer',
     f_glb: n => `第 ${n} 块板的三维模型`,
     f_blend: n => `第 ${n} 块板的 Blender 文件，砂浆可用小眼睛开关`,
     f_front: n => `第 ${n} 块板 正视渲染`, f_hero: n => `第 ${n} 块板 立体渲染`,
