@@ -70,13 +70,19 @@ body{
 
 .panwrap{position:relative; border:1px solid var(--rule); background:#fff; border-radius:2px}
 #pan{display:block; width:100%; height:auto}
-#pan .slip{fill:#f4f1ec; stroke:#141414; stroke-width:1.1; vector-effect:non-scaling-stroke;
-  transition:fill .12s}
-#pan .slip.on{fill:#fdeee6; stroke:var(--hot); stroke-width:2}
-#pan .slip.dim{opacity:.28}
-#pan .clip{fill:none; stroke-width:1.4; vector-effect:non-scaling-stroke; opacity:.9}
-#pan .clip.dim{opacity:.1}
-#pan .hole{fill:#d92b2b}
+/* One thing at a time.  Everything on this drawing is a thin line of about the same weight, so
+   picking one out has to take the rest most of the way down rather than nudge it. */
+#pan .slip{fill:#f4f1ec; stroke:#8e877a; stroke-width:1; vector-effect:non-scaling-stroke;
+  transition:fill .1s, opacity .1s}
+#pan .slip.on{fill:#f6c9b2; stroke:var(--hot); stroke-width:2.6}
+#pan .slip.dim{opacity:.12}
+#pan .clip{fill:none; stroke-width:1.3; vector-effect:non-scaling-stroke; opacity:.85;
+  transition:opacity .12s, stroke-width .12s}
+#pan .clip.dim{opacity:.05}
+#pan .clip.hi{stroke-width:3.4; opacity:1}
+#pan .hole{fill:#d92b2b; transition:opacity .12s}
+#pan .hole.dim{opacity:.06}
+#plan.iso #pan .slip{opacity:.18}
 .hint{position:absolute; left:14px; bottom:10px; font:600 10px/1 ui-monospace,monospace;
   letter-spacing:.1em; opacity:.38; pointer-events:none}
 .pick{position:absolute; left:14px; top:12px; font:600 11px/1.5 ui-monospace,monospace;
@@ -88,18 +94,28 @@ aside h3.mt{margin-top:26px}
 table{width:100%; border-collapse:collapse; font-size:12.5px}
 th,td{text-align:left; padding:7px 6px; border-bottom:1px solid var(--rule)}
 th{font:600 9.5px/1 ui-monospace,monospace; letter-spacing:.12em; opacity:.45}
-tr.on td{background:#fdf1eb; color:var(--hot); font-weight:600}
+tr.on td{background:#f6c9b2; color:#5c1f06; font-weight:700}
+td.or{color:var(--hot)}
+th.or{color:var(--hot); opacity:.75}
+i.sw{display:inline-block; width:14px; height:4px; border-radius:1px;
+  margin-right:7px; vertical-align:middle}
+#csched tr[data-clip]{cursor:pointer}
 td.n{text-align:right; font-family:ui-monospace,monospace}
 
+/* the wipe.  Full width under the plan, at the board's own shape, and both pictures fill the
+   same box so the seam is one straight line through one image. */
+.wide{margin-top:38px}
+.wide h3{margin-bottom:10px}
 .swap{position:relative; overflow:hidden; border:1px solid var(--rule); background:#fff;
-  aspect-ratio:3/2; cursor:ew-resize; user-select:none; touch-action:none}
-.swap img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
-.swap .swapb{position:absolute; inset:0; overflow:hidden; width:56%}
-.swap .swapb img{width:auto; height:100%; max-width:none}
-.swap .handle{position:absolute; top:0; bottom:0; left:56%; width:2px; background:var(--hot)}
-.swap .handle:after{content:''; position:absolute; left:-10px; top:50%; width:22px; height:22px;
-  margin-top:-11px; border-radius:50%; background:var(--hot);
-  box-shadow:0 3px 10px rgba(0,0,0,.3)}
+  cursor:ew-resize; user-select:none; touch-action:none; max-height:78vh; margin:0 auto}
+.swap img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+  display:block; background:#fff}
+.swap img.top{clip-path:inset(0 0 0 50%)}
+.swap .handle{position:absolute; top:0; bottom:0; left:50%; width:2px; background:var(--hot);
+  pointer-events:none}
+.swap .handle:after{content:''; position:absolute; left:-11px; top:50%; width:24px; height:24px;
+  margin-top:-12px; border-radius:50%; background:var(--hot);
+  box-shadow:0 3px 12px rgba(0,0,0,.32)}
 .cap{margin-top:8px; font-size:11.5px; opacity:.45}
 
 /* ---------------------------------------------------------------- boards */
