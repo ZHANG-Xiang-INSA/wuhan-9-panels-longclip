@@ -305,6 +305,87 @@ for q in ('S7_nine_boards_schedule_CN_EN', 'S8_clips_CN_EN', 'S9_bricks_CN_EN'):
         ck(abs(a.width/a.height-float(m.group(1))/float(m.group(2))) < 0.02,
            '%s: the png and the svg are different shapes' % q)
 
+# ---------------------------------------------- every drill mark in every model, in its place
+# The clips in the models were solid - 60 triangles each, the section swept round with nothing
+# taken out - while the drawing and the texture both showed the drill marks.  Nothing was looking,
+# because nothing had ever compared a model against the geometry below the level of "how many
+# clips".  Every hole is now found in the mesh by its own rim: a ring of vertices at 1.75 from the
+# centre the data puts it at.  glTF is Y-up, so the board's y is the mesh's MINUS z - the first
+# version of this check had that sign the wrong way round and reported 1470 of 2654 missing when
+# every one of them was there.
+def _rigid(src, dst):
+    """the motion that carries src onto dst; boards.json has each clip's placed tray but not its
+    placed holes, so the holes are carried over by the motion recovered from the two polygons"""
+    n = min(len(src), len(dst))
+    cs = (sum(q[0] for q in src)/len(src), sum(q[1] for q in src)/len(src))
+    cd = (sum(q[0] for q in dst)/len(dst), sum(q[1] for q in dst)/len(dst))
+    nu = sum((src[i][0]-cs[0])*(dst[i][1]-cd[1])-(src[i][1]-cs[1])*(dst[i][0]-cd[0])
+             for i in range(n))
+    de = sum((src[i][0]-cs[0])*(dst[i][0]-cd[0])+(src[i][1]-cs[1])*(dst[i][1]-cd[1])
+             for i in range(n))
+    th = math.atan2(nu, de)
+    co, si = math.cos(th), math.sin(th)
+    return lambda p: (cd[0]+(p[0]-cs[0])*co-(p[1]-cs[1])*si,
+                      cd[1]+(p[0]-cs[0])*si+(p[1]-cs[1])*co)
+
+
+MS = 0.001
+for b in D['boards']:
+    q = os.path.join('site', 'models', 'board_%d.glb' % b['idx'])
+    if not os.path.exists(q):
+        continue
+    raw = open(q, 'rb').read()
+    off, ch = 12, {}
+    while off < len(raw):
+        ln, ty = struct.unpack_from('<II', raw, off)
+        ch[ty] = raw[off+8:off+8+ln]
+        off += 8+ln
+    G = json.loads(ch[0x4E4F534A].decode('utf-8'))
+    BIN = ch[0x004E4942]
+    cx, cy = b['w']/2.0, b['h']/2.0
+    want = {}
+    cov = {j for rc in b['rails'] for j in rc['covers']}
+    for rc in b['rails']:
+        want.setdefault(rc['code'], []).extend([tuple(v) for v in rc['holes']])
+    for j, p in enumerate(b['pieces']):
+        if j in cov:
+            continue
+        g = CG[p['c']]
+        if g.get('holes') and len(g['base']) == len(p['k']):
+            mv = _rigid([tuple(v) for v in g['base']], [tuple(v) for v in p['k']])
+            want.setdefault(p['c'], []).extend([mv(tuple(v)) for v in g['holes']])
+    for m in G['meshes']:
+        c = m['name']
+        if c not in want:
+            continue
+        a = G['accessors'][m['primitives'][0]['attributes']['POSITION']]
+        bv = G['bufferViews'][a['bufferView']]
+        o = bv.get('byteOffset', 0)+a.get('byteOffset', 0)
+        st = bv.get('byteStride') or 12
+        pts = [struct.unpack_from('<3f', BIN, o+k*st) for k in range(a['count'])]
+        gone = 0
+        for hx, hy in want[c]:
+            X, Z = (hx-cx)*MS, -(hy-cy)*MS
+            if sum(1 for v in pts
+                   if abs(math.hypot(v[0]-X, v[2]-Z)-1.75*MS) < 0.0002) < 8:
+                gone += 1
+        ck(gone == 0, 'board %d: %d of the %d drill marks on %s are not in the model'
+           % (b['idx'], gone, len(want[c]), c))
+
+# ---------------------------------------------- S8 draws the same holes as everything else
+sys.path.insert(0, HERE)
+import clips9_draw as _CDR                                              # noqa: E402
+for _c in json.load(io.open(os.path.join(HERE, 'clips9.json'), encoding='utf-8'))['clips']:
+    if _c['kind'] != 'POCKET':
+        continue
+    _base, _lip, _hs, _bl = _CDR.geom(_c)
+    _x0 = min(v[0] for v in _base)
+    _y0 = min(v[1] for v in _base)
+    _got = sorted((round(h[0]-_x0, 2), round(h[1]-_y0, 2)) for h in _hs)
+    _wnt = sorted((round(v[0], 2), round(v[1], 2)) for v in CG[_c['code']]['holes'])
+    ck(_got == _wnt, 'S8 draws %s at %s, every other drawing has %s'
+       % (_c['code'], _got, _wnt))
+
 print('%d checks over %d boards, %d slips, %d clips' % (seen, N, SLIPS, CLIPS))
 print('CHECKS FAILED: %d' % len(bad))
 for x in bad[:40]:

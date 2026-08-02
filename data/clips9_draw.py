@@ -222,8 +222,31 @@ def geom(c):
         # overall dimension, which every pocket meets at 65 across.
         base = [tuple(q) for q in c['base']]
         lipped = c['lipped']
-    return base, lipped, holes_rule(base, lipped), blank(base, lipped, tabs_of(c), tabw_of(c))
+    # THE HOLES COME FROM THE PUBLISHED GEOMETRY, not from a rule of this file's own.
+    #
+    # holes_rule() below is this module's own idea of where a pocket's holes go, and it is not the
+    # one dxf/06, dxf/08, the textures and the models use - clips9_dxf.poly_holes() is.  A pocket
+    # carries no `holes` in clips9.json, so S8 fell through to the local rule and has been drawing
+    # different holes from every other drawing.  It went unnoticed because the two rules used to
+    # agree; when the positions were redesigned S8 came out byte for byte identical, having never
+    # read them.  site/data/boards.json carries the answer, stored against the blank's own
+    # bottom-left corner, so it is offset back into this file's frame.
+    hs = None
+    try:
+        _g = _PUB['clipgeo'][c['code']]
+        if _g.get('holes') and len(_g['base']) == len(base):
+            _x0 = min(q[0] for q in base); _y0 = min(q[1] for q in base)
+            hs = [(q[0]+_x0, q[1]+_y0) for q in _g['holes']]
+    except Exception:
+        hs = None
+    return base, lipped, hs or holes_rule(base, lipped), blank(base, lipped, tabs_of(c),
+                                                               tabw_of(c))
 
+
+try:
+    _PUB = json.load(open(os.path.join(HERE, '..', 'site', 'data', 'boards.json'), encoding='utf-8'))
+except Exception:
+    _PUB = {'clipgeo': {}}
 
 # ---------------------------------------------------------------- sheet
 n = len(CLIPS)

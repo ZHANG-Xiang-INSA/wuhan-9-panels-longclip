@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -375361,7 +375361,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-08-02T00:04:11.681094+00:00
+1.4.4 @ 2026-08-02T09:56:01.095865+00:00
   0
 VISUALSTYLE
   5
@@ -376073,7 +376073,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-08-02T00:05:09.036268+00:00
+1.4.4 @ 2026-08-02T09:57:01.303101+00:00
   0
 ENDSEC
   0

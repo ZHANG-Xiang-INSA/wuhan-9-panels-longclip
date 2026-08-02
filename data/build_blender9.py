@@ -30,7 +30,7 @@ its own long edge, so no two slips show the same grain.  Per-piece tone sits in 
 reads the same two channels and gets the same variation.
 """
 import bpy, bmesh, json, math, os, sys
-from mathutils import Vector
+from mathutils import Vector, Matrix
 
 HERE = os.path.dirname(os.path.abspath(bpy.data.filepath or __file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..')) if os.path.basename(HERE) == 'data' else \
@@ -699,6 +699,27 @@ def clip_pocket(bm, poly, lipped, prof, tabs=None, tab_w=None):
             fold_strip(bm, a+u*r0, a+u*r1, inw, sec, t)
 
 
+def fit_motion(src, dst):
+    """the rotation and translation that carries polygon src onto polygon dst
+
+    The same recovery setout9._fit does, and for the same reason: boards.json carries each clip's
+    placed TRAY but not its placed holes, so the motion is read back off the two polygons and then
+    applied to the hole centres.  Both files must use this one, or the model's drill marks and the
+    setting-out's drill marks drift apart.
+    """
+    n = min(len(src), len(dst))
+    cs = (sum(q[0] for q in src)/len(src), sum(q[1] for q in src)/len(src))
+    cd = (sum(q[0] for q in dst)/len(dst), sum(q[1] for q in dst)/len(dst))
+    num = sum((src[i][0]-cs[0])*(dst[i][1]-cd[1])-(src[i][1]-cs[1])*(dst[i][0]-cd[0])
+              for i in range(n))
+    den = sum((src[i][0]-cs[0])*(dst[i][0]-cd[0])+(src[i][1]-cs[1])*(dst[i][1]-cd[1])
+              for i in range(n))
+    th = math.atan2(num, den)
+    co, si = math.cos(th), math.sin(th)
+    return lambda p: (cd[0]+(p[0]-cs[0])*co-(p[1]-cs[1])*si,
+                      cd[1]+(p[0]-cs[0])*si+(p[1]-cs[1])*co)
+
+
 def clip_rail(bm, quad, prof):
     """the M-section along a footprint: flat, two legs up, two lips hooked inward"""
     t = CLIP_T                     # drawn a little thicker than 0.25 so it reads on screen
@@ -964,27 +985,75 @@ def build(b):
     # be a member of a run now, every slip that keeps its own R50 stopped being built.  703 clips
     # vanished out of the nine models and every check still passed, because nothing opened a GLB.
     covered = {i for lc in b.get('rails', []) for i in lc['covers']}
+    # THE FOOTPRINT AND ITS TWO HOLES.  The clips in the model were solid: 60 triangles each,
+    # which is the section swept round and nothing taken out of it, while the drawing and the
+    # setting-out texture both showed the drill marks.  The holes go in here now, and they come
+    # from the same place the drawing gets them - a rail carries its own two in board coordinates,
+    # and a clip that sits on one slip has the type's holes carried onto that slip by the rigid
+    # motion that put its tray there, which is exactly what setout9 does for dxf/08.
     foot = {}
     for lc in b.get('rails', []):
-        foot.setdefault(lc['code'], []).append(lc['k'])
+        foot.setdefault(lc['code'], []).append((lc['k'], [tuple(q) for q in lc['holes']]))
     for i, p in enumerate(b['pieces']):
-        if i not in covered:
-            foot.setdefault(p['c'], []).append(p['k'])
+        if i in covered:
+            continue
+        g = CLIPGEO.get(p['c'], {})
+        hs = []
+        if g.get('holes') and g.get('base') and len(g['base']) == len(p['k']):
+            mv = fit_motion([tuple(q) for q in g['base']], [tuple(q) for q in p['k']])
+            hs = [mv(tuple(q)) for q in g['holes']]
+        foot.setdefault(p['c'], []).append((p['k'], hs))
     for code in sorted(foot):
         g = CLIPGEO.get(code, {})
         lip = g.get('lipped')
-        bm = bmesh.new()
-        for k in foot[code]:
+        acc = bmesh.new()
+        for k, hs in foot[code]:
             q = cen(k)
+            one = bmesh.new()
             if g.get('kind') == 'POCKET':
                 tb = g.get('tabs') or [False]*len(q)
-                clip_pocket(bm, q, lip if lip and len(lip) == len(q) else [True]*len(q), PROF,
+                clip_pocket(one, q, lip if lip and len(lip) == len(q) else [True]*len(q), PROF,
                             tabs=tb if len(tb) == len(q) else [False]*len(q),
                             tab_w=g.get('tab_w'))
             elif len(q) == 4:
-                clip_rail(bm, q, PROF)
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-        me = bpy.data.meshes.new(code); bm.to_mesh(me); bm.free()
+                clip_rail(one, q, PROF)
+            else:
+                one.free()
+                continue
+            bmesh.ops.recalc_face_normals(one, faces=one.faces[:])
+            if hs:
+                # ONE CLIP AT A TIME.  Cutting a whole board's worth in a single boolean looks
+                # cheaper and does not work: where the clips are dense or touching - board 9 is
+                # laid on a 3 mm joint so neighbouring courses meet face to face, board 3 is a 45
+                # deg herringbone - the EXACT solver is handed a mesh of 150 shells that touch and
+                # returns it untouched.  Boards 2, 4, 6 and 7 came out with every hole and boards
+                # 3, 9 and most of 8 with none at all, which is exactly what that failure looks
+                # like.  Per clip the solver only ever sees one closed shell and two cylinders.
+                tmp = bpy.data.meshes.new('one_'+code); one.to_mesh(tmp); one.free()
+                tob = bpy.data.objects.new('one_'+code, tmp)
+                bpy.context.collection.objects.link(tob)
+                cyl = bmesh.new()
+                for h in hs:
+                    hx, hy = cen([h])[0]
+                    bmesh.ops.create_cone(cyl, cap_ends=True, segments=20, radius1=1.75*S,
+                                          radius2=1.75*S, depth=60*S,
+                                          matrix=Matrix.Translation((hx*S, hy*S, 0.0)))
+                cme = bpy.data.meshes.new('cut'); cyl.to_mesh(cme); cyl.free()
+                cob = bpy.data.objects.new('cut', cme)
+                bpy.context.collection.objects.link(cob)
+                mod = tob.modifiers.new('holes', 'BOOLEAN')
+                mod.operation, mod.object, mod.solver = 'DIFFERENCE', cob, 'EXACT'
+                bpy.context.view_layer.objects.active = tob
+                bpy.ops.object.modifier_apply(modifier=mod.name)
+                acc.from_mesh(tob.data)
+                bpy.data.objects.remove(cob, do_unlink=True)
+                bpy.data.objects.remove(tob, do_unlink=True)
+                bpy.data.meshes.remove(cme)
+            else:
+                tmp = bpy.data.meshes.new('one_'+code); one.to_mesh(tmp); one.free()
+                acc.from_mesh(tmp)
+                bpy.data.meshes.remove(tmp)
+        me = bpy.data.meshes.new(code); acc.to_mesh(me); acc.free()
         ob = bpy.data.objects.new('CLIP_'+code, me)
         ob.data.materials.append(m_clip.get(code, m_rail))
         bpy.context.collection.objects.link(ob)
