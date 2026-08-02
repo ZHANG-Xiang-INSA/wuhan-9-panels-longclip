@@ -35,7 +35,8 @@
       </div>
       <ul class="legend" id="legend"></ul>
       <div class="scrub">
-        <div class="bar"><i id="scrubi"></i></div>
+        <div class="steps" id="steps"></div>
+        <div class="bar" id="scrubbar"><i id="scrubi"></i></div>
         <p><span id="scrubtxt"></span></p>
       </div>
       <div class="figs" id="figs"></div>
@@ -64,7 +65,7 @@
   <div class="wide">
     <h3 data-t="s_swap"></h3>
     <div class="swap" id="swap">
-      <img id="swapA" alt="">
+      <canvas id="swapA"></canvas>
       <img id="swapB" alt="" class="top">
       <div class="handle" id="handle"></div>
     </div>
@@ -77,7 +78,6 @@
 </section>
 
 <footer>
-  <span data-t="foot"></span>
   <span class="by">
     <b data-t="author_n"></b>
     <i data-t="author_r"></i>
