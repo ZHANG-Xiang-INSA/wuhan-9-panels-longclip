@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>武汉摄影展板 · 九块板 — 装配</title>
+<link rel="stylesheet" href="style.css">
+<!-- One entry, because the postprocessing addons were rewired to import each other by relative
+     path when they were vendored.  Nothing here is fetched from a CDN at run time: the page is
+     copied to gh-pages as a directory and has to work from that directory alone. -->
+<script type="importmap">
+{"imports":{"three":"../vendor/three.module.js"}}
+</script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+</head>
+<body>
+
+<header class="bar">
+  <a class="home" href="../">← <span data-t="back"></span></a>
+  <b data-t="code"></b>
+  <button id="lang" class="lang">EN</button>
+</header>
+
+<!-- ---------------------------------------------------------------- the stage -->
+<section id="stage">
+  <div class="sticky">
+    <canvas id="gl"></canvas>
+    <div class="over">
+      <div class="ttl">
+        <span class="idx" id="bidx">01</span>
+        <h1 id="btitle"></h1>
+        <p id="bsub"></p>
+      </div>
+      <ul class="legend" id="legend"></ul>
+      <div class="scrub">
+        <div class="bar"><i id="scrubi"></i></div>
+        <p><span id="scrubtxt"></span></p>
+      </div>
+      <div class="figs" id="figs"></div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+</section>
+
+<!-- ---------------------------------------------------------------- the drawing -->
+<section id="plan">
+  <div class="head">
+    <h2 data-t="s_plan"></h2>
+    <p data-t="s_plan_p"></p>
+  </div>
+  <div class="split">
+    <div class="panwrap">
+      <svg id="pan" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="hint" data-t="hint"></div>
+      <div class="pick" id="pick"></div>
+    </div>
+    <aside>
+      <h3 data-t="s_sched"></h3>
+      <table id="sched"></table>
+      <h3 class="mt" data-t="s_swap"></h3>
+      <div class="swap" id="swap">
+        <img id="swapA" alt="">
+        <div class="swapb"><img id="swapB" alt=""></div>
+        <div class="handle" id="handle"></div>
+      </div>
+      <p class="cap" data-t="s_swap_p"></p>
+    </aside>
+  </div>
+</section>
+
+<section id="boards">
+  <h2 data-t="s_pick"></h2>
+  <div class="chips" id="chips"></div>
+</section>
+
+<footer>
+  <span data-t="foot"></span>
+  <span class="by">
+    <b data-t="author_n"></b>
+    <i data-t="author_r"></i>
+    <a href="mailto:xiang.zhang@earth4earth.co.uk">xiang.zhang@earth4earth.co.uk</a>
+  </span>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
