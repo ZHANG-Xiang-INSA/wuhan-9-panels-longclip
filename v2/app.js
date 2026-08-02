@@ -42,9 +42,9 @@ const T = {
     s_sched: '砖片明细 BRICK SCHEDULE',
     s_swap: '成品面 ⇄ 背板放线',
     s_pick: '换一块板',
-    scrub: n => `滚动 = 爆炸行程　·　砖片抬起 ${n}%`,
+    scrub: n => `砖片抬起 ${n}%`,
+    steps: ['装好', '抬起砖片', '只剩卡扣'],
     f_w: '板宽 mm', f_h: '板高 mm', f_j: '灰缝 mm', f_s: '砖片', f_c: '卡扣', f_d: '钻孔',
-    foot: '几何、图纸、模型与本页由 data/ 下的脚本从同一份数据生成。',
     author_n: '张祥 Xiang ZHANG', author_r: '产品开发工程师 Product Development Engineer',
     of: '共', row: (c, s, q) => `${c}　${s}　×${q}`
   },
@@ -55,9 +55,9 @@ const T = {
     s_sched: 'BRICK SCHEDULE',
     s_swap: 'FINISHED FACE ⇄ SETTING OUT',
     s_pick: 'ANOTHER BOARD',
-    scrub: n => `SCROLL = EXPLODE　·　slips lifted ${n}%`,
+    scrub: n => `SLIPS LIFTED ${n}%`,
+    steps: ['ASSEMBLED', 'SLIPS LIFTED', 'CLIPS ONLY'],
     f_w: 'board w', f_h: 'board h', f_j: 'joint', f_s: 'slips', f_c: 'clips', f_d: 'drill marks',
-    foot: 'The geometry, the drawings, the models and this page are generated from one set of data by the scripts under data/.',
     author_n: 'Xiang ZHANG', author_r: 'Product Development Engineer',
     of: 'of', row: (c, s, q) => `${c}　${s}　×${q}`
   }
@@ -70,6 +70,9 @@ function paint() {
   document.querySelectorAll('[data-t]').forEach(el => {
     const v = t(el.dataset.t);
     if (typeof v === 'string') el.textContent = v;
+  });
+  document.querySelectorAll('#steps button').forEach(bt => {
+    bt.textContent = t('steps')[+bt.dataset.si];
   });
   drawBoard();
 }
@@ -113,22 +116,28 @@ const cv = $('#gl');
 const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-// 0.62, not 1.05.  Three lights, a room environment and a bloom on top of a backing board that is
-// nearly white came out as a white sheet with the board somewhere inside it.
-renderer.toneMappingExposure = 0.62;
+renderer.toneMappingExposure = 1.25;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0e0f11);
 const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 60);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.05).texture;
+// 0.26, the same figure the page at / uses.  A room environment at full strength is a white box
+// on every side, and the slips came out of it white however far the exposure was pulled down -
+// taking the exposure down only took the metal with them.  The environment is the light to cut.
+scene.environmentIntensity = 0.26;
 
-const key = new THREE.DirectionalLight(0xfff0dd, 1.5);
+const key = new THREE.DirectionalLight(0xfff0dd, 1.45);
 key.position.set(-1.4, 2.2, 1.7);
 scene.add(key);
-const rim = new THREE.DirectionalLight(0xbcd4ff, 0.8);
+const rim = new THREE.DirectionalLight(0xbcd4ff, 0.55);
 rim.position.set(1.9, 0.9, -1.6);
 scene.add(rim);
-scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+scene.add(new THREE.AmbientLight(0xffffff, 0.06));
+
+// The clay colour lives in a texture the page at / builds at run time; the GLB carries the shape
+// and no brick colour at all, so the slips arrive white and stay white.  It is put back here.
+const CLAY = new THREE.Color(0xc7936a);
 
 // Bloom, and gently.  The clips are the only bright metal in the frame, so a low threshold picks
 // them out on their own without the backing board fogging up behind them.
@@ -149,6 +158,31 @@ controls.minDistance = 0.6;
 controls.maxDistance = 6;
 controls.maxPolarAngle = Math.PI * 0.49;      // never under the board
 controls.target.set(0, 0, 0);
+
+// The wheel belongs to the page.  OrbitControls takes it for zoom and swallows it, and over a
+// canvas that fills the screen that means the page stops scrolling and the explode never runs.
+// Zoom is moved onto ctrl + wheel (pinch on a trackpad sends the same thing) and the plain wheel
+// is left alone.
+controls.enableZoom = false;
+cv.addEventListener('wheel', e => {
+  if (!(e.ctrlKey || e.metaKey)) return;
+  e.preventDefault();
+  const d = camera.position.clone().sub(controls.target);
+  const L = d.length() * Math.exp(e.deltaY * 0.0015);
+  camera.position.copy(controls.target)
+    .add(d.setLength(Math.min(controls.maxDistance, Math.max(controls.minDistance, L))));
+}, { passive: false });
+
+let ballR = 1;
+// the distance at which a sphere of ballR fits the shorter of the two field angles
+function frame() {
+  const v = THREE.MathUtils.degToRad(camera.fov) * 0.5;
+  const half = Math.min(v, Math.atan(Math.tan(v) * camera.aspect));
+  const d = (ballR / Math.sin(half)) * 1.06;
+  camera.position.set(0, 0, 0)
+    .add(new THREE.Vector3(0.10, 0.60, 0.79).normalize().multiplyScalar(d));
+  controls.update();
+}
 
 function fit() {
   const w = cv.clientWidth, h = cv.clientHeight;
@@ -192,26 +226,33 @@ async function loadBoard(i) {
   const size = box.getSize(new THREE.Vector3());
   const mid = box.getCenter(new THREE.Vector3());
   root.position.sub(mid);
-  const r = Math.max(size.x, size.z) * 0.5;
-  camera.position.set(r * 0.55, r * 1.75, r * 2.05);
+  // Framed off the bounding sphere and off whichever of the two field angles is the narrower, so
+  // a tall window frames the board the same as a wide one.  Set by eye against a half-size it
+  // guessed at, the board ran off three sides of the screen.
+  ballR = size.length() * 0.5;
   controls.target.set(0, 0, 0);
-  controls.minDistance = r * 1.1;
-  controls.maxDistance = r * 6;
-  controls.update();
+  controls.minDistance = ballR * 0.55;
+  controls.maxDistance = ballR * 5;
   // the backing carries the setting-out texture, which is nearly white and swamps everything in
   // front of it once there is a bloom; on this page it is taken down to a stage grey
-  if (backing) {
-    root.traverse(o => {
-      if (o.isMesh && (o.name || '').startsWith('backing') && o.material) {
-        o.material = o.material.clone();
-        o.material.color = new THREE.Color(0x3a3d42);
-        if (o.material.map) o.material.map = null;
-        o.material.roughness = 0.92;
-        o.material.metalness = 0;
-      }
-    });
-  }
+  root.traverse(o => {
+    if (!o.isMesh || !o.material) return;
+    if ((o.name || '').startsWith('backing')) {
+      o.material = o.material.clone();
+      o.material.color = new THREE.Color(0x3a3d42);
+      if (o.material.map) o.material.map = null;
+      o.material.roughness = 0.92;
+      o.material.metalness = 0;
+    } else if (!(o.name || '').startsWith('CLIP_')) {
+      // slips and mortar: fired clay, matt, and nothing like a mirror
+      o.material = o.material.clone();
+      o.material.color = o === mortar ? new THREE.Color(0x9a958c) : CLAY.clone();
+      o.material.roughness = 0.88;
+      o.material.metalness = 0;
+    }
+  });
   fit();
+  frame();
   explode(0);
 }
 
@@ -222,7 +263,7 @@ function explode(k) {
   const e = k * k * (3 - 2 * k);                 // smoothstep, so the ends settle
   if (slipGroup) slipGroup.position.y = e * 0.42;
   if (mortar) { mortar.visible = e < 0.55; mortar.position.y = e * 0.42; }
-  const tilt = -0.30 + e * 0.16;
+  const tilt = -0.14 + e * 0.10;
   root.rotation.x = tilt;
   root.rotation.y = -0.22 + e * 0.30;
   clipMeshes.forEach(m => {
@@ -234,7 +275,30 @@ function explode(k) {
   });
   $('#scrubi').style.width = (k * 100).toFixed(1) + '%';
   $('#scrubtxt').textContent = t('scrub')(Math.round(k * 100));
+  document.querySelectorAll('#steps button').forEach(bt => {
+    bt.classList.toggle('on', Math.abs(+bt.dataset.p - k) < 0.2);
+  });
 }
+
+/* The stage had one control and it was the page scroll, which is a fair way to travel through the
+   explode and a poor way to stop anywhere in particular.  The three states it passes through are
+   on buttons now, and the bar under them takes a drag.  Both of them move the page rather than the
+   model, so the scroll position stays the one thing that says where the explode is. */
+let seek = p => explode(p);
+(function stageControl() {
+  $('#steps').innerHTML = [0, 1, 2]
+    .map(i => `<button data-si="${i}" data-p="${i / 2}"></button>`).join('');
+  $('#steps').querySelectorAll('button').forEach(bt => { bt.onclick = () => seek(+bt.dataset.p); });
+  const bar = $('#scrubbar');
+  const at = x => {
+    const r = bar.getBoundingClientRect();
+    seek(Math.max(0, Math.min(1, (x - r.left) / r.width)));
+  };
+  let down = false;
+  bar.addEventListener('pointerdown', e => { down = true; bar.setPointerCapture(e.pointerId); at(e.clientX); });
+  bar.addEventListener('pointermove', e => { if (down) at(e.clientX); });
+  bar.addEventListener('pointerup', () => { down = false; });
+})();
 
 let isolate = null;
 function applyIsolate() {
@@ -267,7 +331,28 @@ function tick() {
 // nothing at all - so what actually got drawn is exposed instead: the triangle count per frame,
 // and what the loader found in the GLB.
 window.__v2 = {
+  // what the slips actually come out as.  The scene is re-rendered into an offscreen target,
+  // which unlike the default buffer can be read back, and the middle of the frame is averaged.
+  sample: () => {
+    const rt = new THREE.WebGLRenderTarget(160, 160, { type: THREE.UnsignedByteType });
+    const old = renderer.getRenderTarget();
+    renderer.setRenderTarget(rt);
+    renderer.render(scene, camera);
+    const px = new Uint8Array(160 * 160 * 4);
+    renderer.readRenderTargetPixels(rt, 0, 0, 160, 160, px);
+    renderer.setRenderTarget(old);
+    rt.dispose();
+    let r = 0, g = 0, b = 0, n = 0, white = 0;
+    for (let i = 0; i < px.length; i += 4) {
+      if (px[i] + px[i + 1] + px[i + 2] < 40) continue;        // the black backdrop
+      r += px[i]; g += px[i + 1]; b += px[i + 2]; n++;
+      if (px[i] > 235 && px[i + 1] > 235 && px[i + 2] > 235) white++;
+    }
+    return n ? { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n),
+                 lit: n, whitePct: +(100 * white / n).toFixed(1) } : { lit: 0 };
+  },
   stats: () => ({
+    dist: +camera.position.distanceTo(controls.target).toFixed(4),
     triangles: renderer.info.render.triangles,
     calls: renderer.info.render.calls,
     slips: slipGroup ? slipGroup.children.length : 0,
@@ -330,7 +415,7 @@ function drawBoard() {
 
   drawPlan(b, cov);
   drawSched(b);
-  $('#swapA').src = `../renders/b${b.idx}_front.webp`;
+  drawFace(b);
   $('#swapB').src = `../textures/setout_board_${b.idx}.png`;
   $('#swap').style.aspectRatio = `${b.w} / ${b.h}`;
   $('#chips').innerHTML = D.boards.map((x, i) =>
@@ -339,6 +424,33 @@ function drawBoard() {
     c.onclick = () => { bi = +c.dataset.i; isolate = null; paint(); loadBoard(bi); };
   });
   applyIsolate();
+}
+
+/* The finished face for the wipe, drawn rather than photographed.  b*_front.webp is a 29 mm lens
+   looking slightly down at the board, so its outline is a trapezoid sitting inside a margin; the
+   setting-out texture is the board itself, dead on.  Wiping between the two never lined up, and no
+   amount of cropping makes a perspective view register with an orthographic one.  Both halves are
+   now the same rectangle off the same coordinates, so a course on the left is the course on the
+   right.  What shows between the slips is the joint. */
+function drawFace(b) {
+  const cvs = $('#swapA'), S = Math.min(2, 1500 / b.w);
+  cvs.width = Math.round(b.w * S);
+  cvs.height = Math.round(b.h * S);
+  const g = cvs.getContext('2d');
+  g.fillStyle = '#a29c92';
+  g.fillRect(0, 0, cvs.width, cvs.height);
+  g.setTransform(S, 0, 0, -S, 0, cvs.height);      // the board's own frame, y up
+  b.pieces.forEach((p, i) => {
+    let h = (i * 2654 + b.idx * 977) & 0xffff;
+    h ^= h >> 5;
+    const v = (h % 21) - 10;                       // clay is not one colour
+    g.fillStyle = `rgb(${186 + v},${143 + v},${103 + v})`;
+    g.beginPath();
+    p.p.forEach((q, k) => (k ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])));
+    g.closePath();
+    g.fill();
+  });
+  g.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 function drawPlan(b, cov) {
@@ -409,6 +521,12 @@ function setHot(code) {
     el.classList.toggle('on', !!code && el.dataset.code === code);
     el.classList.toggle('dim', !!code && el.dataset.code !== code);
   });
+  // a slip is picked out by taking the whole rest of the drawing down, clips and drill marks
+  // included - leaving them at full weight left the picked slip inside the same thicket of lines
+  if (!isolate) {
+    document.querySelectorAll('#pan .clip, #pan .hole')
+      .forEach(el => el.classList.toggle('dim', !!code));
+  }
   document.querySelectorAll('#sched tr').forEach(tr => {
     tr.classList.toggle('on', !!code && tr.dataset.code === code);
   });
@@ -505,6 +623,10 @@ if (!REDUCED) {
     scrub: 0.6,
     onUpdate: s => explode(s.progress)
   });
+  seek = p => {
+    const el = $('#stage');
+    lenis.scrollTo(el.offsetTop + p * (el.offsetHeight - innerHeight), { duration: 0.85 });
+  };
   gsap.from('.ttl h1', {
     scrollTrigger: { trigger: '#stage', start: 'top top' },
     yPercent: 24, opacity: 0, duration: 0.9, ease: 'power3.out'

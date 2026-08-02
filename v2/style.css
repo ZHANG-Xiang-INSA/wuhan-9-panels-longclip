@@ -32,7 +32,7 @@ body{
 #stage{position:relative; background:var(--dark); color:var(--lift)}
 #stage .sticky{position:sticky; top:0; height:100vh; overflow:hidden}
 #gl{position:absolute; inset:0; width:100%; height:100%; display:block}
-#stage .spacer{height:340vh}          /* the scroll the explode is scrubbed against */
+#stage .spacer{height:300vh}          /* the scroll the explode is scrubbed against */
 .over{position:absolute; inset:0; pointer-events:none; padding:78px 34px 26px}
 .ttl{max-width:min(30ch,34vw)}
 .ttl .idx{font:600 11px/1 ui-monospace,monospace; letter-spacing:.28em; opacity:.5}
@@ -49,10 +49,19 @@ body{
 .legend i{width:22px; height:5px; border-radius:1px; display:block; flex:none}
 .legend em{font-style:normal; opacity:.55; margin-left:2px}
 
+/* the overlay lets the pointer through to the model; only the two controls take it back */
 .scrub{position:absolute; left:34px; right:34px; bottom:104px}
-.scrub .bar{height:2px; background:#2b2e34; position:relative}
-.scrub .bar i{position:absolute; left:0; top:-2px; height:6px; width:0;
-  background:#e9a06a; box-shadow:0 0 14px #e9a06a}
+.scrub .steps,.scrub .bar{pointer-events:auto}
+.scrub .steps{display:flex; gap:8px; margin-bottom:12px; width:max-content}
+.scrub .steps button{font:600 10px/1 ui-monospace,monospace; letter-spacing:.14em; cursor:pointer;
+  padding:8px 12px; color:inherit; background:rgba(255,255,255,.05);
+  border:1px solid #33383f; border-radius:2px; opacity:.55; transition:opacity .18s,background .18s}
+.scrub .steps button:hover{opacity:.9}
+.scrub .steps button.on{opacity:1; background:#e9a06a; color:#17150f; border-color:#e9a06a}
+.scrub .bar{height:2px; background:#2b2e34; position:relative; cursor:ew-resize;
+  padding:9px 0; background-clip:content-box; touch-action:none}
+.scrub .bar i{position:absolute; left:0; top:7px; height:6px; width:0;
+  background:#e9a06a; box-shadow:0 0 14px #e9a06a; pointer-events:none}
 .scrub p{margin-top:10px; font:600 10px/1 ui-monospace,monospace; letter-spacing:.16em; opacity:.5}
 
 .figs{position:absolute; left:34px; right:34px; bottom:30px;
@@ -79,7 +88,7 @@ body{
 #pan .clip{fill:none; stroke-width:1.3; vector-effect:non-scaling-stroke; opacity:.85;
   transition:opacity .12s, stroke-width .12s}
 #pan .clip.dim{opacity:.05}
-#pan .clip.hi{stroke-width:3.4; opacity:1}
+#pan .clip.hi{stroke-width:2.2; opacity:1}
 #pan .hole{fill:#d92b2b; transition:opacity .12s}
 #pan .hole.dim{opacity:.06}
 #plan.iso #pan .slip{opacity:.18}
@@ -108,7 +117,7 @@ td.n{text-align:right; font-family:ui-monospace,monospace}
 .wide h3{margin-bottom:10px}
 .swap{position:relative; overflow:hidden; border:1px solid var(--rule); background:#fff;
   cursor:ew-resize; user-select:none; touch-action:none; max-height:78vh; margin:0 auto}
-.swap img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+.swap img,.swap canvas{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
   display:block; background:#fff}
 .swap img.top{clip-path:inset(0 0 0 50%)}
 .swap .handle{position:absolute; top:0; bottom:0; left:50%; width:2px; background:var(--hot);
