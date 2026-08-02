@@ -44,7 +44,7 @@ const T = {
     s_pick: '换一块板',
     scrub: n => `砖片抬起 ${n}%`,
     steps: ['装好', '抬起砖片', '只剩卡扣'],
-    f_w: '板宽 mm', f_h: '板高 mm', f_j: '灰缝 mm', f_s: '砖片', f_c: '卡扣', f_d: '钻孔',
+    f_w: '板长 mm', f_h: '板宽 mm', f_j: '灰缝 mm', f_s: '砖片', f_c: '卡扣', f_d: '钻孔',
     author_n: '张祥 Xiang ZHANG', author_r: '产品开发工程师 Product Development Engineer',
     of: '共', row: (c, s, q) => `${c}　${s}　×${q}`
   },
@@ -57,7 +57,7 @@ const T = {
     s_pick: 'ANOTHER BOARD',
     scrub: n => `SLIPS LIFTED ${n}%`,
     steps: ['ASSEMBLED', 'SLIPS LIFTED', 'CLIPS ONLY'],
-    f_w: 'board w', f_h: 'board h', f_j: 'joint', f_s: 'slips', f_c: 'clips', f_d: 'drill marks',
+    f_w: 'board length', f_h: 'board width', f_j: 'joint', f_s: 'slips', f_c: 'clips', f_d: 'drill marks',
     author_n: 'Xiang ZHANG', author_r: 'Product Development Engineer',
     of: 'of', row: (c, s, q) => `${c}　${s}　×${q}`
   }
@@ -147,7 +147,7 @@ const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.28, 0.45, 0.95);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
-let root = null, slipGroup = null, clipMeshes = [], mortar = null, backing = null;
+let root = null, slipGroup = null, clipMeshes = [], brickMeshes = [], mortar = null, backing = null;
 const loader = new GLTFLoader();
 
 const controls = new OrbitControls(camera, cv);
@@ -193,10 +193,17 @@ function fit() {
   bloom.resolution.set(w, h);
 }
 
+let loadSeq = 0;
 async function loadBoard(i) {
   const b = D.boards[i];
-  if (root) { scene.remove(root); root.traverse(o => { if (o.isMesh) o.geometry.dispose(); }); }
+  // The old board is torn down AFTER the new one has arrived, and a load that has been overtaken
+  // drops what it fetched.  Tearing down first and awaiting meant two quick clicks on the chips
+  // left the slower board in the scene for good - and it kept the brickwork the fade could no
+  // longer reach, so CLIPS ONLY showed a raft of slips over two backings.
+  const seq = ++loadSeq;
   const g = await loader.loadAsync(`../models/board_${b.idx}.glb`);
+  if (seq !== loadSeq) return;
+  if (root) { scene.remove(root); root.traverse(o => { if (o.isMesh) o.geometry.dispose(); }); }
   root = g.scene;
   slipGroup = new THREE.Group();
   clipMeshes = [];
@@ -218,8 +225,12 @@ async function loadBoard(i) {
       clipMeshes.push(o);
     } else o.userData.slip = true;
   });
-  // the slips are re-parented so one group carries the lift; the clips and the board stay put
+  // The slips are re-parented so one group carries the lift; the clips and the board stay put.
+  // The mortar goes up with them: it is the joint BETWEEN the slips, and it used to be cut at a
+  // fixed point in the run instead, so half way through the lift the brickwork lost its joints
+  // and became a raft of loose slips with daylight between them.
   parts.forEach(o => { if (o.userData.slip) slipGroup.add(o); });
+  if (mortar) slipGroup.add(mortar);
   root.add(slipGroup);
   scene.add(root);
   const box = new THREE.Box3().setFromObject(root);
@@ -249,20 +260,55 @@ async function loadBoard(i) {
       o.material.color = o === mortar ? new THREE.Color(0x9a958c) : CLAY.clone();
       o.material.roughness = 0.88;
       o.material.metalness = 0;
+      // Transparency is declared here, once, and never flipped again.  It is part of three's
+      // program cache key, so setting it during the fade needs material.needsUpdate - and doing
+      // that on the crossing still churned a recompile every frame.  Declared up front, the fade
+      // is one number.  depthWrite stays on while it is solid, so nothing sorts differently.
+      o.material.transparent = true;
+      // and front faces only, because a slip is a closed box.  The GLB marks every brick material
+      // double-sided, and three draws a double-sided TRANSPARENT mesh twice a frame - back faces,
+      // then front - flipping material.side and re-flagging needsUpdate each time
+      // (three.module.js: 'material.transparent === true && material.side === DoubleSide').  That
+      // is two extra draws and two program look-ups per mesh per frame for a solid that has no
+      // inside to see.
+      o.material.side = THREE.FrontSide;
     }
   });
+  brickMeshes = [];
+  slipGroup.traverse(o => { if (o.isMesh) brickMeshes.push(o); });
   fit();
   frame();
-  explode(0);
+  // Where the page is scrolled to, not zero.  Changing board at the far end of the run put the
+  // new board back together while the page was still at the bottom of the stage: the scrub read
+  // 0 % against a scroll of 100 %, and the next nudge of the wheel snapped it back.
+  explode(REDUCED ? 0.55 : progress());
 }
 
-/* the exploded view.  0 = assembled, 1 = the slips clear of the board and the mortar gone, which
-   is the only state in which the clips and their drill marks are all visible at once. */
+/* how far through the stage the page is scrolled, which is what says where the explode is */
+function progress() {
+  const el = $('#stage');
+  const travel = el.offsetHeight - innerHeight;
+  return travel > 0 ? Math.max(0, Math.min(1, (scrollY - el.offsetTop) / travel)) : 0;
+}
+
+/* The exploded view.  0 = assembled; half way = the brickwork lifted clear of the board, joints
+   and all; 1 = the brickwork gone and the clips left standing on the backing with their drill
+   marks, which is the only state that shows all of them at once. */
 function explode(k) {
   if (!root) return;
   const e = k * k * (3 - 2 * k);                 // smoothstep, so the ends settle
   if (slipGroup) slipGroup.position.y = e * 0.42;
-  if (mortar) { mortar.visible = e < 0.55; mortar.position.y = e * 0.42; }
+  // The brickwork clears away over 0.58 to 0.80, because CLIPS ONLY has to mean only the clips and
+  // the board they are fixed to - and it has to be gone by the point the button that says so
+  // lights up, which is k = 0.8.
+  const a = 1 - Math.max(0, Math.min(1, (k - 0.58) / 0.22));
+  brickMeshes.forEach(m => {
+    m.visible = a > 0.02;
+    const mt = m.material;
+    if (!mt) return;
+    mt.opacity = a;
+    mt.depthWrite = a > 0.999;
+  });
   const tilt = -0.14 + e * 0.10;
   root.rotation.x = tilt;
   root.rotation.y = -0.22 + e * 0.30;
@@ -270,7 +316,10 @@ function explode(k) {
     const mt = m.material;
     if (mt && mt.emissive) {
       mt.emissive.set(new THREE.Color(CC[m.userData.code]?.metal || '#8b939c'));
-      mt.emissiveIntensity = 0.05 + e * 0.55;
+      // Gently.  The rails cover 68 of every 75 mm of this board, so once the brickwork is out of
+      // the way they are the whole picture - lit to 0.6 they flattened into one orange sheet with
+      // the drill marks lost in it.
+      mt.emissiveIntensity = 0.04 + e * 0.22;
     }
   });
   $('#scrubi').style.width = (k * 100).toFixed(1) + '%';
@@ -295,7 +344,12 @@ let seek = p => explode(p);
     seek(Math.max(0, Math.min(1, (x - r.left) / r.width)));
   };
   let down = false;
-  bar.addEventListener('pointerdown', e => { down = true; bar.setPointerCapture(e.pointerId); at(e.clientX); });
+  // seek first, capture second: a capture that is refused must not cost the click its position
+  bar.addEventListener('pointerdown', e => {
+    down = true;
+    at(e.clientX);
+    try { bar.setPointerCapture(e.pointerId); } catch (_) { /* no pointer to capture */ }
+  });
   bar.addEventListener('pointermove', e => { if (down) at(e.clientX); });
   bar.addEventListener('pointerup', () => { down = false; });
 })();
@@ -351,11 +405,27 @@ window.__v2 = {
     return n ? { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n),
                  lit: n, whitePct: +(100 * white / n).toFixed(1) } : { lit: 0 };
   },
+  scene: () => {
+    const out = [];
+    root && root.traverse(o => {
+      if (!o.isMesh || !o.visible) return;
+      const bb = new THREE.Box3().setFromObject(o);
+      out.push({ n: o.name, col: '#' + o.material.color.getHexString(),
+                 min: bb.min.toArray().map(v => +v.toFixed(2)),
+                 max: bb.max.toArray().map(v => +v.toFixed(2)) });
+    });
+    return { cam: camera.position.toArray().map(v => +v.toFixed(2)),
+             rot: root ? [+root.rotation.x.toFixed(3), +root.rotation.y.toFixed(3)] : null,
+             meshes: out };
+  },
   stats: () => ({
+    bricks: brickMeshes.map(m => ({ n: m.name, on: m.visible, o: +(m.material.opacity).toFixed(3),
+                                    clear: m.material.transparent, ver: m.material.version })),
+    mortarInLift: !!mortar && mortar.parent === slipGroup,
     dist: +camera.position.distanceTo(controls.target).toFixed(4),
     triangles: renderer.info.render.triangles,
     calls: renderer.info.render.calls,
-    slips: slipGroup ? slipGroup.children.length : 0,
+    slips: slipGroup ? slipGroup.children.filter(o => o !== mortar).length : 0,
     clips: clipMeshes.length,
     codes: clipMeshes.map(m => m.userData.code).filter((v, i, a2) => a2.indexOf(v) === i),
     lift: slipGroup ? +slipGroup.position.y.toFixed(4) : null
@@ -417,7 +487,8 @@ function drawBoard() {
   drawSched(b);
   drawFace(b);
   $('#swapB').src = `../textures/setout_board_${b.idx}.png`;
-  $('#swap').style.aspectRatio = `${b.w} / ${b.h}`;
+  // the drawing and the wipe are the same board seen twice, so they are given the same box
+  $('#swap').style.aspectRatio = $('#panwrap').style.aspectRatio = `${b.w} / ${b.h}`;
   $('#chips').innerHTML = D.boards.map((x, i) =>
     `<button class="chip${i === bi ? ' on' : ''}" data-i="${i}">${String(x.idx).padStart(2, '0')}</button>`).join('');
   $('#chips').querySelectorAll('.chip').forEach(c => {
