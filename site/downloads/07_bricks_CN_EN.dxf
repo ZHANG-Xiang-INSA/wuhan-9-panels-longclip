@@ -10659,7 +10659,7 @@ AcDbText
  40
 14.0
   1
-板 board 1   T01   L10 Yellow   x 132
+板 board 1   L10 Yellow   x 132
   7
 CN
  11
@@ -10693,7 +10693,7 @@ AcDbText
  40
 14.0
   1
-板 board 2   T01   L10 Yellow   x 120
+板 board 2   L10 Yellow   x 120
   7
 CN
  11
@@ -10727,7 +10727,7 @@ AcDbText
  40
 14.0
   1
-板 board 3   T01   L10 Yellow   x 94
+板 board 3   L10 Yellow   x 94
   7
 CN
  11
@@ -10761,7 +10761,7 @@ AcDbText
  40
 14.0
   1
-板 board 4   T01   L10 B2   x 90
+板 board 4   L10 B2   x 90
   7
 CN
  11
@@ -10795,7 +10795,7 @@ AcDbText
  40
 14.0
   1
-板 board 5   T01   L10 B2   x 121
+板 board 5   L10 B2   x 121
   7
 CN
  11
@@ -10829,7 +10829,7 @@ AcDbText
  40
 14.0
   1
-板 board 6   T01   L10 B2   x 147
+板 board 6   L10 B2   x 147
   7
 CN
  11
@@ -10863,7 +10863,7 @@ AcDbText
  40
 14.0
   1
-板 board 7   T01   L10 Grey   x 137
+板 board 7   L10 Grey   x 137
   7
 CN
  11
@@ -10897,7 +10897,7 @@ AcDbText
  40
 14.0
   1
-板 board 8   T01   L10 Grey   x 120
+板 board 8   L10 Grey   x 120
   7
 CN
  11
@@ -10931,7 +10931,7 @@ AcDbText
  40
 14.0
   1
-板 board 9   T01   L10 Grey   x 154
+板 board 9   L10 Grey   x 154
   7
 CN
  11
@@ -11885,7 +11885,7 @@ AcDbText
  40
 14.0
   1
-板 board 4   T02   L10 B2   x 95
+板 board 4   L10 B2   x 95
   7
 CN
  11
@@ -11919,7 +11919,7 @@ AcDbText
  40
 14.0
   1
-板 board 7   T02   L10 Grey   x 20
+板 board 7   L10 Grey   x 20
   7
 CN
  11
@@ -12873,7 +12873,7 @@ AcDbText
  40
 14.0
   1
-板 board 1   T02   L10 Yellow   x 16
+板 board 1   L10 Yellow   x 16
   7
 CN
  11
@@ -12907,7 +12907,7 @@ AcDbText
  40
 14.0
   1
-板 board 2   T02   L10 Yellow   x 20
+板 board 2   L10 Yellow   x 20
   7
 CN
  11
@@ -12941,7 +12941,7 @@ AcDbText
  40
 14.0
   1
-板 board 3   T02   L10 Yellow   x 20
+板 board 3   L10 Yellow   x 20
   7
 CN
  11
@@ -14453,7 +14453,7 @@ AcDbText
  40
 14.0
   1
-板 board 3   T03   L10 Yellow   x 34
+板 board 3   L10 Yellow   x 34
   7
 CN
  11
@@ -15553,7 +15553,7 @@ AcDbText
  40
 14.0
   1
-板 board 8   T02   L10 Grey   x 16
+板 board 8   L10 Grey   x 16
   7
 CN
  11
@@ -16631,7 +16631,7 @@ AcDbText
  40
 14.0
   1
-板 board 8   T03   L10 Grey   x 16
+板 board 8   L10 Grey   x 16
   7
 CN
  11
@@ -17709,7 +17709,7 @@ AcDbText
  40
 14.0
   1
-板 board 8   T04   L10 Grey   x 16
+板 board 8   L10 Grey   x 16
   7
 CN
  11
@@ -18663,7 +18663,7 @@ AcDbText
  40
 14.0
   1
-板 board 5   T02   L10 B2   x 12
+板 board 5   L10 B2   x 12
   7
 CN
  11
@@ -19617,7 +19617,7 @@ AcDbText
  40
 14.0
   1
-板 board 5   T03   L10 B2   x 12
+板 board 5   L10 B2   x 12
   7
 CN
  11
@@ -20927,7 +20927,7 @@ AcDbText
  40
 14.0
   1
-板 board 3   T04   L10 Yellow   x 10
+板 board 3   L10 Yellow   x 10
   7
 CN
  11
@@ -22005,7 +22005,7 @@ AcDbText
  40
 14.0
   1
-板 board 3   T05   L10 Yellow   x 8
+板 board 3   L10 Yellow   x 8
   7
 CN
  11
@@ -22959,7 +22959,7 @@ AcDbText
  40
 14.0
   1
-板 board 8   T05   L10 Grey   x 4
+板 board 8   L10 Grey   x 4
   7
 CN
  11
@@ -24107,7 +24107,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-08-02T09:53:30.669908+00:00
+1.4.4 @ 2026-08-19T12:27:18.354313+00:00
   0
 VISUALSTYLE
   5
@@ -24819,7 +24819,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-08-02T09:53:30.862803+00:00
+1.4.4 @ 2026-08-19T12:27:18.550716+00:00
   0
 ENDSEC
   0

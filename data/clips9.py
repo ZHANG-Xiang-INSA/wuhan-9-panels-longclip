@@ -18,6 +18,7 @@ they get a pocket clip instead, which turns a lip up on three sides and traps th
 """
 import json, math, os
 from panels9_types import classify
+import catalogue9 as CAT
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 P = json.load(open(os.path.join(HERE, 'panels9.json')))
@@ -186,6 +187,11 @@ def pocket_code(idx, code, loc):
     return _PK.setdefault(k, 'PK-%d%s' % (idx, code))
 
 
+# The diagnostic table below is the first thing anybody reads when a clip choice looks wrong,
+# so it names bricks the way every drawing does.  pocket_code() still takes the T code: the
+# clip's part number is its own and is not being renumbered.
+BCODE = CAT.of([(q['idx'], [CAT.norm(t) for t in classify(q)[0]]) for q in P])
+
 rows, need_pocket = [], {}
 for p in P:
     types, pieces = classify(p)
@@ -201,13 +207,13 @@ for p in P:
         else:
             loc, w, hh = to_local(obj)
         kind, ln, grip, run, t0, t1, axis = assign(loc, w, hh, poly_area(loc) or 1.0)
-        key = t['code']
+        key = BCODE[(p['idx'], t['code'])]
         d = per.setdefault(key, dict(t=t, kind=kind, ln=ln, grip=grip, run=run, qty=0))
         d['qty'] += 1
         if kind == 'POCKET':
             pk = pocket_code(p['idx'], t['code'], loc)
             e = need_pocket.setdefault(pk, dict(
-                panel=p['idx'], code=t['code'], qty=0, sig=t['label'],
+                panel=p['idx'], code=BCODE[(p['idx'], t['code'])], qty=0, sig=t['label'],
                 area=t['area'], run=run, edges=sorted(round(v) for v in edges(loc) if v >= 2.0)))
             e['qty'] += 1
     rows.append((p['idx'], per))

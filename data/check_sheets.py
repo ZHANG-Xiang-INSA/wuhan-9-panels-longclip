@@ -173,3 +173,6 @@ if __name__ == '__main__':
     for tag in want:
         n += check(tag, SHEETS[tag])
     print('total faults:', n)
+    # Every sibling gate exits non-zero.  This one printed its faults and returned 0, so a label
+    # pushed into its neighbour on S7, S8 or S9 read as a clean build.
+    sys.exit(1 if n else 0)

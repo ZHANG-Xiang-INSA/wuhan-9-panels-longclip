@@ -439,8 +439,10 @@ function prep(root, idx) {
   root.traverse(o => {
     if (!o.isMesh) return;
     const n = o.name.replace(/^CLIP_/, '').replace(/\.\d+$/, '');
-    const m = /^T(\d+)_/.exec(o.name);
-    if (m) { o.userData = {kind: 'slip', ti: +m[1] - 1}; slips.push(o); }
+    // a slip mesh is named for its brick - B01, B04 - so the type index is a lookup in this
+    // board's own list.  No brick code can collide with a clip code, so this test is safe first.
+    const ti = b.types.findIndex(t => t.code === n);
+    if (ti >= 0) { o.userData = {kind: 'slip', ti}; slips.push(o); }
     else if (codes.has(n) || /^(RC-|PK-)/.test(n)) { o.userData = {kind: 'clip', code: n}; clips.push(o); }
     // the mortar has to be picked off before the fall-through, or it lands in `backing` and the
     // two fight over one slot: whichever the traverse reached last would be the only one drawn
@@ -1008,11 +1010,10 @@ function sections() {
 /* =====================================================================
    all-board summary
 
-   The one table somebody ordering material can work from.  It cannot sum the per-board schedules by
-   code, because T-codes restart on every board: board 3's T04 and board 8's T04 are different cut
-   shapes that happen to share a number.  data/boards.json therefore carries a `summary` block built
-   by site_export.py, which groups types on size using the same key panels9_types uses, so a type is
-   one row here however many boards lay it and however they number it.
+   The one table somebody ordering material can work from.  Every brick carries the same B code
+   here as it does on its board, in the drawings and on the model, because data/boards.json is
+   written with the codes catalogue9.py assigns across all nine boards at once.  So the used-on
+   column names boards and nothing else: the row is already headed by the part number.
    ===================================================================== */
 let spare = false;
 const withSpare = n => Math.ceil(n * 1.15);
@@ -1085,7 +1086,7 @@ function brickGroups() {
   if (bgroup === 'shape') {
     return [{rows: S.bricks.map(e => row(e, q(e),
       (e.products || []).map(x => x.product).join('　'),
-      e.use.map(u => `${u.board}·${u.code}`).join('　')))}];
+      e.use.map(u => `${t('g_board_l')} ${u.board}`).join('　')))}];
   }
   if (bgroup === 'product') {
     return PRODS().map(p => ({
@@ -1094,7 +1095,7 @@ function brickGroups() {
         const c = e.products.find(x => x.product === p);
         return row(e, spare ? c.spare : c.qty, p,
                    e.use.filter(u => PRODOF[u.board] === p)
-                        .map(u => `${u.board}·${u.code}`).join('　'));
+                        .map(u => `${t('g_board_l')} ${u.board}`).join('　'));
       }),
     }));
   }
@@ -1102,7 +1103,7 @@ function brickGroups() {
     label: `${t('g_board_l')} ${b.idx}　${b.product}`,
     rows: S.bricks.filter(e => e.use.some(u => u.board === b.idx)).map(e => {
       const u = e.use.find(x => x.board === b.idx);
-      return row(e, u.qty, b.product, `${b.idx}·${u.code}`);
+      return row(e, u.qty, b.product, `${t('g_board_l')} ${b.idx}`);
     }),
   }));
 }

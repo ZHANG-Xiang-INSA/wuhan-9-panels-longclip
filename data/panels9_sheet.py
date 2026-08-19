@@ -13,6 +13,7 @@ from matplotlib.gridspec import GridSpec
 import sheetwrap as SW
 from PIL import Image
 from panels9_types import classify
+import catalogue9 as CAT
 import labels9 as LB
 
 matplotlib.rcParams['font.family'] = ['Microsoft YaHei']
@@ -29,6 +30,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PDFD = os.path.join(HERE, '..', 'proposal', 'extracted')
 OUT = os.path.join(HERE, '..', 'drawings')
 P = json.load(open(os.path.join(HERE, 'panels9.json')))
+# The B code, assigned across all nine boards at once - the sheet shows every board, and a
+# per-board T number would mean a different brick in each of its nine schedules.
+BCODE = CAT.of([(p['idx'], [CAT.norm(t) for t in classify(p)[0]]) for p in P])
 
 MOCK = {
     1: 'P1_stretcher_wall_vertstack.png', 2: 'P2_stretcher_floor.png',
@@ -57,6 +61,8 @@ def dim_line(ax, p0, p1, text, off, horiz):
 for row, p in enumerate(P):
     idx, Wd, Ht = p['idx'], p['Wd'], p['Ht']
     types, pieces = classify(p)
+    for t in types:
+        t['code'] = BCODE[(idx, t['code'])]
     zh, en = LB.bond(idx)
 
     ax = fig.add_subplot(gs[row, 0])

@@ -7,7 +7,11 @@ page needs no library and the file is the same one every time.
 
     python data/pack_downloads.py
 """
-import os, shutil, zipfile, json
+import os, shutil, zipfile, json, hashlib
+
+
+def _sha(p):
+    return hashlib.sha256(open(p, 'rb').read()).hexdigest()
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, '..')
@@ -39,8 +43,12 @@ for src, dst in MIRROR:
     if not os.path.exists(s):
         print('  missing source', src)
         continue
-    if not os.path.exists(d) or os.path.getmtime(s) > os.path.getmtime(d) \
-            or os.path.getsize(s) != os.path.getsize(d):
+    # Compared by CONTENT, not by mtime or size.  Every token a renumbering touches is the same
+    # length - T01 and B01 are both three characters, P3_T03_CUT and P3_B04_CUT both ten - so a
+    # rebuilt drawing can be exactly as long as the one it replaces, and anything that levels
+    # timestamps then left site/downloads and the zip serving the previous numbering with
+    # nothing at all to show for it.
+    if not os.path.exists(d) or _sha(s) != _sha(d):
         shutil.copy2(s, d)
         print('  refreshed downloads/%s' % dst)
 

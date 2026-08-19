@@ -970,8 +970,11 @@ def build(b):
         sel = [(i, p) for i, p in enumerate(b['pieces']) if p['t'] == ti]
         if not sel:
             continue
-        slip_mesh([cen(p['p']) for _, p in sel], [i for i, _ in sel],
-                  'T%02d_%s' % (ti+1, t['code']),
+        # named for the brick, not for its place in this board's list.  A 'T01_' ordinal
+        # prefix used to carry the type index across to the page; the page finds the index by
+        # looking the code up in the board's own type list instead, which is one number fewer
+        # for a reader to reconcile.
+        slip_mesh([cen(p['p']) for _, p in sel], [i for i, _ in sel], t['code'],
                   m_cut if t['kind'] == 'CUT' else m_brick)
 
     # ONE MESH PER CODE, gathered first and built once.  A clip of a given length can reach the

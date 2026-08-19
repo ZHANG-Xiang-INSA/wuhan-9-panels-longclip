@@ -413,8 +413,8 @@ def panel(t, ox, oy):
             ty -= 24
     else:
         for u in t['use']:
-            TX((tx, ty), '板 board %d   %s   %s   x %d'
-               % (u['board'], u['code'], PROD[u['board']], u['qty']), 14, 'TXT', al='BL')
+            TX((tx, ty), '板 board %d   %s   x %d'
+               % (u['board'], PROD[u['board']], u['qty']), 14, 'TXT', al='BL')
             ty -= 24
     return ty
 

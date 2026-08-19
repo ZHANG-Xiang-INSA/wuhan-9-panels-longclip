@@ -9,6 +9,7 @@ import json, math, os
 from panels9_types import classify
 from clips9 import (to_local, full_width_run, poly_area, assign, span_at,
                     PROF, SLIP_W, RAIL, pocket_code, TAB_W)
+import catalogue9 as CAT
 import labels9 as LB
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -117,9 +118,14 @@ def rail_quad(loc, w, h, run, t0, t1, axis, length, bias=0):
     return [[lo, a], [lo, b], [hi, b], [hi, a]]
 
 
+# Classify all nine first.  The B code is assigned across the whole set, and a board's types have
+# to carry it before they are written out - the T code classify() gives them is a sort order inside
+# one board, not a part number.
+CLS = [(p['idx'], classify(p)) for p in P]
+BRICKS, BCODE = CAT.catalogue([(idx, [CAT.norm(t) for t in ty]) for idx, (ty, _pc) in CLS])
+
 boards = []
-for p in P:
-    types, pieces = classify(p)
+for p, (types, pieces) in zip(P, [c[1] for c in CLS]):
     seq = ([(r, (r['x'], r['y'], r['w'], r['h'])) for r in p.get('rects', [])] +
            [(f, None) for f in p.get('herr', [])])
     out_pieces, used = [], {}
@@ -163,9 +169,11 @@ for p in P:
         # nsides travels with the type: a rectangular cut is labelled "147.5 x 65" and a polygonal
         # one "65/92/140", so the page cannot count sides off the label without calling the first
         # one a one-sided brick.
-        types=[dict(code=t['code'], kind=t['kind'], qty=t['qty'], colour=t['colour'],
-                    label=t['label'], desc=LB.describe(t), area=round(t['area']),
-                    nsides=t['nsides'],
+        # the B code, not the T code classify() handed out: one number for one brick, the same on
+        # dxf/08, the model, the schedules and the page
+        types=[dict(code=BCODE[(p['idx'], t['code'])], kind=t['kind'], qty=t['qty'],
+                    colour=t['colour'], label=t['label'], desc=LB.describe(t),
+                    area=round(t['area']), nsides=t['nsides'],
                     dims=[round(t['dims'][0], 1), round(t['dims'][1], 1)]) for t in types],
         # provisional; the rails block below rebuilds it once the packing is known, and on a
         # first run from an empty tree clips9.json may not name the rails at all yet
@@ -279,32 +287,9 @@ for b in boards:
 
 # ---------------------------------------------------------------- ordering summary
 # One catalogue across all nine boards, which is what somebody ordering material actually needs.
-# T-codes are per board - board 1's T01 and board 8's T01 are both the plain slip, but board 3's T04
-# and board 8's T04 are different cut shapes - so summing by code would be wrong and would look
-# right, which is worse.  Types are keyed the way panels9_types keys them, on size alone, so the
-# same product is one row however it is laid.
-def gkey(t):
-    # A rectangle can arrive by either path and gets a different label each way: the border
-    # generator labels it "147.5 x 65" and the herringbone labels the same kind of piece with its
-    # edge signature, "65/65/140/140".  Keying on the label would file one product under two rows.
-    # A polygon whose area fills its bounding box is a rectangle, whatever the label says.
-    rect = abs(t['area'] - t['dims'][0]*t['dims'][1]) < 1.5
-    if rect:
-        return ('r', tuple(sorted(t['dims'])), t['kind'] == 'CUT')
-    return ('f', t['label'])
-
-
-KORD = {'WHOLE': 0, 'STD': 1, 'CUT': 2}
-cat = {}
-for b in boards:
-    for t in b['types']:
-        e = cat.setdefault(gkey(t), dict(kind=t['kind'], label=t['label'], dims=t['dims'],
-                                         nsides=t['nsides'], area=t['area'], qty=0, use=[]))
-        e['qty'] += t['qty']
-        e['use'].append(dict(board=b['idx'], code=t['code'], qty=t['qty']))
-bricks = sorted(cat.values(), key=lambda e: (KORD[e['kind']], -e['qty'], e['label']))
-for i, e in enumerate(bricks):
-    e['code'] = 'B%02d' % (i+1)
+# Assigned in catalogue9 rather than here, because dxf/05, S7 and the pocket clip note are drawn
+# at build steps 1, 2 and 4 and need the same codes this file needs at step 6.
+bricks = BRICKS
 # One shape can be cut from more than one product - the plain 215 x 65 is on all nine boards and so
 # is all three - so the row carries the split as well as the total.  Spare is 15 % on top, rounded
 # up, and rounded up PER PRODUCT: rounding the shape total and then dividing it would order a
@@ -335,17 +320,13 @@ clips_sum = sorted(clipcat.values(), key=lambda e: (e['kind'] != 'RAIL', -e['qty
 # spare clip: ordering the two independently and rounding each up on its own gave 1633 slips against
 # 1628 clips, which is arithmetically fine and obviously wrong to anybody reading it.  The page
 # derives the clip quantity from the brick quantity through this map, so the two always agree.
-bcode = {}
-for i, e in enumerate(bricks):
-    for u in e['use']:
-        bcode[(u['board'], u['code'])] = e['code']
 for e in clips_sum:
     e['serves'] = {}
 for b in boards:
     for p in b['pieces']:
-        t = b['types'][p['t']]
+        # the piece's type already carries the B code, so this is a read, not a second lookup
+        k = b['types'][p['t']]['code']
         e = clipcat[p['c']]
-        k = bcode[(b['idx'], t['code'])]
         e['serves'][k] = e['serves'].get(k, 0)+1
 for e in clips_sum:
     e['serves'] = [dict(brick=k, qty=v) for k, v in sorted(e['serves'].items())]

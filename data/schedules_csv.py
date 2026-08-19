@@ -50,7 +50,7 @@ def bricks():
                      '%g x %g' % (e['dims'][0], e['dims'][1]),
                      '; '.join('%s %d' % (x['product'], x['qty']) for x in e['products']),
                      e['qty'], e['spare'],
-                     '; '.join('%d.%s x%d' % (u['board'], u['code'], u['qty'])
+                     '; '.join('板 %d x%d' % (u['board'], u['qty'])
                                for u in e['use'])])
     for p in PRODS:
         for e in S['bricks']:
@@ -59,7 +59,7 @@ def bricks():
                 continue
             rows.append(['按砖类型 by product', p, e['code'], kind[e['kind']],
                          '%g x %g' % (e['dims'][0], e['dims'][1]), p, c['qty'], c['spare'],
-                         '; '.join('%d.%s x%d' % (u['board'], u['code'], u['qty'])
+                         '; '.join('板 %d x%d' % (u['board'], u['qty'])
                                    for u in e['use'] if PROD[u['board']] == p)])
     for b in D['boards']:
         for e in S['bricks']:
@@ -69,7 +69,7 @@ def bricks():
             # no spare on a by-board row: see the docstring
             rows.append(['按板号 by board', '板 board %d' % b['idx'], e['code'], kind[e['kind']],
                          '%g x %g' % (e['dims'][0], e['dims'][1]), b['product'], u['qty'], '',
-                         '%d.%s' % (b['idx'], u['code'])])
+                         '板 %d' % b['idx']])
     return write(os.path.join(OUT, 'brick_schedule.csv'), head, rows)
 
 

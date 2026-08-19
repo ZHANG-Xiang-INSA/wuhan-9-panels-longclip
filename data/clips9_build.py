@@ -19,6 +19,7 @@ POCKET  for pieces a rail cannot hold: a triangle, or a trapezoid that tapers to
 import json, math, os
 import ezdxf
 from panels9_types import classify
+import catalogue9 as CAT
 from clips9 import (PROF, HOLE, CLIP_MIN, GRIP_MIN, LIP_MIN, SLIP_W, RAIL,
                     to_local, full_width_run, poly_area, assign, edges, pocket_code, TAB_W, lip_runs, edge_pts)
 import labels9 as LB
@@ -27,6 +28,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', 'dxf')
 DRW = os.path.join(HERE, '..', 'drawings')
 P = json.load(open(os.path.join(HERE, 'panels9.json')))
+# The pocket clip is cut to one brick's outline, so its note has to name that brick, and it
+# names it by the B code every other drawing uses.  The clip's OWN part number keeps the T code
+# it was minted with: the number on a clip is that clip's number, and renaming it would orphan
+# the palette, the fold table, the schedules and dxf/06, which all key on PK-3T03 and PK-8T02.
+BCODE = CAT.of([(q['idx'], [CAT.norm(t) for t in classify(q)[0]]) for q in P])
 
 FLAT, LEG, LIP, ANG = PROF['flat'], PROF['leg'], PROF['lip'], math.radians(PROF['lip_angle'])
 TIP_IN = LIP*math.sin(ANG)          # 2.76  how far the lip tip reaches back over the slip
@@ -196,6 +202,7 @@ for p in P:
            [(f, None) for f in p.get('herr', [])])
     for (obj, rect), pc in zip(seq, pieces):
         t = types[pc['type']]
+        bcode = BCODE[(p['idx'], t['code'])]
         if rect is not None:
             loc = [(0.0, 0.0), (rect[2], 0.0), (rect[2], rect[3]), (0.0, rect[3])]
             w, h = rect[2], rect[3]
@@ -205,14 +212,14 @@ for p in P:
         kind, ln, grip, run, t0, t1, axis = assign(loc, w, h, area)
         if kind != 'POCKET':
             RC['qty'] += 1
-            ASSIGN.append(dict(panel=p['idx'], type=t['code'], clip='R50', grip=round(grip, 3)))
+            ASSIGN.append(dict(panel=p['idx'], type=bcode, clip='R50', grip=round(grip, 3)))
             continue
         code = pocket_code(p['idx'], t['code'], loc)
         ex = next((c for c in CLIPS if c['code'] == code), None)
         if ex is None:
             base, lipped, elen, tabs = pocket(loc, code)
             ex = dict(code=code, kind='POCKET', zh='专用包边卡扣', en='Dedicated pocket clip',
-                      panel=p['idx'], type=t['code'], qty=0,
+                      panel=p['idx'], type=bcode, qty=0,
                       piece=[list(q) for q in ccw(loc)], base=[list(q) for q in base],
                       lipped=lipped, tabs=tabs, tab_w=TAB_W,
                       elen=[round(e, 1) for e in elen], area=round(area, 0),
@@ -250,19 +257,20 @@ for p in P:
                              '等宽段，导轨卡扣无处可夹。折边：%s；唇边一律向内折回扣住砖片，'
                              '唇尖压进砖面 %.2f mm，与导轨卡扣的过盈量相同。'
                              '%s2 个 3.5 直径固定孔。'
-                             % (p['idx'], t['code'], min(elen), '，'.join(zh), GRIP,
+                             % (p['idx'], bcode, min(elen), '，'.join(zh), GRIP,
                                 spec.get('why_zh', '')))
-            ex['note_en'] = ('Made for board %d type %s. The shortest edge of the SLIP is %.1f mm '
+            ex['note_en'] = ('Made for board %d, brick %s. The shortest edge of the SLIP is '
+                             '%.1f mm '
                              '(that is the brick, not the clip) and it has no 20 mm run of full '
                              'width, so a rail has nothing to grip. The piece is held by %s; '
                              'every one of them folds INWARD back over the slip, gripping the '
                              'slip face by %.2f mm, the same interference as the rail. '
                              '%s2 off dia 3.5 fixing holes.'
-                             % (p['idx'], t['code'], min(elen), ' and '.join(en), GRIP,
+                             % (p['idx'], bcode, min(elen), ' and '.join(en), GRIP,
                                 (spec.get('why_en', '')+' ').lstrip()))
             CLIPS.append(ex)
         ex['qty'] += 1
-        ASSIGN.append(dict(panel=p['idx'], type=t['code'], clip=code, grip=1.0))
+        ASSIGN.append(dict(panel=p['idx'], type=bcode, clip=code, grip=1.0))
 
 # This file knows only that a piece needs a rail; it cannot know which of those rails a long clip
 # has already taken over, because that is decided against the runs in site_export.  Where the

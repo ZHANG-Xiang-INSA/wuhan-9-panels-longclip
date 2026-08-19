@@ -13,6 +13,7 @@ import dxftext as _DT
 from panels9 import (W, TARGET, stretcher, soldiers, endcourse, stack, basketweave,
                      herring, border, rect, parea, rot_clip, basket_cells)
 from panels9_types import classify, edge_sig
+import catalogue9 as CAT
 import labels9 as LB
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dxf')
@@ -221,6 +222,12 @@ if _mlog:
 for P in PANELS:
     P['cut_shapes'], P['cuts'] = score(P)
 
+# One code per brick across the nine boards.  classify() numbers a board's own types T01, T02, ...
+# in that board's order, which means a different brick on every board; the drawing carries the
+# B code the schedules, the model and the page carry.  Assigned here from the merged geometry,
+# which is why the merge above has to have run first.
+BCODE = CAT.of([(P['idx'], [CAT.norm(t) for t in classify(P)[0]]) for P in PANELS])
+
 
 def types_of(P):
     t = {}
@@ -305,6 +312,8 @@ for i, P in enumerate(PANELS):
     cx = (i % cols)*CW
     cy = -(i//cols)*CH
     types, pieces = classify(P)
+    for t in types:
+        t['code'] = BCODE[(P['idx'], t['code'])]
 
     msp.add_lwpolyline([(cx, cy), (cx+P['Wd'], cy), (cx+P['Wd'], cy+P['Ht']), (cx, cy+P['Ht'])],
                        close=True, dxfattribs={'layer': 'PANEL', 'lineweight': 50})

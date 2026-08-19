@@ -241,8 +241,9 @@ for b in D['boards']:
         ck(False, 'board %d has no model' % b['idx'])
         continue
     G, BIN = _glb(q)
+    _slip = {t['code'] for t in b['types']}
     got = {m['name']: _shells(G, BIN, m) for m in G['meshes']
-           if m['name'] not in ('backing', 'MORTAR') and not m['name'].startswith('T0')}
+           if m['name'] not in ('backing', 'MORTAR') and m['name'] not in _slip}
     want = {e['code']: e['qty'] for e in b['clips']}
     for c in sorted(set(got) | set(want)):
         g, w = got.get(c, 0), want.get(c, 0)

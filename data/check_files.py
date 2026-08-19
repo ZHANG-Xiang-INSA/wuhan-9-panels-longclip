@@ -160,13 +160,59 @@ ck(len(hole) == nh, 'dxf/08 draws %d drill marks, the geometry has %d' % (len(ho
 t7s = text('dxf/07_bricks_spare15_CN_EN.dxf')
 ck(str(S['brick_spare']) in t7s, 'dxf/07 spare does not carry the order total %d' % S['brick_spare'])
 
+# ------------------------------------------------- one numbering, on every drawing
+# The brick code is the number a fabricator works to, and it is written in six places: dxf/05's
+# schedule and its layer names, dxf/08's per-piece labels and its per-board legend, dxf/07, and
+# the three sheets.  Nothing used to hold any of those to boards.json, so a renumbering that
+# reached five of the six passed every gate and shipped two numbering systems in one set.
+_BC = {b['idx']: [t['code'] for t in b['types']] for b in D['boards']}
+_ALL = sorted({c for v in _BC.values() for c in v})
+
+t5 = ' '.join(text('dxf/05_nine_boards_CN_EN.dxf'))
+_l5 = {e.dxf.layer for e in ezdxf.readfile('dxf/05_nine_boards_CN_EN.dxf').modelspace()}
+for _i, _cs in _BC.items():
+    for _c in _cs:
+        ck(_c in t5, 'dxf/05 never writes %s, which board %d lays' % (_c, _i))
+        ck(any(l.startswith('P%d_%s_' % (_i, _c)) for l in _l5),
+           'dxf/05 has no P%d_%s_* layer' % (_i, _c))
+ck(not re.search(r'\bT0[1-9]\b', t5) and not any(re.search(r'\bT0[1-9]\b', l) for l in _l5),
+   'dxf/05 still carries a per-board T code')
+
+for _q in ('dxf/08_setout_CN_EN.dxf', 'dxf/08_setout_spare15_CN_EN.dxf'):
+    _t8 = [x for x in text(_q) if re.fullmatch(r'[A-Z]+[0-9]+', x or '')]
+    _lab = collections.Counter(x for x in _t8 if x in _ALL)
+    _want = collections.Counter()
+    for b in D['boards']:
+        for p in b['pieces']:
+            _want[b['types'][p['t']]['code']] += 1
+    ck(_lab == _want, '%s labels %s, the geometry has %s'
+       % (os.path.basename(_q), dict(_lab), dict(_want)))
+    ck(not re.search(r'\bT0[1-9]\b', ' '.join(text(_q))),
+       '%s still carries a per-board T code' % os.path.basename(_q))
+
+# The two setting-out copies must say the same thing piece for piece, not only draw the same
+# geometry: check_all compares their polylines and circles and never looked at the text.
+_a = [x for x in text('dxf/08_setout_CN_EN.dxf') if x in _ALL]
+_b = [x for x in text('dxf/08_setout_spare15_CN_EN.dxf') if x in _ALL]
+ck(_a == _b, 'dxf/08 and its ordering copy label the pieces differently')
+
 # ------------------------------------------------------------------ the sheets
-for q, want in (('drawings/S7_nine_boards_schedule_CN_EN.svg', [str(S['brick_total'])]),
+# Read out of the SVG's text COMMENTS, not its body.  matplotlib writes every glyph as a path, so
+# a plain substring test was answered by whatever <g id="patch_1414"> happened to be there: the
+# S7 assertion below passed for any brick total from 1 to 1528 and would have passed just as
+# happily with the sheet still on the old numbering.
+def svgtext(q):
+    return ' '.join(re.findall(r'<!--(.*?)-->', io.open(q, encoding='utf-8').read(), re.S))
+
+
+for q, want in (('drawings/S7_nine_boards_schedule_CN_EN.svg', _ALL),
                 ('drawings/S8_clips_CN_EN.svg', [e['code'] for e in S['clips']]),
                 ('drawings/S9_bricks_CN_EN.svg', [e['code'] for e in S['bricks']])):
-    body = io.open(q, encoding='utf-8').read()
+    body = svgtext(q)
     for w in want:
         ck(w in body, '%s does not carry %s' % (os.path.basename(q), w))
+    ck(not re.search(r'\bT0[1-9]\b', body),
+       '%s still carries a per-board T code' % os.path.basename(q))
 
 # ------------------------------------------------------------------ the schedules
 for q, tot, col in (('site/downloads/brick_schedule.csv', S['brick_total'], 6),
