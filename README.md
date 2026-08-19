@@ -1,8 +1,9 @@
 # 武汉摄影展板 · 九块板
 
-**已上线**：网站 <https://zhang-xiang-insa.github.io/wuhan-9-panels/>，
-仓库 <https://github.com/ZHANG-Xiang-INSA/wuhan-9-panels>（public，`main` 全套，`gh-pages` 是 `site/`
-的内容作站点根）。发布用的是**另一个只装这个项目的仓库**：本仓库的根是 `Documents\Claude\Projects`，
+**已上线**：网站 <https://zhang-xiang-insa.github.io/wuhan-9-panels-longclip/>，
+仓库 <https://github.com/ZHANG-Xiang-INSA/wuhan-9-panels-longclip>（public，`main` 全套，`gh-pages` 是 `site/`
+的内容作站点根）。原项目另有一个站 <https://zhang-xiang-insa.github.io/wuhan-9-panels/>，
+那是 RC-50 的那一版，不属于本分支，不要往那里推。发布用的是**另一个只装这个项目的仓库**：本仓库的根是 `Documents\Claude\Projects`，
 还装着二十几个无关项目，不能整个推。发布副本里不含 `proposal/`（客户原始 PDF 与抽出的 mock-up，
 86 MB），所以 `panels9_sheet.py` 与 `proposal_compare.py` 在那边重跑需要先补回该目录。
 
